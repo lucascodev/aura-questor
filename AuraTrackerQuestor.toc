@@ -1,0 +1,19 @@
+## Interface: 120100
+## Title: Aura Tracker Questor
+## Notes: Move, skin, filter and auto-hide the objective tracker.
+## Version: 0.1.0
+## Author: Lucas
+## IconTexture: Interface\ICONS\INV_Misc_Map_01
+## SavedVariables: AuraTrackerQuestorDB
+## Category-enUS: Quests
+## Category-ptBR: Missões
+
+# Ports/ is intentionally absent: it holds type contracts only, consumed by the
+# language server at edit time and stripped from the runtime bundle.
+
+Core\Startup.lua
+
+Adapters\AddonMetadata.lua
+Adapters\ChatLogger.lua
+
+Bootstrap.lua

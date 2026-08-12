@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+  "runtime.version": "Lua 5.1",
+  "workspace.library": ["Ports"],
+  "diagnostics.globals": ["CreateFrame", "C_AddOns", "DEFAULT_CHAT_FRAME"],
+  "diagnostics.disable": ["duplicate-set-field"]
+}
