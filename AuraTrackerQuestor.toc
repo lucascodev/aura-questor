@@ -1,8 +1,10 @@
 ## Interface: 120100
 ## Title: Aura Tracker Questor
-## Notes: Move, skin, filter and auto-hide the objective tracker.
-## Version: 0.1.0
-## Author: Lucas
+## Notes: A standalone objective tracker built on the public quest APIs.
+## Version: 0.63.0
+## Author: Lucascodev
+## X-License: MIT
+## X-Copyright: Copyright (c) 2026 Lucascodev
 ## IconTexture: Interface\ICONS\INV_Misc_Map_01
 ## SavedVariables: AuraTrackerQuestorDB
 ## Category-enUS: Quests
@@ -11,9 +13,88 @@
 # Ports/ is intentionally absent: it holds type contracts only, consumed by the
 # language server at edit time and stripped from the runtime bundle.
 
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+Libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+Libs\LibSharedMedia-3.0\LibSharedMedia-3.0.lua
+Libs\LibSerialize\LibSerialize.lua
+Libs\LibDeflate\LibDeflate.lua
+
+Core\Profiles.lua
+Core\PreferenceKeys.lua
+Core\QuestFilterIds.lua
+Core\QuestFilters.lua
+Core\SortModes.lua
+Core\SoundChannels.lua
+Core\CompletionWatcher.lua
+Core\FontFlags.lua
+Core\HexColor.lua
+Core\PreferenceCatalog.lua
+Core\Preferences.lua
+Core\QuestFiltering.lua
+Core\TrackerContent.lua
+Core\TrackerDisplay.lua
+Core\StatusCommand.lua
+Core\HelpCommand.lua
 Core\Startup.lua
 
 Adapters\AddonMetadata.lua
 Adapters\ChatLogger.lua
+Adapters\SlashCommandRegistry.lua
+Adapters\KeyBindings.lua
+Adapters\NamePrompt.lua
+Adapters\MinimapButton.lua
+Adapters\MediaLibrary.lua
+Adapters\SoundLibrary.lua
+Adapters\SoundPlayer.lua
+Adapters\FontStyler.lua
+Adapters\ColorPicker.lua
+Adapters\ClassColor.lua
+Adapters\PanelControls.lua
+Adapters\ProfileTransfer.lua
+Adapters\QuestLogSource.lua
+Adapters\QuestObjectiveReader.lua
+Adapters\QuestGroupReader.lua
+Adapters\RequirementReader.lua
+Adapters\ReagentReader.lua
+Adapters\AchievementCategoryReader.lua
+Adapters\AchievementPanel.lua
+Adapters\AchievementTracking.lua
+Adapters\SuperTracking.lua
+Adapters\QuestSectionProvider.lua
+Adapters\WorldQuestSectionProvider.lua
+Adapters\BonusObjectiveSectionProvider.lua
+Adapters\AchievementSectionProvider.lua
+Adapters\EventSectionProvider.lua
+Adapters\ScenarioSectionProvider.lua
+Adapters\ProfessionSectionProvider.lua
+Adapters\MonthlyActivitySectionProvider.lua
+Adapters\CollectableSectionProvider.lua
+Adapters\InitiativeTaskSectionProvider.lua
+Adapters\MapNavigator.lua
+Adapters\QuestEntryActions.lua
+Adapters\BonusEntryActions.lua
+Adapters\AchievementEntryActions.lua
+Adapters\EventEntryActions.lua
+Adapters\ScenarioEntryActions.lua
+Adapters\ProfessionEntryActions.lua
+Adapters\MonthlyActivityEntryActions.lua
+Adapters\CollectableEntryActions.lua
+Adapters\InitiativeTaskEntryActions.lua
+Adapters\EntryActionRouter.lua
+Adapters\QuestItemSource.lua
+Adapters\EntryBlockPool.lua
+Adapters\OwnTrackerFrame.lua
+Adapters\TrackerFilterButton.lua
+Adapters\TrackerAchievementButton.lua
+Adapters\HeaderButtonRow.lua
+Adapters\BlizzardTracker.lua
+Adapters\TrackerEvents.lua
+Adapters\ChallengeTimer.lua
+Adapters\InfoPanel.lua
+Adapters\BackgroundPanel.lua
+Adapters\ProfilePanel.lua
+Adapters\OptionsPanel.lua
 
 Bootstrap.lua
