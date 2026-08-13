@@ -18,6 +18,7 @@ $Runtime = @(
     "$AddonName.toc",
     "Bindings.xml",
     "Bootstrap.lua",
+    "Media",
     "Libs",
     "Locales",
     "Core",
