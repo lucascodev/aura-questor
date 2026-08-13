@@ -17,6 +17,7 @@ manual-changelog:
 
 ignore:
   - Ports
+  - Tests
   - build.ps1
   - .editorconfig
   - .luacheckrc

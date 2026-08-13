@@ -4,6 +4,7 @@ max_line_length = false
 exclude_files = {
 	"Libs/",
 	"dist/",
+	"Tests/",
 }
 
 ignore = {
