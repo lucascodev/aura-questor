@@ -112,6 +112,15 @@ vazio; use `>` ou `·`.
 
 ## Como verificar
 
-Após um `/reload`, o arquivo `_retail_/Logs/General.log` deve estar com
-**0 bytes**. Qualquer erro ou taint é registrado ali com a pilha completa, o que
-é mais rápido do que diagnosticar pelo sintoma na tela.
+O arquivo `_retail_/Logs/General.log` acumula tudo que o cliente registra, então
+o tamanho dele não diz nada. O que interessa são as linhas `[E][Lua] Lua Error`
+com data posterior ao último `/reload`:
+
+```sh
+grep -E "^$(date +%-m/%-d) 1[0-9]:" General.log | grep "Lua Error"
+```
+
+Cada erro traz a pilha completa com o caminho do arquivo, o que é mais rápido do
+que diagnosticar pelo sintoma na tela. O caminho também denuncia log velho: se
+ele aponta para um arquivo que não existe mais, o erro é de antes de alguma
+reorganização.
