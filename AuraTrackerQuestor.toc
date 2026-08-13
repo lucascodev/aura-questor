@@ -1,7 +1,7 @@
-## Interface: 120100
+## Interface: 120100, 120007
 ## Title: Aura Tracker Questor
 ## Notes: A standalone objective tracker built on the public quest APIs.
-## Version: 0.64.0
+## Version: 0.65.0
 ## Author: Lucascodev
 ## X-License: MIT
 ## X-Copyright: Copyright (c) 2026 Lucascodev
@@ -13,6 +13,7 @@
 # Ports/ is intentionally absent: it holds type contracts only, consumed by the
 # language server at edit time and stripped from the runtime bundle.
 
+#@no-lib-strip@
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
 Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
@@ -20,7 +21,11 @@ Libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
 Libs\LibSharedMedia-3.0\LibSharedMedia-3.0.lua
 Libs\LibSerialize\LibSerialize.lua
 Libs\LibDeflate\LibDeflate.lua
+#@end-no-lib-strip@
 
+# Rules, in plain Lua. Nothing here knows the game exists. PreferenceKeys,
+# FontFlags, SortModes and SoundChannels are read at file scope by
+# PreferenceCatalog, so they load before it.
 Core\Profiles.lua
 Core\PreferenceKeys.lua
 Core\QuestFilterIds.lua
@@ -42,61 +47,70 @@ Core\StatusCommand.lua
 Core\HelpCommand.lua
 Core\Startup.lua
 
-Adapters\AddonMetadata.lua
-Adapters\ChatLogger.lua
-Adapters\SlashCommandRegistry.lua
-Adapters\KeyBindings.lua
-Adapters\NamePrompt.lua
-Adapters\MinimapButton.lua
-Adapters\MediaLibrary.lua
-Adapters\SoundLibrary.lua
-Adapters\SoundPlayer.lua
-Adapters\FontStyler.lua
-Adapters\ColorPicker.lua
-Adapters\ClassColor.lua
-Adapters\PanelControls.lua
-Adapters\ProfileTransfer.lua
-Adapters\QuestLogSource.lua
-Adapters\QuestObjectiveReader.lua
-Adapters\QuestGroupReader.lua
-Adapters\RequirementReader.lua
-Adapters\ReagentReader.lua
-Adapters\AchievementCategoryReader.lua
-Adapters\AchievementPanel.lua
-Adapters\AchievementTracking.lua
-Adapters\SuperTracking.lua
-Adapters\QuestSectionProvider.lua
-Adapters\WorldQuestSectionProvider.lua
-Adapters\BonusObjectiveSectionProvider.lua
-Adapters\AchievementSectionProvider.lua
-Adapters\EventSectionProvider.lua
-Adapters\ScenarioSectionProvider.lua
-Adapters\ProfessionSectionProvider.lua
-Adapters\CollectableSectionProvider.lua
-Adapters\TrackedListSectionProvider.lua
-Adapters\MapNavigator.lua
-Adapters\QuestEntryActions.lua
-Adapters\BonusEntryActions.lua
-Adapters\AchievementEntryActions.lua
-Adapters\EventEntryActions.lua
-Adapters\ScenarioEntryActions.lua
-Adapters\ProfessionEntryActions.lua
-Adapters\MonthlyActivityEntryActions.lua
-Adapters\CollectableEntryActions.lua
-Adapters\InitiativeTaskEntryActions.lua
-Adapters\EntryActionRouter.lua
-Adapters\QuestItemSource.lua
-Adapters\EntryBlockPool.lua
-Adapters\OwnTrackerFrame.lua
-Adapters\TrackerFilterButton.lua
-Adapters\TrackerAchievementButton.lua
-Adapters\HeaderButtonRow.lua
-Adapters\BlizzardTracker.lua
-Adapters\TrackerEvents.lua
-Adapters\ChallengeTimer.lua
-Adapters\InfoPanel.lua
-Adapters\BackgroundPanel.lua
-Adapters\ProfilePanel.lua
-Adapters\OptionsPanel.lua
+# Reads the game and draws nothing.
+Game\AddonMetadata.lua
+Game\BlizzardTracker.lua
+Game\ClassColor.lua
+Game\SuperTracking.lua
+Game\MapNavigator.lua
+Game\QuestLogSource.lua
+Game\QuestObjectiveReader.lua
+Game\QuestGroupReader.lua
+Game\QuestItemSource.lua
+Game\RequirementReader.lua
+Game\ReagentReader.lua
+Game\AchievementCategoryReader.lua
+Game\AchievementTracking.lua
+Game\AchievementPanel.lua
+
+# Chat, commands, events and shared media.
+System\ChatLogger.lua
+System\SlashCommandRegistry.lua
+System\KeyBindings.lua
+System\MediaLibrary.lua
+System\SoundLibrary.lua
+System\SoundPlayer.lua
+System\ProfileTransfer.lua
+System\TrackerEvents.lua
+System\ChallengeTimer.lua
+
+# One folder per kind of content: what it collects, and what its entries do.
+Modules\Scenario\SectionProvider.lua
+Modules\Scenario\EntryActions.lua
+Modules\Quest\SectionProvider.lua
+Modules\Quest\EntryActions.lua
+Modules\WorldQuest\SectionProvider.lua
+Modules\Event\SectionProvider.lua
+Modules\Event\EntryActions.lua
+Modules\BonusObjective\SectionProvider.lua
+Modules\BonusObjective\EntryActions.lua
+Modules\Achievement\SectionProvider.lua
+Modules\Achievement\EntryActions.lua
+Modules\Profession\SectionProvider.lua
+Modules\Profession\EntryActions.lua
+Modules\Collectable\SectionProvider.lua
+Modules\Collectable\EntryActions.lua
+Modules\MonthlyActivity\EntryActions.lua
+Modules\InitiativeTask\EntryActions.lua
+Modules\TrackedListSectionProvider.lua
+Modules\EntryActionRouter.lua
+
+# Frames.
+UI\FontStyler.lua
+UI\ColorPicker.lua
+UI\NamePrompt.lua
+UI\EntryBlockPool.lua
+UI\OwnTrackerFrame.lua
+UI\HeaderButtonRow.lua
+UI\TrackerFilterButton.lua
+UI\TrackerAchievementButton.lua
+UI\MinimapButton.lua
+
+# Options pages.
+Options\PanelControls.lua
+Options\InfoPanel.lua
+Options\BackgroundPanel.lua
+Options\ProfilePanel.lua
+Options\OptionsPanel.lua
 
 Bootstrap.lua
