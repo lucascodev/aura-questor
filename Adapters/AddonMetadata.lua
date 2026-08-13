@@ -7,7 +7,7 @@ local AddonMetadata = {}
 ---@param field string
 ---@param fallback string
 ---@return string
-local function ReadMetadata(field, fallback)
+local function ReadField(field, fallback)
 	local value = C_AddOns.GetAddOnMetadata(ADDON_NAME, field)
 	if not value or value == "" then
 		return fallback
@@ -15,14 +15,12 @@ local function ReadMetadata(field, fallback)
 	return value
 end
 
----@return string
-function AddonMetadata.GetTitle()
-	return ReadMetadata("Title", ADDON_NAME)
-end
-
----@return string
-function AddonMetadata.GetVersion()
-	return ReadMetadata("Version", "0.0.0")
+---@return AddonInfo
+function AddonMetadata.Read()
+	return {
+		title = ReadField("Title", ADDON_NAME),
+		version = ReadField("Version", "0.0.0"),
+	}
 end
 
 Addon.AddonMetadata = AddonMetadata
