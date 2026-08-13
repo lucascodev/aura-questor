@@ -9,7 +9,7 @@ local KINDS = {
 	{ kind = "decor", trackingType = Enum.ContentTrackingType.Decor },
 }
 
---- SectionProvider for tracked collectables — appearances and decor.
+--- SectionProvider for tracked collectables, appearances and decor.
 ---@class CollectableSectionProvider : SectionProvider
 local CollectableSectionProvider = {}
 CollectableSectionProvider.__index = CollectableSectionProvider

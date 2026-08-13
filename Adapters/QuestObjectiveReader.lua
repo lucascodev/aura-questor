@@ -2,7 +2,7 @@ local _, Addon = ...
 
 --- Reads a quest's objective lines.
 ---
---- Shared by every provider that deals in quests — regular, world and bonus —
+--- Shared by every provider that deals in quests (regular, world and bonus)
 --- so what counts as an objective is decided in exactly one place.
 ---@class QuestObjectiveReader
 local QuestObjectiveReader = {}

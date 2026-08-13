@@ -262,7 +262,7 @@ end
 
 --- Once a quest item button exists, the blocks around it are protected frames,
 --- and combat forbids moving, resizing or hiding those. Waiting is the only
---- legal answer — PLAYER_REGEN_ENABLED brings the refresh straight back.
+--- legal answer, PLAYER_REGEN_ENABLED brings the refresh straight back.
 ---
 --- Nothing is locked until an item button actually exists, so the usual case is
 --- a tracker that keeps updating right through the fight.
@@ -286,7 +286,7 @@ function OwnTrackerFrame:Render(sections)
 	local offset = 0
 
 	-- Numbered in reading order across every section, the way the player scans
-	-- the list — not by the game's internal watch index.
+	-- the list, not by the game's internal watch index.
 	local entryNumber = 0
 
 	for _, section in ipairs(sections) do
@@ -336,7 +336,7 @@ function OwnTrackerFrame:Render(sections)
 end
 
 --- The header strip. Exposed so the composition root can hang buttons on it
---- without this frame having to know what they do — and so they all centre on
+--- without this frame having to know what they do, and so they all centre on
 --- the same line whatever their size.
 ---@return table
 function OwnTrackerFrame:HeaderAnchor()
@@ -413,7 +413,7 @@ function OwnTrackerFrame:SetScale(scale)
 end
 
 --- Back to where a fresh install puts it, for when the frame has been dragged
---- somewhere unreachable — off screen, or under another addon.
+--- somewhere unreachable, off screen, or under another addon.
 function OwnTrackerFrame:ResetPosition()
 	wipe(self.position)
 	self.root:ClearAllPoints()

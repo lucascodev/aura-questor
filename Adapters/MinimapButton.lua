@@ -7,8 +7,8 @@ local RIGHT_HINT = "Clique direito: opções"
 
 --- The minimap button, by way of the broker object behind it.
 ---
---- LibDataBroker publishes a launcher other displays can pick up — Titan, ElvUI
---- data texts — and LibDBIcon is only one consumer of it. Registering the broker
+--- LibDataBroker publishes a launcher other displays can pick up (Titan, ElvUI
+--- data texts) and LibDBIcon is only one consumer of it. Registering the broker
 --- rather than drawing a button means the addon shows up wherever the player
 --- already keeps their launchers.
 ---@class MinimapButton

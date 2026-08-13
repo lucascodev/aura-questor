@@ -6,7 +6,7 @@ local TICK_SECONDS = 1
 ---
 --- The tracker is otherwise event-driven, and a clock has no event: nothing
 --- fires when a second passes. This is the one place that needs a ticker, and it
---- only exists while there is a run to time — a permanent one-second refresh
+--- only exists while there is a run to time, a permanent one-second refresh
 --- would cost the frame budget all day for a number nobody is reading.
 ---@class ChallengeTimer
 ---@field private onTick fun()

@@ -3,7 +3,7 @@ local _, Addon = ...
 local BADGE_SIZE = 30
 local BADGE_GAP = 6
 
---- Event art is drawn smaller than a quest pin — it reads better that way, and
+--- Event art is drawn smaller than a quest pin, it reads better that way, and
 --- it is the size it had before the pins grew. The column stays BADGE_SIZE wide
 --- either way, so a smaller pin is centred in it instead of shifting the text.
 local EVENT_PIN_SIZE = 26
@@ -128,7 +128,7 @@ local BADGE_COLOR = { red = 0.6, green = 0.75, blue = 1 }
 --- Recycles the widgets that draw a single entry.
 ---
 --- Pooling is not an optimisation here. QUEST_LOG_UPDATE fires constantly, and
---- creating frames per refresh would leak widgets for the whole session — WoW
+--- creating frames per refresh would leak widgets for the whole session, WoW
 --- never frees them.
 ---@class EntryBlockPool
 ---@field private parent table
@@ -478,7 +478,7 @@ local function CreateItemButton(block)
 end
 
 --- A secure button's attributes are locked while the player is in combat, and so
---- is hiding it. Leaving it exactly as it was is the only legal move — the same
+--- is hiding it. Leaving it exactly as it was is the only legal move, the same
 --- restriction Blizzard's own tracker lives with.
 ---@param pool EntryBlockPool
 ---@param block table

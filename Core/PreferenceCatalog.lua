@@ -6,7 +6,7 @@ local BACKGROUND_PANEL = "background"
 
 --- Every preference the addon exposes, as data.
 --- Adding an entry here is enough for it to be persisted and to show up in the
---- options panel — no adapter needs to change.
+--- options panel; no adapter needs to change.
 ---@type Preference[]
 local PreferenceCatalog = {
 	{
@@ -253,7 +253,7 @@ local PreferenceCatalog = {
 		default = false,
 		label = "Objetivos bônus da zona inteira",
 		tooltip = "Ligado, lista todos os objetivos bônus da zona. Desligado, só os "
-			.. "da área onde você está — como o rastreador da Blizzard faz.",
+			.. "da área onde você está, como o rastreador da Blizzard faz.",
 	},
 	{
 		key = Keys.SOUND_ENABLED,

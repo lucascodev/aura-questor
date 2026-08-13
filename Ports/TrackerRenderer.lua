@@ -5,7 +5,7 @@
 ---@class TrackerFontStyle
 ---@field path string
 ---@field size number
----@field flags string Font flag string, already resolved — "" means none.
+---@field flags string Font flag string, already resolved; "" means none.
 ---@field hasShadow boolean
 ---@field wrapsLongText boolean Off cuts what does not fit with an ellipsis.
 

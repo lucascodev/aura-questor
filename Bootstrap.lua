@@ -1,5 +1,5 @@
 --- Aura Tracker Questor
---- Copyright (c) 2026 Lucascodev. MIT licensed — see LICENSE.
+--- Copyright (c) 2026 Lucascodev. MIT licensed. See LICENSE.
 
 local ADDON_NAME, Addon = ...
 

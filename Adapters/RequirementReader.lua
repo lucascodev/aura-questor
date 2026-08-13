@@ -2,8 +2,8 @@ local _, Addon = ...
 
 --- Reads a requirement list into objective lines.
 ---
---- Monthly activities and neighbourhood tasks describe progress the same way —
---- a list of { requirementText, completed } — so the translation lives once.
+--- Monthly activities and neighbourhood tasks describe progress the same way,
+--- a list of { requirementText, completed }, so the translation lives once.
 ---@class RequirementReader
 local RequirementReader = {}
 

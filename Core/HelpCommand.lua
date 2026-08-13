@@ -19,7 +19,7 @@ end
 
 function HelpCommand:Run()
 	for _, entry in ipairs(self.commands) do
-		self.logger:Info(("%s — %s"):format(entry.command, entry.description))
+		self.logger:Info(("%s - %s"):format(entry.command, entry.description))
 	end
 end
 

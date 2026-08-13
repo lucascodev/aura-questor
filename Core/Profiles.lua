@@ -14,7 +14,7 @@ local PROFILE_TABLES = {
 
 --- Named sets of settings, with one active per character.
 ---
---- Holds the raw SavedVariables table and nothing else — no game API — so the
+--- Holds the raw SavedVariables table and nothing else, no game API, so the
 --- whole thing is testable outside the client.
 ---@class Profiles
 ---@field private database table
@@ -115,7 +115,7 @@ function Profiles:Select(name)
 end
 
 --- A new profile starts empty, which means every preference falls back to its
---- default — the same state a fresh install has.
+--- default, the same state a fresh install has.
 ---@param name string
 function Profiles:Create(name)
 	if self.database.profiles[name] then

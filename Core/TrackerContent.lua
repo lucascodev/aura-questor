@@ -49,7 +49,7 @@ function TrackerContent:SortEntries(sections)
 end
 
 --- Split into two lists and joined instead of sorted, because table.sort would
---- also shuffle entries that share a state — and "Desativada" promises to keep
+--- also shuffle entries that share a state, and "Desativada" promises to keep
 --- the order they were tracked in.
 ---@private
 ---@param sections TrackerSection[]

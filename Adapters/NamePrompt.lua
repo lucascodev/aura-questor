@@ -45,7 +45,7 @@ function NamePrompt.Ask(question, onAccept)
 end
 
 --- Shows text for the player to copy. The same dialog is reused with its accept
---- handler emptied, since there is nothing to accept — only something to read.
+--- handler emptied, since there is nothing to accept, only something to read.
 ---@param question string
 ---@param text string
 function NamePrompt.Show(question, text)

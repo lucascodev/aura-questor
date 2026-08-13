@@ -6,7 +6,7 @@ local HIDDEN_ALPHA = 0
 --- TrackerVisibility port for the Blizzard objective tracker.
 ---
 --- Alpha and mouse input only. Hide, SetScale and SetPoint are blocked or
---- taint-prone on a frame that owns quest item buttons — that is what broke
+--- taint-prone on a frame that owns quest item buttons, that is what broke
 --- Carrot Objective Tracker on 12.1. At zero alpha the frame still exists and
 --- still updates, so this is reversible with no reload and no side effects.
 ---@class BlizzardTracker : TrackerVisibility
