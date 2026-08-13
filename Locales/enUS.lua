@@ -133,7 +133,6 @@ Addon.RegisterLocale("enUS", {
 	PROFILE_DELETE = "Delete…",
 	PROFILE_EXPORT = "Export",
 	PROFILE_IMPORT = "Import…",
-	PROFILE_DEFAULT_NAME = "Default",
 	PROFILE_IMPORTED_NAME = "Imported",
 	PROFILE_NEW_QUESTION = "Name for the new profile:",
 	PROFILE_COPY_QUESTION = "Copy the current settings to which name?",

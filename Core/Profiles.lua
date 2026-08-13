@@ -1,6 +1,8 @@
 local _, Addon = ...
 
-local DEFAULT_NAME = Addon.L.PROFILE_DEFAULT_NAME
+--- Nome fixo de propósito: é chave de SavedVariables, e traduzi-lo faria o
+--- perfil sumir quando o jogador trocasse o idioma do cliente.
+local DEFAULT_NAME = "Default"
 
 --- Tables a profile owns besides its settings. Named here so migration and
 --- creation cannot drift apart.
