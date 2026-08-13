@@ -1,7 +1,7 @@
 ## Interface: 120100, 120007
 ## Title: Aura Tracker Questor
 ## Notes: A standalone objective tracker built on the public quest APIs.
-## Version: 0.66.0
+## Version: 0.67.0
 ## Author: Lucascodev
 ## X-License: MIT
 ## X-Copyright: Copyright (c) 2026 Lucascodev
@@ -23,29 +23,33 @@ Libs\LibSerialize\LibSerialize.lua
 Libs\LibDeflate\LibDeflate.lua
 #@end-no-lib-strip@
 
-# Rules, in plain Lua. Nothing here knows the game exists. PreferenceKeys,
-# FontFlags, SortModes and SoundChannels are read at file scope by
-# PreferenceCatalog, so they load before it.
-Core\Profiles.lua
-Core\PreferenceKeys.lua
-Core\QuestFilterIds.lua
-Core\QuestFilters.lua
-Core\SortModes.lua
-Core\SectionOrder.lua
-Core\ToggleSet.lua
-Core\SoundChannels.lua
-Core\CompletionWatcher.lua
-Core\FontFlags.lua
+# Rules, in plain Lua. Nothing here knows the game exists.
 Core\HexColor.lua
-Core\PreferenceCatalog.lua
-Core\Preferences.lua
-Core\QuestFiltering.lua
-Core\TrackerContent.lua
-Core\TrackerDisplay.lua
-Core\AchievementCategories.lua
-Core\StatusCommand.lua
-Core\HelpCommand.lua
-Core\Startup.lua
+Core\ToggleSet.lua
+Core\Profiles.lua
+
+# Keys, choice lists and the catalog that reads them at file scope, so the
+# lists load first.
+Core\Preferences\Keys.lua
+Core\Preferences\FontFlags.lua
+Core\Preferences\SortModes.lua
+Core\Preferences\SoundChannels.lua
+Core\Preferences\Catalog.lua
+Core\Preferences\Store.lua
+
+Core\Filtering\FilterIds.lua
+Core\Filtering\Filters.lua
+Core\Filtering\Filtering.lua
+
+Core\Tracker\SectionOrder.lua
+Core\Tracker\Content.lua
+Core\Tracker\Display.lua
+Core\Tracker\CompletionWatcher.lua
+Core\Tracker\AchievementCategories.lua
+
+Core\Commands\Status.lua
+Core\Commands\Help.lua
+Core\Commands\Startup.lua
 
 # Reads the game and draws nothing.
 Game\AddonMetadata.lua
