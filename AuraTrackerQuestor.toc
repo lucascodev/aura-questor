@@ -1,7 +1,7 @@
 ## Interface: 120100
 ## Title: Aura Tracker Questor
 ## Notes: A standalone objective tracker built on the public quest APIs.
-## Version: 0.63.0
+## Version: 0.64.0
 ## Author: Lucascodev
 ## X-License: MIT
 ## X-Copyright: Copyright (c) 2026 Lucascodev
@@ -26,6 +26,8 @@ Core\PreferenceKeys.lua
 Core\QuestFilterIds.lua
 Core\QuestFilters.lua
 Core\SortModes.lua
+Core\SectionOrder.lua
+Core\ToggleSet.lua
 Core\SoundChannels.lua
 Core\CompletionWatcher.lua
 Core\FontFlags.lua
@@ -35,6 +37,7 @@ Core\Preferences.lua
 Core\QuestFiltering.lua
 Core\TrackerContent.lua
 Core\TrackerDisplay.lua
+Core\AchievementCategories.lua
 Core\StatusCommand.lua
 Core\HelpCommand.lua
 Core\Startup.lua
@@ -69,9 +72,8 @@ Adapters\AchievementSectionProvider.lua
 Adapters\EventSectionProvider.lua
 Adapters\ScenarioSectionProvider.lua
 Adapters\ProfessionSectionProvider.lua
-Adapters\MonthlyActivitySectionProvider.lua
 Adapters\CollectableSectionProvider.lua
-Adapters\InitiativeTaskSectionProvider.lua
+Adapters\TrackedListSectionProvider.lua
 Adapters\MapNavigator.lua
 Adapters\QuestEntryActions.lua
 Adapters\BonusEntryActions.lua

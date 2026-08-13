@@ -1,0 +1,11 @@
+---@meta
+
+--- A system that publishes its tracked items as a list of ids plus a lookup by
+--- id, describing progress as a requirements list.
+---@class TrackedListSource
+---@field kind string Entry kind, for styling and actions.
+---@field sectionID string
+---@field title string
+---@field titleField string Which field of the info table carries the name.
+---@field readTracked fun(): { trackedIDs: number[] }?
+---@field readInfo fun(id: number): table?

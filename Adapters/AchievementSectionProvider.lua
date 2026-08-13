@@ -2,7 +2,6 @@ local _, Addon = ...
 
 local ENTRY_KIND = "achievement"
 local TRACKING_TYPE = Enum.ContentTrackingType.Achievement
-local SECTION_ORDER = 50
 
 --- SectionProvider for tracked achievements.
 ---
@@ -118,7 +117,7 @@ function AchievementSectionProvider:Collect()
 		{
 			id = "achievements",
 			title = TRACKER_HEADER_ACHIEVEMENTS,
-			order = SECTION_ORDER,
+			order = Addon.SectionOrder.achievements,
 			entries = entries,
 		},
 	}

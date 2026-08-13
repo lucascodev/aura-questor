@@ -3,7 +3,6 @@ local _, Addon = ...
 local Keys = Addon.PreferenceKeys
 
 local ENTRY_KIND = "bonus"
-local SECTION_ORDER = 40
 
 --- What the game draws inside a bonus objective's pin.
 local STAR_ATLAS = "Bonus-Objective-Star"
@@ -94,7 +93,7 @@ function BonusObjectiveSectionProvider:Collect()
 		{
 			id = "bonus",
 			title = TRACKER_HEADER_BONUS_OBJECTIVES,
-			order = SECTION_ORDER,
+			order = Addon.SectionOrder.bonus,
 			entries = entries,
 		},
 	}

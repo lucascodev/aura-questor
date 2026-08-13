@@ -62,16 +62,9 @@ function TrackerDisplay:IsSectionShown(sectionID)
 	return not self.hiddenSections[sectionID]
 end
 
---- A shown section drops its key rather than storing false, so the saved table
---- only ever holds what differs from the default.
 ---@param sectionID string
 function TrackerDisplay:ToggleSection(sectionID)
-	if self.hiddenSections[sectionID] then
-		self.hiddenSections[sectionID] = nil
-	else
-		self.hiddenSections[sectionID] = true
-	end
-
+	Addon.ToggleSet.Toggle(self.hiddenSections, sectionID)
 	self:Refresh()
 end
 

@@ -7,7 +7,6 @@ local _, Addon = ...
 ---@field private addonInfo AddonInfo
 ---@field private catalog Preference[]
 ---@field private preferences Preferences
----@field private onChanged fun(changedKey: string)
 ---@field private category table?
 ---@field private settings table<string, table>
 ---@field private panels table<string, boolean>
@@ -20,33 +19,23 @@ local VARIABLE_PREFIX = "ATQ_"
 
 --- The pages drawn by hand, under the name a preference points at.
 local CUSTOM_PANELS = {
-	background = function(category, catalog, preferences, onChanged)
-		Addon.BackgroundPanel.Register(category, catalog, preferences, onChanged)
+	background = function(category, catalog, preferences)
+		Addon.BackgroundPanel.Register(category, catalog, preferences)
 	end,
 }
 
 ---@param addonInfo AddonInfo
 ---@param catalog Preference[]
 ---@param preferences Preferences
----@param onChanged fun(changedKey: string)
 ---@param info { label: string, value: string }[] Read-only facts for the about page.
 ---@param choiceProviders table<string, fun(): PreferenceChoice[]> Lists resolved on open.
 ---@param profileCommands table Everything the profile page can do.
 ---@return OptionsPanel
-function OptionsPanel.New(
-	addonInfo,
-	catalog,
-	preferences,
-	onChanged,
-	info,
-	choiceProviders,
-	profileCommands
-)
+function OptionsPanel.New(addonInfo, catalog, preferences, info, choiceProviders, profileCommands)
 	return setmetatable({
 		addonInfo = addonInfo,
 		catalog = catalog,
 		preferences = preferences,
-		onChanged = onChanged,
 		settings = {},
 		panels = {},
 		info = info,
@@ -70,7 +59,7 @@ function OptionsPanel:AddControl(category, preference)
 	)
 
 	setting:SetValueChangedCallback(function()
-		self.onChanged(preference.key)
+		self.preferences:Notify(preference.key)
 	end)
 	self.settings[preference.key] = setting
 
@@ -116,7 +105,7 @@ function OptionsPanel:AddPanel(category, name)
 	end
 
 	self.panels[name] = true
-	CUSTOM_PANELS[name](category, self.catalog, self.preferences, self.onChanged)
+	CUSTOM_PANELS[name](category, self.catalog, self.preferences)
 end
 
 function OptionsPanel:Register()
@@ -146,13 +135,21 @@ function OptionsPanel:Register()
 	self.category = category
 end
 
---- Changing a preference from outside the panel goes through the setting object
---- on purpose: it persists the value, refreshes the control and fires the same
---- callback, so there is one path for a change no matter who triggered it.
+--- The one way to change a preference from outside the panel. A preference the
+--- Settings API drew goes through its setting object, which persists the value,
+--- refreshes the control and announces the change; one drawn by hand has no
+--- control to refresh and goes straight to the store.
 ---@param key string
 ---@param value boolean|number|string
 function OptionsPanel:SelectValue(key, value)
-	self.settings[key]:SetValue(value)
+	local setting = self.settings[key]
+
+	if setting then
+		setting:SetValue(value)
+		return
+	end
+
+	self.preferences:Set(key, value)
 end
 
 function OptionsPanel:Open()

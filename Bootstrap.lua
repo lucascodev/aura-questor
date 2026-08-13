@@ -31,6 +31,34 @@ local IMPORTED_PROFILE_NAME = "Importado"
 local ADDON_AUTHOR = "Lucascodev"
 local ADDON_LICENSE = "MIT"
 
+---@type TrackedListSource
+local MONTHLY_ACTIVITIES = {
+	kind = "monthlyActivity",
+	sectionID = "monthlyActivities",
+	title = TRACKER_HEADER_MONTHLY_ACTIVITIES,
+	titleField = "activityName",
+	readTracked = function()
+		return C_PerksActivities.GetTrackedPerksActivities()
+	end,
+	readInfo = function(id)
+		return C_PerksActivities.GetPerksActivityInfo(id)
+	end,
+}
+
+---@type TrackedListSource
+local INITIATIVE_TASKS = {
+	kind = "initiativeTask",
+	sectionID = "initiativeTasks",
+	title = TRACKER_HEADER_INITIATIVE_TASKS,
+	titleField = "taskName",
+	readTracked = function()
+		return C_NeighborhoodInitiative.GetTrackedInitiativeTasks()
+	end,
+	readInfo = function(id)
+		return C_NeighborhoodInitiative.GetInitiativeTaskInfo(id)
+	end,
+}
+
 ---@type Startup
 local startup
 ---@type TrackerDisplay
@@ -61,8 +89,42 @@ local function Build()
 	)
 	local profile = profiles:Current()
 
-	local preferences = Addon.Preferences.New(Addon.PreferenceCatalog, profile.settings)
+	local sounds = Addon.SoundPlayer.New()
+
+	---@type Preferences
+	local preferences
+
+	local function PlayCompletionSound()
+		if not preferences:Get(Keys.SOUND_ENABLED) then
+			return
+		end
+
+		sounds:Play(
+			preferences:Get(Keys.SOUND_QUEST_COMPLETE),
+			preferences:Get(Keys.SOUND_CHANNEL)
+		)
+	end
+
+	preferences = Addon.Preferences.New(
+		Addon.PreferenceCatalog,
+		profile.settings,
+		function(changedKey)
+			display:Refresh()
+
+			if changedKey == Keys.SOUND_QUEST_COMPLETE then
+				PlayCompletionSound()
+			end
+		end
+	)
+
 	local hiddenCategories = profile.hiddenCategories
+	local categories = Addon.AchievementCategories.New(
+		hiddenCategories,
+		Addon.AchievementCategoryReader.ListTopLevel,
+		function()
+			display:Refresh()
+		end
+	)
 
 	local filtering = Addon.QuestFiltering.New(
 		Addon.QuestLogSource.New(),
@@ -110,9 +172,9 @@ local function Build()
 			Addon.BonusObjectiveSectionProvider.New(preferences),
 			Addon.AchievementSectionProvider.New(hiddenCategories),
 			Addon.ProfessionSectionProvider.New(),
-			Addon.MonthlyActivitySectionProvider.New(),
+			Addon.TrackedListSectionProvider.New(MONTHLY_ACTIVITIES),
 			Addon.CollectableSectionProvider.New(),
-			Addon.InitiativeTaskSectionProvider.New(),
+			Addon.TrackedListSectionProvider.New(INITIATIVE_TASKS),
 		}, Addon.SortModes, preferences),
 		ownTracker,
 		Addon.BlizzardTracker.New(),
@@ -127,19 +189,6 @@ local function Build()
 		},
 		widgets
 	)
-
-	local sounds = Addon.SoundPlayer.New()
-
-	local function PlayCompletionSound()
-		if not preferences:Get(Keys.SOUND_ENABLED) then
-			return
-		end
-
-		sounds:Play(
-			preferences:Get(Keys.SOUND_QUEST_COMPLETE),
-			preferences:Get(Keys.SOUND_CHANNEL)
-		)
-	end
 
 	local completion = Addon.CompletionWatcher.New()
 
@@ -212,13 +261,6 @@ local function Build()
 		addonInfo,
 		Addon.PreferenceCatalog,
 		preferences,
-		function(changedKey)
-			display:Refresh()
-
-			if changedKey == Keys.SOUND_QUEST_COMPLETE then
-				PlayCompletionSound()
-			end
-		end,
 		{
 			{ label = "Versão", value = addonInfo.version },
 			{ label = "Autor", value = ADDON_AUTHOR },
@@ -283,34 +325,16 @@ local function Build()
 			optionsPanel:SelectValue(Keys.EVENTS_ENABLED, not preferences:Get(Keys.EVENTS_ENABLED))
 		end,
 		categories = function()
-			return Addon.AchievementCategoryReader.ListTopLevel()
+			return categories:List()
 		end,
 		isCategoryShown = function(categoryID)
-			return not hiddenCategories[categoryID]
+			return categories:IsShown(categoryID)
 		end,
 		toggleCategory = function(categoryID)
-			-- Shown categories drop their key instead of storing false, so the
-			-- saved table only ever holds what differs from the default.
-			if hiddenCategories[categoryID] then
-				hiddenCategories[categoryID] = nil
-			else
-				hiddenCategories[categoryID] = true
-			end
-
-			display:Refresh()
+			categories:Toggle(categoryID)
 		end,
 		showAllCategories = function(isShown)
-			for categoryID in pairs(hiddenCategories) do
-				hiddenCategories[categoryID] = nil
-			end
-
-			if not isShown then
-				for _, category in ipairs(Addon.AchievementCategoryReader.ListTopLevel()) do
-					hiddenCategories[category.id] = true
-				end
-			end
-
-			display:Refresh()
+			categories:ShowAll(isShown)
 		end,
 	})
 

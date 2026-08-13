@@ -1,7 +1,5 @@
 local _, Addon = ...
 
-local SECTION_ORDER = 80
-
 --- The kinds double as the tracking type, so the actions can untrack an entry
 --- without the generic entry structure having to carry a type field.
 local KINDS = {
@@ -64,7 +62,7 @@ function CollectableSectionProvider:Collect()
 		{
 			id = "collectables",
 			title = ADVENTURE_TRACKING_MODULE_HEADER_TEXT,
-			order = SECTION_ORDER,
+			order = Addon.SectionOrder.collectables,
 			entries = entries,
 		},
 	}

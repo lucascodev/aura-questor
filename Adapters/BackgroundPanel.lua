@@ -34,32 +34,28 @@ end
 
 ---@param preferences Preferences
 ---@param key string
----@param onChanged fun(changedKey: string)
 ---@return table
-local function ColorAccess(preferences, key, onChanged)
+local function ColorAccess(preferences, key)
 	return {
 		get = function()
 			return Addon.HexColor.ToRGB(preferences:Get(key))
 		end,
 		set = function(red, green, blue)
 			preferences:Set(key, Addon.HexColor.FromRGB(red, green, blue))
-			onChanged(key)
 		end,
 	}
 end
 
 ---@param preferences Preferences
 ---@param key string
----@param onChanged fun(changedKey: string)
 ---@return table
-local function ValueAccess(preferences, key, onChanged)
+local function ValueAccess(preferences, key)
 	return {
 		get = function()
 			return preferences:Get(key)
 		end,
 		set = function(value)
 			preferences:Set(key, value)
-			onChanged(key)
 		end,
 	}
 end
@@ -83,7 +79,7 @@ end
 ---@return table
 local function Dropdown(context, key, choices)
 	local preference = Find(context.catalog, key)
-	local access = ValueAccess(context.preferences, key, context.onChanged)
+	local access = ValueAccess(context.preferences, key)
 
 	return Addon.PanelControls.Dropdown(context.frame, {
 		label = preference.label,
@@ -98,7 +94,7 @@ end
 ---@return table
 local function Swatch(context, key)
 	local preference = Find(context.catalog, key)
-	local access = ColorAccess(context.preferences, key, context.onChanged)
+	local access = ColorAccess(context.preferences, key)
 
 	return Addon.PanelControls.ColorSwatch(context.frame, {
 		label = preference.label,
@@ -112,7 +108,7 @@ end
 ---@return table
 local function Checkbox(context, key)
 	local preference = Find(context.catalog, key)
-	local access = ValueAccess(context.preferences, key, context.onChanged)
+	local access = ValueAccess(context.preferences, key)
 
 	return Addon.PanelControls.Checkbox(context.frame, {
 		label = preference.label,
@@ -126,7 +122,7 @@ end
 ---@return table
 local function Slider(context, key)
 	local preference = Find(context.catalog, key)
-	local access = ValueAccess(context.preferences, key, context.onChanged)
+	local access = ValueAccess(context.preferences, key)
 
 	return Addon.PanelControls.Slider(context.frame, {
 		label = preference.label,
@@ -151,8 +147,7 @@ end
 ---@param category table Parent category the page hangs under.
 ---@param catalog Preference[]
 ---@param preferences Preferences
----@param onChanged fun(changedKey: string)
-function BackgroundPanel.Register(category, catalog, preferences, onChanged)
+function BackgroundPanel.Register(category, catalog, preferences)
 	local frame = CreateFrame("Frame")
 	frame.name = PAGE_NAME
 
@@ -167,7 +162,6 @@ function BackgroundPanel.Register(category, catalog, preferences, onChanged)
 		frame = frame,
 		catalog = catalog,
 		preferences = preferences,
-		onChanged = onChanged,
 	}
 
 	local rows = {
