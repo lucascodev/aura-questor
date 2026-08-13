@@ -26,4 +26,4 @@ Blizzard.
 | Eventos do jogo escutados | 26 |
 | Preferências | 32 |
 | Contratos em `Ports/` | 15 |
-| Testes do `Core/`, rodando fora do cliente | 115 |
+| Testes do `Core/`, rodando fora do cliente | 117 |
