@@ -147,6 +147,32 @@ return function(Addon, T)
 			)
 		end)
 
+		T.Test("perfil com o nome antigo traduzido e renomeado sem perder nada", function()
+			local database = {
+				profiles = { ["Padrão"] = { settings = { fontSize = 16 } } },
+				characters = { [OTHER] = "Padrão" },
+			}
+			local profiles = Addon.Profiles.New(database, CHARACTER)
+
+			T.Equals(database.profiles["Padrão"], nil, "o nome antigo deveria sair")
+			T.Equals(profiles:Current().settings.fontSize, 16, "as configuracoes seguem junto")
+			T.Equals(database.characters[OTHER], DEFAULT, "quem apontava para ele acompanha")
+		end)
+
+		T.Test("renomear nao sobrescreve um padrao que ja existe", function()
+			local database = {
+				profiles = {
+					[DEFAULT] = { settings = { fontSize = 1 } },
+					["Padrão"] = { settings = { fontSize = 2 } },
+				},
+				characters = {},
+			}
+			Addon.Profiles.New(database, CHARACTER)
+
+			T.Equals(database.profiles[DEFAULT].settings.fontSize, 1)
+			T.Equals(database.profiles["Padrão"].settings.fontSize, 2, "o outro segue intacto")
+		end)
+
 		T.Test("migracao nao roda de novo sobre um banco ja migrado", function()
 			local database = { fontSize = 16 }
 			Addon.Profiles.New(database, CHARACTER)

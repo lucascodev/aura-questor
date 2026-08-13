@@ -2,7 +2,7 @@
 ## Title: Aura Tracker Questor
 ## Notes: A standalone objective tracker built on the public quest APIs.
 ## Notes-ptBR: Um rastreador de objetivos autônomo, escrito sobre as APIs públicas do jogo.
-## Version: 0.71.0
+## Version: 0.72.0
 ## Author: Lucascodev
 ## X-License: MIT
 ## X-Copyright: Copyright (c) 2026 Lucascodev
