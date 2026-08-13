@@ -39,7 +39,8 @@ local SECTION_SIZE_DELTA = -1
 --- here is protected, so scrolling is a real ScrollFrame, the layout is ours,
 --- and none of the taint workarounds the skinning approach needed apply.
 ---@class OwnTrackerFrame : TrackerRenderer
----@field private position table
+---@field private position FramePosition
+---@field private backdrop TrackerBackdrop
 ---@field private actions EntryActions
 ---@field private header table
 ---@field private collapsedSections table<string, boolean>
@@ -52,32 +53,6 @@ local SECTION_SIZE_DELTA = -1
 local OwnTrackerFrame = {}
 OwnTrackerFrame.__index = OwnTrackerFrame
 
---- Rebuilding a backdrop recreates nine textures, and appearance is applied on
---- every quest update, so two runs that read the same have nothing to redo.
----@param appearance TrackerAppearance
----@return string
-local function BackdropSignature(appearance)
-	return ("%s|%s|%d|%d"):format(
-		appearance.backgroundTexture or "",
-		appearance.borderTexture or "",
-		appearance.borderThickness,
-		appearance.backgroundInset
-	)
-end
-
----@param appearance TrackerAppearance
----@return table
-local function BackdropFrom(appearance)
-	local inset = appearance.backgroundInset
-
-	return {
-		bgFile = appearance.backgroundTexture,
-		edgeFile = appearance.borderTexture,
-		edgeSize = appearance.borderThickness,
-		insets = { left = inset, right = inset, top = inset, bottom = inset },
-	}
-end
-
 ---@param addonInfo AddonInfo
 ---@param position table Persisted across sessions; empty on a fresh install.
 ---@param actions EntryActions
@@ -85,7 +60,6 @@ end
 ---@return OwnTrackerFrame
 function OwnTrackerFrame.New(addonInfo, position, actions, collapsedSections)
 	local view = setmetatable({
-		position = position,
 		actions = actions,
 		collapsedSections = collapsedSections,
 		sectionHeaders = {},
@@ -93,36 +67,14 @@ function OwnTrackerFrame.New(addonInfo, position, actions, collapsedSections)
 		lastSections = {},
 	}, OwnTrackerFrame)
 
-	view:Build(addonInfo)
+	view:Build(addonInfo, position)
 
 	return view
 end
 
 ---@private
-function OwnTrackerFrame:SavePosition()
-	local point, _, relativePoint, x, y = self.root:GetPoint()
-
-	self.position.point = point
-	self.position.relativePoint = relativePoint
-	self.position.x = x
-	self.position.y = y
-end
-
----@private
-function OwnTrackerFrame:RestorePosition()
-	local saved = self.position
-
-	if not saved.point then
-		self.root:SetPoint("RIGHT", UIParent, "RIGHT", -120, 0)
-		return
-	end
-
-	self.root:SetPoint(saved.point, UIParent, saved.relativePoint, saved.x, saved.y)
-end
-
----@private
 ---@param addonInfo AddonInfo
-function OwnTrackerFrame:Build(addonInfo)
+function OwnTrackerFrame:Build(addonInfo, position)
 	-- BackdropTemplate is what puts SetBackdrop on a frame.
 	local root = CreateFrame("Frame", "AuraTrackerQuestorTracker", UIParent, "BackdropTemplate")
 	root:SetSize(INITIAL_WIDTH, INITIAL_HEIGHT)
@@ -132,7 +84,7 @@ function OwnTrackerFrame:Build(addonInfo)
 	root:SetScript("OnDragStart", root.StartMoving)
 	root:SetScript("OnDragStop", function(frame)
 		frame:StopMovingOrSizing()
-		self:SavePosition()
+		self.position:Save()
 	end)
 	root:Hide()
 
@@ -150,7 +102,9 @@ function OwnTrackerFrame:Build(addonInfo)
 	self.editOutline = outline
 
 	self.root = root
-	self:RestorePosition()
+	self.backdrop = Addon.TrackerBackdrop.New(root)
+	self.position = Addon.FramePosition.New(root, position)
+	self.position:Restore()
 
 	-- A real header strip rather than a loose title: everything that belongs to
 	-- the header centres inside it, so buttons of different heights still share
@@ -342,25 +296,7 @@ function OwnTrackerFrame:SetAppearance(appearance)
 	self.root:SetSize(appearance.width, appearance.height)
 	self.content:SetWidth(appearance.width - FRAME_PADDING * 2)
 
-	local signature = BackdropSignature(appearance)
-
-	if signature ~= self.backdropSignature then
-		self.backdropSignature = signature
-		self.root:SetBackdrop(BackdropFrom(appearance))
-	end
-
-	self.root:SetBackdropColor(
-		appearance.backgroundColor.red,
-		appearance.backgroundColor.green,
-		appearance.backgroundColor.blue,
-		appearance.opacity
-	)
-	self.root:SetBackdropBorderColor(
-		appearance.borderColor.red,
-		appearance.borderColor.green,
-		appearance.borderColor.blue,
-		appearance.borderOpacity
-	)
+	self.backdrop:Apply(appearance)
 end
 
 ---@param style TrackerFontStyle
@@ -404,12 +340,8 @@ function OwnTrackerFrame:SetScale(scale)
 	self.root:SetScale(scale)
 end
 
---- Back to where a fresh install puts it, for when the frame has been dragged
---- somewhere unreachable, off screen, or under another addon.
 function OwnTrackerFrame:ResetPosition()
-	wipe(self.position)
-	self.root:ClearAllPoints()
-	self:RestorePosition()
+	self.position:Reset()
 end
 
 ---@param isShown boolean

@@ -1,7 +1,7 @@
 ## Interface: 120100, 120007
 ## Title: Aura Tracker Questor
 ## Notes: A standalone objective tracker built on the public quest APIs.
-## Version: 0.65.0
+## Version: 0.66.0
 ## Author: Lucascodev
 ## X-License: MIT
 ## X-Copyright: Copyright (c) 2026 Lucascodev
@@ -99,7 +99,12 @@ Modules\EntryActionRouter.lua
 UI\FontStyler.lua
 UI\ColorPicker.lua
 UI\NamePrompt.lua
+UI\EntryPinStyles.lua
+UI\EntryText.lua
+UI\EntryTooltip.lua
 UI\EntryBlockPool.lua
+UI\TrackerBackdrop.lua
+UI\FramePosition.lua
 UI\OwnTrackerFrame.lua
 UI\HeaderButtonRow.lua
 UI\TrackerFilterButton.lua

@@ -3,11 +3,6 @@ local _, Addon = ...
 local BADGE_SIZE = 30
 local BADGE_GAP = 6
 
---- Event art is drawn smaller than a quest pin, it reads better that way, and
---- it is the size it had before the pins grew. The column stays BADGE_SIZE wide
---- either way, so a smaller pin is centred in it instead of shifting the text.
-local EVENT_PIN_SIZE = 26
-
 --- A font string centres on its bounding box, descender included, which leaves
 --- the digit looking low inside the pin. One pixel up puts it back.
 local NUMBER_OFFSET_Y = 1
@@ -21,76 +16,6 @@ local BAR_BACKGROUND_COLOR = { red = 0, green = 0, blue = 0, alpha = 0.55 }
 local BAR_FILL_COLOR = { red = 0.16, green = 0.55, blue = 0.28 }
 local BAR_COMPLETE_COLOR = { red = 0.35, green = 0.35, blue = 0.35 }
 
---- Every numbered quest pin comes as the same four-part set, so the family name
---- is enough to build one.
----@param prefix string
----@return table
-local function NumberedPin(prefix)
-	return {
-		normal = prefix,
-		pressed = prefix .. "-Pressed",
-		selected = prefix .. "-SuperTracked",
-		selectedPressed = prefix .. "-Pressed-SuperTracked",
-		showsNumber = true,
-	}
-end
-
---- The same set, for a pin that carries an icon where the number would be.
----@param prefix string
----@return table
-local function IconPin(prefix)
-	local style = NumberedPin(prefix)
-	style.showsNumber = false
-
-	return style
-end
-
---- Blizzard's own pin art, matched to what each kind of objective is. Using the
---- same families the map uses is what makes a campaign quest here look like the
---- campaign quest there.
-local PIN_STYLES = {
-	normal = NumberedPin("UI-QuestPoi-QuestNumber"),
-	campaign = NumberedPin("UI-QuestPoiCampaign-QuestNumber"),
-	legendary = NumberedPin("UI-QuestPoiLegendary-QuestNumber"),
-	recurring = NumberedPin("UI-QuestPoiRecurring-QuestNumber"),
-	important = NumberedPin("UI-QuestPoiImportant-QuestNumber"),
-	meta = NumberedPin("UI-QuestPoiWrapper-QuestNumber"),
-
-	-- Blizzard gives a world quest the same ring as a plain quest, with the type
-	-- icon where the number would be.
-	worldQuest = IconPin("UI-QuestPoi-QuestNumber"),
-
-	bonus = {
-		normal = "worldquest-questmarker-epic",
-		pressed = "worldquest-questmarker-epic-down",
-		selected = "worldquest-questmarker-epic-supertracked",
-		selectedPressed = "worldquest-questmarker-epic-down-supertracked",
-		showsNumber = false,
-	},
-
-	-- No pin at all. A number that cannot be clicked and points at nothing is
-	-- noise, and the column it reserved goes back to the text.
-	none = { isHidden = true, showsNumber = false },
-}
-
--- An event pin is a map pin, and the game draws those with the same marker
--- whenever the event has no icon of its own.
-PIN_STYLES.areaPoi = PIN_STYLES.bonus
-
---- A pin drawn with art the entry supplied. There are no pressed or selected
---- variants of these, so all four states share one texture.
----@param atlas string
----@return table
-local function OwnArtPin(atlas)
-	return {
-		normal = atlas,
-		pressed = atlas,
-		selected = atlas,
-		selectedPressed = atlas,
-		showsNumber = false,
-		size = EVENT_PIN_SIZE,
-	}
-end
 --- Sized to sit on the title's line rather than tower over it, now that it is
 --- inline instead of parked in the corner.
 local ITEM_SIZE = 22
@@ -106,23 +31,6 @@ local LINE_SPACING = 2
 --- the art".
 local FALLBACK_ICON = "Interface\\Icons\\INV_Misc_QuestionMark"
 
-local TITLE_COLOR = { red = 1, green = 0.82, blue = 0 }
-local TITLE_COMPLETE_COLOR = { red = 0.55, green = 0.85, blue = 0.55 }
-
---- The one the arrow is following reads brighter than the rest. The pin already
---- says so, but only if you are looking at the pin.
-local TITLE_TRACKED_COLOR = { red = 1, green = 0.97, blue = 0.88 }
-local OBJECTIVE_COLOR = { red = 0.82, green = 0.82, blue = 0.82 }
-local OBJECTIVE_COMPLETE_COLOR = { red = 0.55, green = 0.55, blue = 0.55 }
-local TIME_COLOR = { red = 0.4, green = 0.7, blue = 1 }
-local GROUP_COLOR = { red = 0.45, green = 0.65, blue = 0.9 }
-
-local COLOR_CHANNEL_MAXIMUM = 255
-local FULL_ALPHA = 1
-
---- Gold for the part already done, so "9/16" reads as progress at a glance
---- instead of as one grey number.
-local PROGRESS_HEX = "ffd100"
 local BADGE_COLOR = { red = 0.6, green = 0.75, blue = 1 }
 
 --- Recycles the widgets that draw a single entry.
@@ -158,79 +66,6 @@ end
 ---@return boolean
 function EntryBlockPool:IsProtected()
 	return self.hasSecureChildren
-end
-
----@param actions EntryActions
----@param entry TrackerEntry
----@param owner table
---- The actions decide what belongs in the menu, so an entry that supports
---- nothing gets no menu at all rather than one full of dead options.
-local function ShowMenu(actions, entry, owner)
-	local items = actions:MenuItems(entry)
-	if #items == 0 then
-		return
-	end
-
-	MenuUtil.CreateContextMenu(owner, function(_, rootDescription)
-		rootDescription:CreateTitle(entry.title)
-
-		for _, item in ipairs(items) do
-			rootDescription:CreateButton(item.label, item.run)
-		end
-	end)
-end
-
---- The tracker shows a line per objective; the tooltip is where the briefing
---- fits. Anchored left so it never covers the tracker it came from.
----@param actions EntryActions
----@param entry TrackerEntry
----@param owner table
-local function ShowEntryTooltip(actions, entry, owner)
-	GameTooltip:SetOwner(owner, "ANCHOR_LEFT")
-
-	-- SetText takes an alpha before the wrap flag, unlike AddLine. Passing the
-	-- flag straight after the colour lands it in the alpha slot and errors.
-	GameTooltip:SetText(
-		entry.title,
-		TITLE_COLOR.red,
-		TITLE_COLOR.green,
-		TITLE_COLOR.blue,
-		FULL_ALPHA,
-		true
-	)
-
-	if entry.groupName then
-		GameTooltip:AddLine(entry.groupName, GROUP_COLOR.red, GROUP_COLOR.green, GROUP_COLOR.blue)
-	end
-
-	local description = actions:Describe(entry)
-
-	if description and description ~= "" then
-		GameTooltip:AddLine(" ")
-		GameTooltip:AddLine(description, 1, 1, 1, true)
-	end
-
-	if #entry.objectives > 0 then
-		GameTooltip:AddLine(" ")
-
-		for _, objective in ipairs(entry.objectives) do
-			local color = objective.isComplete and OBJECTIVE_COMPLETE_COLOR or OBJECTIVE_COLOR
-			GameTooltip:AddLine("- " .. objective.text, color.red, color.green, color.blue, true)
-		end
-	end
-
-	local rewards = actions:Rewards(entry)
-
-	if #rewards > 0 then
-		GameTooltip:AddLine(" ")
-		GameTooltip:AddLine(REWARDS, TITLE_COLOR.red, TITLE_COLOR.green, TITLE_COLOR.blue)
-
-		for _, reward in ipairs(rewards) do
-			GameTooltip:AddLine(reward, 1, 1, 1)
-		end
-	end
-
-	GameTooltip:Show()
 end
 
 ---@param parent table
@@ -316,7 +151,7 @@ local function CreateBlock(parent, actions)
 			return
 		end
 
-		ShowEntryTooltip(actions, block.entry, owner)
+		Addon.EntryTooltip.Show(actions, block.entry, owner)
 	end)
 
 	frame:SetScript("OnLeave", function()
@@ -329,7 +164,7 @@ local function CreateBlock(parent, actions)
 		end
 
 		if mouseButton == "RightButton" then
-			ShowMenu(actions, block.entry, owner)
+			Addon.EntryTooltip.ShowMenu(actions, block.entry, owner)
 			return
 		end
 
@@ -337,80 +172,6 @@ local function CreateBlock(parent, actions)
 	end)
 
 	return block
-end
-
-local MINUTES_PER_HOUR = 60
-
----@param minutes number
----@return string
-local function FormatTimeLeft(minutes)
-	if minutes < MINUTES_PER_HOUR then
-		return ("%d min"):format(minutes)
-	end
-
-	return ("%dh %dmin"):format(math.floor(minutes / MINUTES_PER_HOUR), minutes % MINUTES_PER_HOUR)
-end
-
---- The level reads in the game's own difficulty colour, the same one the quest
---- log uses, so green really means trivial.
----@param entry TrackerEntry
----@return string
-local function FormatTitle(entry)
-	if not entry.level then
-		return entry.title
-	end
-
-	local color = GetQuestDifficultyColor(entry.level)
-
-	return ("|cff%02x%02x%02x[%d]|r %s"):format(
-		math.floor(color.r * COLOR_CHANNEL_MAXIMUM),
-		math.floor(color.g * COLOR_CHANNEL_MAXIMUM),
-		math.floor(color.b * COLOR_CHANNEL_MAXIMUM),
-		entry.level,
-		entry.title
-	)
-end
-
---- Highlights the achieved half of an "x/y" count. Objectives that have not
---- started keep a plain zero: colouring it would suggest progress that is not
---- there.
----@param text string
----@return string
-local function HighlightProgress(text)
-	local current, remainder = text:match("^(%d+)(/%d+.*)$")
-
-	if not current or tonumber(current) == 0 then
-		return text
-	end
-
-	return ("|cff%s%s|r%s"):format(PROGRESS_HEX, current, remainder)
-end
-
---- The group, the objectives and the expiry clock share one column, so they are
---- collected into a single list first and drawn by one loop. Only objectives get
---- the dash: the others are context, not progress.
----@param entry TrackerEntry
----@return { text: string, color: table, percent: number? }[]
-local function CollectRows(entry)
-	local rows = {}
-
-	if entry.groupName then
-		table.insert(rows, { text = entry.groupName, color = GROUP_COLOR })
-	end
-
-	for _, objective in ipairs(entry.objectives) do
-		table.insert(rows, {
-			text = "- " .. HighlightProgress(objective.text),
-			color = objective.isComplete and OBJECTIVE_COMPLETE_COLOR or OBJECTIVE_COLOR,
-			percent = objective.percent,
-		})
-	end
-
-	if entry.timeLeftMinutes and entry.timeLeftMinutes > 0 then
-		table.insert(rows, { text = FormatTimeLeft(entry.timeLeftMinutes), color = TIME_COLOR })
-	end
-
-	return rows
 end
 
 --- Hangs a widget from the top of the block, offset so its middle lines up with
@@ -611,9 +372,7 @@ function EntryBlockPool:Build(entry, width, index)
 	-- An entry that names its own art wins: a world event has a specific icon,
 	-- and replacing it with a generic marker is how five different events end up
 	-- looking like the same thing.
-	local style = entry.pinAtlas and OwnArtPin(entry.pinAtlas)
-		or PIN_STYLES[entry.pinStyle]
-		or PIN_STYLES.normal
+	local style = Addon.EntryPinStyles.For(entry)
 	local hasPin = not style.isHidden
 	local isSuperTracked = entry.isSuperTracked == true
 
@@ -655,11 +414,9 @@ function EntryBlockPool:Build(entry, width, index)
 	local groupWidth = entry.canFindGroup and GROUP_SIZE + GROUP_GAP or 0
 	local tagWidth = entry.tagAtlas and TAG_SIZE + TAG_GAP or 0
 
-	local titleColor = entry.isComplete and TITLE_COMPLETE_COLOR
-		or isSuperTracked and TITLE_TRACKED_COLOR
-		or TITLE_COLOR
+	local titleColor = Addon.EntryText.TitleColor(entry, isSuperTracked)
 	block.title:SetWidth(width - titleLeft - groupWidth - tagWidth)
-	block.title:SetText(FormatTitle(entry))
+	block.title:SetText(Addon.EntryText.Title(entry))
 	block.title:SetTextColor(titleColor.red, titleColor.green, titleColor.blue)
 
 	-- Everything lines up against the title's own line, not against the pin.
@@ -694,7 +451,7 @@ function EntryBlockPool:Build(entry, width, index)
 	end
 
 	local height = titleHeight
-	local rows = CollectRows(entry)
+	local rows = Addon.EntryText.Rows(entry)
 	local rowWidth = width - objectiveLeft
 	local usedLines = 0
 	local usedBars = 0
