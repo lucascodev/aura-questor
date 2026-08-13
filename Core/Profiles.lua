@@ -35,6 +35,35 @@ local function NewProfile()
 	return profile
 end
 
+--- O perfil padrao ja teve o nome traduzido, e um cliente em outro idioma
+--- deixaria de encontra-lo. Renomear preserva as configuracoes; sem isso o
+--- personagem que nunca escolheu um perfil ganharia um vazio.
+local LEGACY_DEFAULT_NAMES = { "Padrão" }
+
+---@private
+function Profiles:RenameLegacyDefault()
+	local profiles = self.database.profiles
+
+	if not profiles or profiles[DEFAULT_NAME] then
+		return
+	end
+
+	for _, legacy in ipairs(LEGACY_DEFAULT_NAMES) do
+		if profiles[legacy] then
+			profiles[DEFAULT_NAME] = profiles[legacy]
+			profiles[legacy] = nil
+
+			for characterKey, name in pairs(self.database.characters or {}) do
+				if name == legacy then
+					self.database.characters[characterKey] = DEFAULT_NAME
+				end
+			end
+
+			return
+		end
+	end
+end
+
 --- Everything used to live loose at the root of the saved table. It is moved
 --- into the first profile rather than discarded: those are settings the player
 --- already made, and losing them to a refactor would be inexcusable.
@@ -43,6 +72,7 @@ function Profiles:Migrate()
 	local database = self.database
 
 	if database.profiles then
+		self:RenameLegacyDefault()
 		return
 	end
 

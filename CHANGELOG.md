@@ -36,7 +36,7 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
 - O nome do perfil padrão era traduzido, e trocar o idioma do cliente fazia o
   perfil sumir junto com todas as configurações. Passou a ser um identificador
-  fixo.
+  fixo, e um perfil salvo com o nome antigo é renomeado na carga.
 
 - Missões mundiais não apareciam quando nenhuma tinha sido rastreada à mão.
 - Clicar no pino de uma entrada já selecionada não soltava a seleção.
