@@ -1,7 +1,7 @@
 # Adicionar um tipo de conteúdo
 
-É a mudança mais comum no projeto, e foi desenhada para caber em uma pasta nova
-mais uma linha. Nada que já funciona é editado.
+É a extensão mais comum do projeto. Requer uma pasta nova e o registro no
+composition root; nenhum código existente é alterado.
 
 ## Os cinco passos
 
@@ -18,9 +18,8 @@ flowchart TD
 
 ## 1. O provider
 
-Implementa uma porta de um método só,
-[`SectionProvider`](../Ports/SectionProvider.lua). O trabalho é ler o jogo e
-devolver a estrutura comum.
+Implementa a porta [`SectionProvider`](../Ports/SectionProvider.lua), que tem um
+método. A responsabilidade é ler a API do jogo e devolver a estrutura comum.
 
 ```lua
 local _, Addon = ...
@@ -70,41 +69,42 @@ end
 Addon.SeuTipoSectionProvider = SeuTipoSectionProvider
 ```
 
-Três coisas que valem seguir:
+Três convenções a seguir:
 
-**O título vem de uma global da Blizzard** quando existir uma
-(`TRACKER_HEADER_QUESTS`, `ADVENTURE_TRACKING_MODULE_HEADER_TEXT`). Chega
-traduzido de graça, em todos os idiomas.
+**Use a global da Blizzard como título** quando existir uma
+(`TRACKER_HEADER_QUESTS`, `ADVENTURE_TRACKING_MODULE_HEADER_TEXT`). Ela já vem
+traduzida em todos os idiomas do cliente.
 
-**`Collect` devolve uma lista**, não uma seção. Uma fonte pode alimentar mais de
-uma: o provider de missões devolve campanha e missões separadas.
+**`Collect` devolve uma lista**, não uma seção. Uma mesma fonte pode alimentar
+mais de uma: o provider de missões devolve campanha e missões em seções
+separadas.
 
-**Seção vazia não precisa de guarda.** O `TrackerContent` descarta as sem
+**Não é preciso tratar seção vazia.** O `TrackerContent` descarta as seções sem
 entradas antes de ordenar.
 
-Se a sua API publica uma lista de ids mais uma consulta por id, e descreve
-progresso como `requirementsList`, não escreva um provider:
-[`TrackedListSectionProvider`](../Modules/TrackedListSectionProvider.lua) já faz
-isso e só precisa de uma tabela de configuração. Atividades Mensais e Tarefas de
-Iniciativa usam o mesmo.
+Se a API expõe uma lista de ids mais uma consulta por id, e descreve progresso
+como `requirementsList`, use
+[`TrackedListSectionProvider`](../Modules/TrackedListSectionProvider.lua) em vez
+de escrever um provider. Ele recebe uma tabela de configuração. Atividades
+Mensais e Tarefas de Iniciativa compartilham essa implementação.
 
 ## 2. A ordem da seção
 
-Uma linha em [`Core/Tracker/SectionOrder.lua`](../Core/Tracker/SectionOrder.lua).
-O `id` da seção é a chave, e a ordem inteira do rastreador se lê ali.
+Uma linha em [`Core/Tracker/SectionOrder.lua`](../Core/Tracker/SectionOrder.lua),
+onde o `id` da seção é a chave. O arquivo concentra a ordem de todas as seções.
 
 ```lua
 seuTipo = 45,
 ```
 
-Há um teste que falha se duas seções empatarem no mesmo número.
+Há um teste que falha se duas seções receberem o mesmo número.
 
 ## 3. As ações
 
-Só se a entrada precisar responder ao clique. A porta é
-[`EntryActions`](../Ports/EntryActions.lua), e os métodos são **opcionais**: o
-roteador verifica capacidade antes de chamar, então implemente apenas o que faz
-sentido.
+Necessário apenas se a entrada responder ao clique. A porta é
+[`EntryActions`](../Ports/EntryActions.lua) e seus métodos são **opcionais**: o
+roteador verifica a presença de cada um antes de chamar, então implemente somente
+os que se aplicam.
 
 | Método | Quando |
 |---|---|
@@ -116,14 +116,14 @@ sentido.
 | `Rewards` | recompensas no tooltip |
 | `FindGroup` | o olho verde de conteúdo em grupo |
 
-Um cenário não abre página nem pode ser desrastreado, então
-[`Modules/Scenario/EntryActions.lua`](../Modules/Scenario/EntryActions.lua) é
-quase vazio de propósito.
+Um cenário não tem página para abrir nem pode ser desrastreado, e por isso
+[`Modules/Scenario/EntryActions.lua`](../Modules/Scenario/EntryActions.lua)
+implementa quase nada.
 
 ## 4. Registrar
 
-Duas linhas no [`Bootstrap.lua`](../Bootstrap.lua), que é o único lugar do
-projeto autorizado a conhecer implementações concretas:
+Duas linhas no [`Bootstrap.lua`](../Bootstrap.lua), único arquivo do projeto que
+conhece implementações concretas:
 
 ```lua
 -- na lista de providers do TrackerContent
@@ -133,28 +133,28 @@ Addon.SeuTipoSectionProvider.New(),
 seuTipo = Addon.SeuTipoEntryActions.New(),
 ```
 
-O `kind` da entrada é o que liga uma à outra. Dois kinds podem dividir o mesmo
-objeto de ações: `quest` e `worldQuest` apontam para a mesma instância, porque
-missão mundial é missão e responde às mesmas chamadas.
+O campo `kind` da entrada é o que associa as duas. Dois kinds podem compartilhar
+o mesmo objeto de ações: `quest` e `worldQuest` apontam para a mesma instância,
+porque uma missão mundial responde às mesmas chamadas de uma missão comum.
 
 ## 5. O `.toc`
 
-Os dois arquivos novos, na seção `Modules`. O `build.ps1` confere nos dois
-sentidos e falha se você esquecer — arquivo listado que não foi empacotado, e
-arquivo empacotado que não está listado.
+Registre os dois arquivos novos na seção `Modules`. O `build.ps1` valida nos dois
+sentidos e falha em caso de omissão: arquivo listado que não foi empacotado, e
+arquivo empacotado que não consta na lista.
 
-## Se precisar de evento novo
+## Eventos adicionais
 
-Se o seu tipo muda por um evento que ainda não é escutado, some à lista de
-[`System/TrackerEvents.lua`](../System/TrackerEvents.lua). Ele já faz o debounce;
-não crie outro frame de eventos.
+Se o tipo novo depende de um evento ainda não registrado, acrescente-o à lista em
+[`System/TrackerEvents.lua`](../System/TrackerEvents.lua). O agrupamento já está
+implementado ali; não crie outro frame de eventos.
 
-## Conferir
+## Verificar
 
 ```sh
 lua Tests/Run.lua
 .\build.ps1
 ```
 
-E em jogo: rastreie algo do tipo novo e confirme que a seção aparece na posição
-que você declarou, com a contagem certa no cabeçalho.
+No cliente, rastreie um item do tipo novo e confirme que a seção aparece na
+posição declarada, com a contagem correta no cabeçalho.
