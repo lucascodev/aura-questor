@@ -1,16 +1,12 @@
 local _, Addon = ...
 
+--- Nenhum botao da familia do rastreador vem sem glifo proprio, entao a moldura
+--- do item de missao e a unica base vazia disponivel. Desenhada no tamanho em
+--- que a arte foi feita: encolhe-la lava o vermelho ate virar bege.
 local BUTTON_SIZE = 24
 
---- A font string centres on its bounding box, descender space included, which
---- leaves the letter sitting low inside the frame. One pixel up puts it back,
---- the same correction the numbered quest pins needed.
-local LABEL_OFFSET_Y = 1
-
---- The red frame the tracker already uses around a quest item, empty of any
---- glyph, which is what lets a letter sit inside it and still look like it
---- belongs beside the filter button.
 local FRAME_ATLAS = "UI-QuestTrackerButton-QuestItem-Frame"
+local PRESSED_ATLAS = "UI-QuestTrackerButton-QuestItem-Frame"
 local HIGHLIGHT_ATLAS = "ui-questtrackerbutton-red-highlight"
 
 local BUTTON_LABEL = "A"
@@ -39,11 +35,14 @@ function TrackerAchievementButton:Attach(row)
 	local button = CreateFrame("Button", nil, row:Frame())
 	button:SetSize(BUTTON_SIZE, BUTTON_SIZE)
 	button:SetNormalAtlas(FRAME_ATLAS)
+	button:SetPushedAtlas(PRESSED_ATLAS)
 	button:SetHighlightAtlas(HIGHLIGHT_ATLAS)
 
-	-- OVERLAY so the letter draws above the frame rather than under it.
-	local label = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-	label:SetPoint("CENTER", button, "CENTER", 0, LABEL_OFFSET_Y)
+	-- OVERLAY so the letter draws above the frame rather than under it. Centred
+	-- on the button's own box, without a nudge: the letter is set in a font whose
+	-- cap height fits the frame, so there is nothing left to correct by hand.
+	local label = button:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+	label:SetPoint("CENTER")
 	label:SetText(BUTTON_LABEL)
 	label:SetTextColor(LABEL_COLOR.red, LABEL_COLOR.green, LABEL_COLOR.blue)
 
