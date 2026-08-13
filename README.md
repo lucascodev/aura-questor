@@ -47,7 +47,7 @@ dentro:
 | Pasta | Responsabilidade |
 |---|---|
 | `Locales/` | textos, `enUS.lua` como padrão e as traduções por cima |
-| `Core/` | regras em Lua puro, agrupadas por assunto: `Preferences/`, `Filtering/`, `Tracker/`, `Commands/`. **Nenhuma API do WoW** |
+| `Core/` | regras em Lua puro: `Preferences/`, `Filtering/`, `Tracker/`, `Commands/`. **Nenhuma API do WoW** |
 | `Ports/` | contratos de tipo, lidos pelo language server e fora do pacote |
 | `Game/` | lê a API do jogo e não desenha nada: `Objectives/`, `Quest/`, `Achievement/` |
 | `Modules/` | uma pasta por tipo de conteúdo: o que ela coleta e o que suas entradas fazem |
@@ -56,39 +56,24 @@ dentro:
 | `System/` | chat, comandos, eventos, som e acervo compartilhado |
 | `Bootstrap.lua` | composition root, o único lugar que conhece as implementações |
 
-Como o `Core/` não importa nada do jogo, ele roda em Lua puro e pode ser testado
-sem abrir o cliente.
-
-Adicionar um tipo de conteúdo novo é criar uma pasta em `Modules/` com o seu
-`SectionProvider` e registrá-la no `Bootstrap.lua`. Nada mais muda.
-
-### Testes
-
 ```sh
-lua Tests/Run.lua
+lua Tests/Run.lua     # 36 testes do Core, sem abrir o jogo
+luacheck .            # análise estática
+.\build.ps1           # gera dist\AuraTrackerQuestor-<versão>.zip
 ```
 
-Cobrem o `Core/`, que é Lua puro. O harness carrega os arquivos na mesma ordem
-do `.toc` e não depende de nada instalado, então roda em qualquer binário Lua e
-no CI. Sai com código 1 se algum teste falhar.
+`Libs/` não está no repositório: o empacotador busca as bibliotecas na origem
+declarada em `.pkgmeta`. Um clone limpo não roda no jogo antes de trazê-las.
 
-### Bibliotecas
+A documentação completa está em **[docs/](docs/)**:
 
-`Libs/` não está no repositório: o empacotador busca cada biblioteca da origem
-declarada em `.pkgmeta` na hora do release. Clonar e apontar direto para
-`Interface\AddOns` não funciona sem elas. Para trabalhar localmente, baixe as
-sete de `.pkgmeta` para `Libs/` uma vez, ou instale o
-[BigWigs packager](https://github.com/BigWigsMods/packager) e rode-o com `-d`.
-
-### Empacotar
-
-```powershell
-.\build.ps1
-```
-
-Gera `dist\AuraTrackerQuestor-<versão>.zip`, pronto para instalar. O script
-confere que todo arquivo listado no `.toc` está no pacote, um arquivo faltando
-só falharia no cliente do jogador, sem pista da causa.
+| | |
+|---|---|
+| [Arquitetura](docs/arquitetura.md) | as camadas e por que elas existem |
+| [Fluxo de execução](docs/fluxo.md) | do evento do jogo até o pixel na tela |
+| [Adicionar conteúdo](docs/adicionar-conteudo.md) | fazer o rastreador mostrar um tipo novo |
+| [Restrições do WoW](docs/restricoes.md) | taint, combate e as armadilhas já pagas |
+| [Desenvolvimento](docs/desenvolvimento.md) | rodar, testar, empacotar, publicar |
 
 ## Licença
 
