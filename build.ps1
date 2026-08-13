@@ -43,9 +43,19 @@ foreach ($item in $Runtime) {
 
 # A file listed in the .toc but absent from the package fails at load time, in
 # the player's client, with no clue why. Cheaper to catch it here.
-$listed = Get-Content $tocPath | Where-Object { $_ -match "\.lua$" }
+$listed = Get-Content $tocPath | Where-Object { $_ -match "\.lua$" } | ForEach-Object { $_.Trim() }
 foreach ($file in $listed) {
     if (-not (Test-Path (Join-Path $Staging $file))) { throw "In .toc but not packaged: $file" }
+}
+
+# And the other way round: a file written but never registered simply never
+# loads, which looks like the feature was never written.
+$listedSet = @{}
+foreach ($file in $listed) { $listedSet[$file] = $true }
+
+foreach ($file in Get-ChildItem $Staging -Recurse -File -Filter *.lua) {
+    $relative = $file.FullName.Substring($Staging.Length + 1)
+    if (-not $listedSet.ContainsKey($relative)) { throw "Packaged but not in .toc: $relative" }
 }
 
 $Archive = Join-Path $Output "$AddonName-$Version.zip"
