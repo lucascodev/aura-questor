@@ -49,7 +49,7 @@ dentro:
 | `Locales/` | textos, `enUS.lua` como padrão e as traduções por cima |
 | `Core/` | regras em Lua puro, agrupadas por assunto: `Preferences/`, `Filtering/`, `Tracker/`, `Commands/`. **Nenhuma API do WoW** |
 | `Ports/` | contratos de tipo, lidos pelo language server e fora do pacote |
-| `Game/` | lê a API do jogo e não desenha nada |
+| `Game/` | lê a API do jogo e não desenha nada: `Objectives/`, `Quest/`, `Achievement/` |
 | `Modules/` | uma pasta por tipo de conteúdo: o que ela coleta e o que suas entradas fazem |
 | `UI/` | frames: `Entry/` desenha uma entrada, `Tracker/` o painel, `Header/` os botões do topo |
 | `Options/` | páginas de opções |
