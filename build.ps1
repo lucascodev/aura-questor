@@ -20,7 +20,11 @@ $Runtime = @(
     "Bootstrap.lua",
     "Libs",
     "Core",
-    "Adapters"
+    "Game",
+    "System",
+    "Modules",
+    "UI",
+    "Options"
 )
 
 $tocPath = Join-Path $Root "$AddonName.toc"

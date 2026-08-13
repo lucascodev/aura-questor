@@ -44,18 +44,22 @@ Dentro do jogo, `/atq` abre as opções e `/atq ajuda` lista os comandos.
 O código segue Clean Architecture, com a regra de dependência apontando para
 dentro:
 
-| Camada | Responsabilidade |
+| Pasta | Responsabilidade |
 |---|---|
-| `Core/` | domínio puro, filtros, ordenação, perfis. **Nenhuma API do WoW** |
+| `Core/` | regras em Lua puro: filtros, ordenação, perfis. **Nenhuma API do WoW** |
 | `Ports/` | contratos de tipo, lidos pelo language server e fora do pacote |
-| `Adapters/` | tudo que fala com o jogo: providers, frames, ações |
+| `Game/` | lê a API do jogo e não desenha nada |
+| `Modules/` | uma pasta por tipo de conteúdo: o que ela coleta e o que suas entradas fazem |
+| `UI/` | frames |
+| `Options/` | páginas de opções |
+| `System/` | chat, comandos, eventos, som e acervo compartilhado |
 | `Bootstrap.lua` | composition root, o único lugar que conhece as implementações |
 
 Como o `Core/` não importa nada do jogo, ele roda em Lua puro e pode ser testado
 sem abrir o cliente.
 
-Adicionar um tipo de conteúdo novo é escrever um `SectionProvider` e registrá-lo
-no `Bootstrap.lua`. Nada mais muda.
+Adicionar um tipo de conteúdo novo é criar uma pasta em `Modules/` com o seu
+`SectionProvider` e registrá-la no `Bootstrap.lua`. Nada mais muda.
 
 ### Empacotar
 
