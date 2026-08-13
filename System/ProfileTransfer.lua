@@ -1,5 +1,4 @@
 local _, Addon = ...
-local L = Addon.L
 
 local DECODE_FAILURE = Addon.L.PROFILE_DECODE_FAILURE
 local DECOMPRESS_FAILURE = Addon.L.PROFILE_DECOMPRESS_FAILURE
