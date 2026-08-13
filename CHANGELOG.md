@@ -34,6 +34,10 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
 ### Corrigido
 
+- O nome do perfil padrão era traduzido, e trocar o idioma do cliente fazia o
+  perfil sumir junto com todas as configurações. Passou a ser um identificador
+  fixo.
+
 - Missões mundiais não apareciam quando nenhuma tinha sido rastreada à mão.
 - Clicar no pino de uma entrada já selecionada não soltava a seleção.
 - Progresso de missões-tarefa não atualizava até a próxima varredura do diário.

@@ -25,12 +25,18 @@ para `World of Warcraft\_retail_\Interface\AddOns\AuraTrackerQuestor`.
 ## Testar
 
 ```sh
-lua Tests/Run.lua
+lua Tests/Run.lua              # todas as suítes
+lua Tests/Run.lua Tracker      # só as de Tests/Core/Tracker/
 ```
 
-36 testes sobre o `Core/`, em Lua puro, sem dependências. O harness carrega
+115 testes sobre o `Core/`, em Lua puro, sem dependências. O harness carrega
 `Locales/` e `Core/` na mesma ordem do `.toc` e simula o vararg que o jogo passa
 para cada arquivo. Retorna código 1 se algum teste falhar.
+
+`Tests/` espelha a estrutura do projeto: cada suíte fica no caminho equivalente
+ao do módulo que exercita. Fakes e construtores compartilhados vivem em
+[`Tests/Support.lua`](../Tests/Support.lua); o carregamento e as asserções, em
+[`Tests/Harness.lua`](../Tests/Harness.lua).
 
 Cobertura: filtros, ordenação, montagem das seções, detecção de conclusão,
 cores, perfis, preferências, categorias de conquista e a consistência entre os

@@ -57,7 +57,7 @@ dentro:
 | `Bootstrap.lua` | composition root, o único lugar que conhece as implementações |
 
 ```sh
-lua Tests/Run.lua     # 36 testes do Core, sem abrir o jogo
+lua Tests/Run.lua     # 115 testes do Core, sem abrir o jogo
 luacheck .            # análise estática
 .\build.ps1           # gera dist\AuraTrackerQuestor-<versão>.zip
 ```
