@@ -1,5 +1,4 @@
 local _, Addon = ...
-local L = Addon.L
 
 local PAGE_NAME = Addon.L.PAGE_PROFILES
 

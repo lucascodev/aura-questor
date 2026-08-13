@@ -8,8 +8,10 @@ exclude_files = {
 }
 
 ignore = {
-	-- Mixins and objects take self without always using it.
+	-- Mixins e objetos recebem self sem sempre usar.
 	"212/self",
+	-- Acoes que satisfazem o contrato sem precisar da entrada.
+	"212/entry",
 }
 
 -- Written by the addon: the saved variables table, the binding strings the
@@ -22,6 +24,8 @@ globals = {
 	"BINDING_NAME_AURATRACKERQUESTOR_OPTIONS",
 	"BINDING_NAME_AURATRACKERQUESTOR_TOGGLE",
 	"SLASH_AURATRACKERQUESTOR1",
+	"SlashCmdList",
+	"StaticPopupDialogs",
 }
 
 -- Read from the game.
@@ -51,8 +55,10 @@ read_globals = {
 	"C_TaskQuest",
 	"C_Timer",
 	"C_TradeSkillUI",
+	"ColorPickerFrame",
 	"Constants",
 	"CreateFrame",
+	"CreateMinimalSliderFormatter",
 	"DEFAULT_CHAT_FRAME",
 	"EVENTS_LABEL",
 	"EncounterJournal",
@@ -60,6 +66,7 @@ read_globals = {
 	"Enum",
 	"EventRegistry",
 	"FILTER",
+	"GameFontHighlight",
 	"GameTooltip",
 	"GetAchievementCategory",
 	"GetAchievementCriteriaInfo",
@@ -68,6 +75,7 @@ read_globals = {
 	"GetCategoryInfo",
 	"GetCategoryList",
 	"GetCoinTextureString",
+	"GetLocale",
 	"GetNumQuestLogChoices",
 	"GetNumQuestLogRewards",
 	"GetQuestDifficultyColor",
@@ -78,6 +86,7 @@ read_globals = {
 	"GetQuestLogRewardInfo",
 	"GetQuestLogRewardMoney",
 	"GetQuestLogSpecialItemInfo",
+	"GetQuestProgressBarPercent",
 	"GetQuestUiMapID",
 	"GetRealmName",
 	"GetTaskInfo",
@@ -91,6 +100,7 @@ read_globals = {
 	"LibStub",
 	"MenuUtil",
 	"MicroButtonTooltipText",
+	"MinimalSliderWithSteppersMixin",
 	"MonthlyActivitiesFrame_OpenFrameToActivity",
 	"OBJECTIVES_SHOW_QUEST_MAP",
 	"OBJECTIVES_STOP_TRACKING",
@@ -98,11 +108,14 @@ read_globals = {
 	"OBJECTIVES_VIEW_IN_QUESTLOG",
 	"OBJECTIVES_VIEW_IN_TRAVELERS_LOG",
 	"ObjectiveTrackerFrame",
+	"PERCENTAGE_STRING",
 	"PROFESSIONS_CRAFTING_FORM_RECRAFTING_HEADER",
 	"PROFESSIONS_TRACKER_HEADER_PROFESSION",
 	"PROFESSIONS_TRACKER_REAGENT_COUNT_FORMAT",
 	"PROFESSIONS_TRACKER_REAGENT_FORMAT",
 	"PROFESSIONS_TRACKER_REAGENT_RANGE_FORMAT",
+	"PlaySound",
+	"PlaySoundFile",
 	"ProfessionsUtil",
 	"QUEST_WATCH_QUEST_READY",
 	"QuestLogDisplayMode",
@@ -111,11 +124,11 @@ read_globals = {
 	"QuestUtil",
 	"QuestUtils_IsQuestWatched",
 	"QuestUtils_IsQuestWorldQuest",
+	"RAID_CLASS_COLORS",
 	"REWARDS",
 	"ReloadUI",
+	"SOUNDKIT",
 	"Settings",
-	"SlashCmdList",
-	"StaticPopupDialogs",
 	"StaticPopup_Show",
 	"TRACKER_HEADER_ACHIEVEMENTS",
 	"TRACKER_HEADER_BONUS_OBJECTIVES",
@@ -128,7 +141,9 @@ read_globals = {
 	"TRACKER_HEADER_WORLD_QUESTS",
 	"ToggleCollectionsJournal",
 	"UIParent",
+	"UnitClass",
 	"UnitName",
+	"WHITE_FONT_COLOR",
 	"strtrim",
 	"time",
 	"wipe",

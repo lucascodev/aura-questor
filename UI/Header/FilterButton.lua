@@ -1,5 +1,4 @@
 local _, Addon = ...
-local L = Addon.L
 
 local BUTTON_WIDTH = 18
 local BUTTON_HEIGHT = 19

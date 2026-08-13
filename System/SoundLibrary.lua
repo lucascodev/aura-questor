@@ -1,5 +1,4 @@
 local _, Addon = ...
-local L = Addon.L
 
 local SOUND_MEDIA = "sound"
 local NONE_ID = "none"
