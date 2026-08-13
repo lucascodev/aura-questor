@@ -1,8 +1,9 @@
 local _, Addon = ...
+local L = Addon.L
 
 local Keys = Addon.PreferenceKeys
 
-local PAGE_NAME = "Fundo e borda"
+local PAGE_NAME = Addon.L.PAGE_BACKGROUND
 
 local PADDING = 20
 local TITLE_GAP = 56
@@ -70,7 +71,7 @@ local function Find(catalog, key)
 		end
 	end
 
-	error(("Preferência desconhecida: %s"):format(key))
+	error((Addon.L.PREF_UNKNOWN):format(key))
 end
 
 ---@param context table

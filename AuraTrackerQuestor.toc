@@ -1,7 +1,8 @@
 ## Interface: 120100, 120007
 ## Title: Aura Tracker Questor
 ## Notes: A standalone objective tracker built on the public quest APIs.
-## Version: 0.67.0
+## Notes-ptBR: Um rastreador de objetivos autônomo, escrito sobre as APIs públicas do jogo.
+## Version: 0.68.0
 ## Author: Lucascodev
 ## X-License: MIT
 ## X-Copyright: Copyright (c) 2026 Lucascodev
@@ -22,6 +23,12 @@ Libs\LibSharedMedia-3.0\LibSharedMedia-3.0.lua
 Libs\LibSerialize\LibSerialize.lua
 Libs\LibDeflate\LibDeflate.lua
 #@end-no-lib-strip@
+
+# Text, before anything reads it at file scope. enUS is the floor; the player's
+# locale is written over it.
+Locales\Locale.lua
+Locales\enUS.lua
+Locales\ptBR.lua
 
 # Rules, in plain Lua. Nothing here knows the game exists.
 Core\HexColor.lua

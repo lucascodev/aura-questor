@@ -1,16 +1,17 @@
 local _, Addon = ...
+local L = Addon.L
 
 local BUTTON_WIDTH = 18
 local BUTTON_HEIGHT = 19
 
-local GROUPS_LABEL = "Por agrupamento"
-local SORTING_LABEL = "Ordenação"
-local CATEGORIES_LABEL = "Categorias"
-local SECTIONS_LABEL = "Seções visíveis"
-local UNTRACK_ALL_LABEL = "Parar de rastrear tudo"
-local TRACK_EVENTS_LABEL = "Rastrear eventos"
-local SHOW_ALL_LABEL = "Marcar todas"
-local HIDE_ALL_LABEL = "Desmarcar todas"
+local GROUPS_LABEL = Addon.L.MENU_GROUPS
+local SORTING_LABEL = Addon.L.MENU_SORTING
+local CATEGORIES_LABEL = Addon.L.MENU_CATEGORIES
+local SECTIONS_LABEL = Addon.L.MENU_SECTIONS
+local UNTRACK_ALL_LABEL = Addon.L.MENU_UNTRACK_ALL
+local TRACK_EVENTS_LABEL = Addon.L.MENU_TRACK_EVENTS
+local SHOW_ALL_LABEL = Addon.L.MENU_CHECK_ALL
+local HIDE_ALL_LABEL = Addon.L.MENU_UNCHECK_ALL
 
 --- The filter menu on the tracker header.
 ---

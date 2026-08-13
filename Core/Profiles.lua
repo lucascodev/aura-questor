@@ -1,6 +1,6 @@
 local _, Addon = ...
 
-local DEFAULT_NAME = "Padrão"
+local DEFAULT_NAME = Addon.L.PROFILE_DEFAULT_NAME
 
 --- Tables a profile owns besides its settings. Named here so migration and
 --- creation cannot drift apart.

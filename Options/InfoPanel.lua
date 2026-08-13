@@ -1,7 +1,8 @@
 local _, Addon = ...
+local L = Addon.L
 
-local PAGE_NAME = "Informações"
-local SUBTITLE = "Rastreador de objetivos próprio, construído sobre as APIs públicas do jogo."
+local PAGE_NAME = Addon.L.PAGE_INFO
+local SUBTITLE = Addon.L.INFO_SUBTITLE
 
 --- Measured from the top of the page. The title is set in the huge font, which
 --- is far taller than it looks in a constant, the first spacing here left the

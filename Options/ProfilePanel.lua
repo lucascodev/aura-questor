@@ -1,6 +1,7 @@
 local _, Addon = ...
+local L = Addon.L
 
-local PAGE_NAME = "Perfis"
+local PAGE_NAME = Addon.L.PAGE_PROFILES
 
 local PADDING = 20
 local TITLE_GAP = 56
@@ -14,12 +15,12 @@ local ACCENT_WIDTH = 60
 local RULE_COLOR = { red = 0.26, green = 0.24, blue = 0.20, alpha = 0.9 }
 local ACCENT_COLOR = { red = 0.95, green = 0.72, blue = 0.25, alpha = 1 }
 
-local ACTIVE_LABEL = "Perfil em uso"
-local NEW_LABEL = "Novo perfil…"
-local COPY_LABEL = "Copiar este para…"
-local DELETE_LABEL = "Apagar…"
-local EXPORT_LABEL = "Exportar"
-local IMPORT_LABEL = "Importar…"
+local ACTIVE_LABEL = Addon.L.PROFILE_ACTIVE
+local NEW_LABEL = Addon.L.PROFILE_NEW
+local COPY_LABEL = Addon.L.PROFILE_COPY
+local DELETE_LABEL = Addon.L.PROFILE_DELETE
+local EXPORT_LABEL = Addon.L.PROFILE_EXPORT
+local IMPORT_LABEL = Addon.L.PROFILE_IMPORT
 
 --- The profile page.
 ---@class ProfilePanel

@@ -376,4 +376,59 @@ Suite("Profiles", function()
 	end)
 end)
 
+Suite("Locales", function()
+	---@param path string
+	---@return table<string, string>
+	local function Entries(path)
+		local captured
+		local chunk = assert(loadfile(path))
+
+		chunk("AuraTrackerQuestor", {
+			RegisterLocale = function(_, entries)
+				captured = entries
+			end,
+		})
+
+		return captured
+	end
+
+	local english = Entries("Locales/enUS.lua")
+	local portuguese = Entries("Locales/ptBR.lua")
+
+	Test("ptBR nao inventa chave que o enUS nao tem", function()
+		for key in pairs(portuguese) do
+			IsTrue(english[key] ~= nil, key .. " so existe em ptBR")
+		end
+	end)
+
+	Test("enUS cobre tudo que o ptBR traduz", function()
+		for key in pairs(english) do
+			IsTrue(portuguese[key] ~= nil, key .. " nao foi traduzido")
+		end
+	end)
+
+	Test("marcadores de formato batem entre os dois", function()
+		for key, text in pairs(english) do
+			local _, expected = text:gsub("%%[%ds]", "")
+			local _, actual = portuguese[key]:gsub("%%[%ds]", "")
+			Equals(actual, expected, key .. " tem contagem de %s diferente")
+		end
+	end)
+
+	Test("nenhuma chave usada no codigo esta faltando", function()
+		for _, path in ipairs(Harness.RuntimeFiles()) do
+			local source = io.open(path, "r")
+
+			if source then
+				local text = source:read("*a")
+				source:close()
+
+				for key in text:gmatch("L%.([A-Z_]+)") do
+					IsTrue(english[key] ~= nil, ("%s le L.%s, que nao existe no enUS"):format(path, key))
+				end
+			end
+		end
+	end)
+end)
+
 os.exit(Harness.Report())

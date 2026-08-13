@@ -1,4 +1,5 @@
 local _, Addon = ...
+local L = Addon.L
 
 --- How the entries inside a section may be ordered.
 ---
@@ -15,25 +16,25 @@ local _, Addon = ...
 local SortModes = {
 	{
 		id = "none",
-		label = "Desativada",
+		label = L.SORT_NONE,
 	},
 	{
 		id = "level",
-		label = "Por nível",
+		label = L.SORT_LEVEL,
 		compare = function(left, right)
 			return (left.level or 0) < (right.level or 0)
 		end,
 	},
 	{
 		id = "group",
-		label = "Por agrupamento",
+		label = L.SORT_GROUP,
 		compare = function(left, right)
 			return (left.groupName or "") < (right.groupName or "")
 		end,
 	},
 	{
 		id = "title",
-		label = "Por título",
+		label = L.SORT_TITLE,
 		compare = function(left, right)
 			return left.title < right.title
 		end,

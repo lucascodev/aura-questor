@@ -19,6 +19,7 @@ $Runtime = @(
     "Bindings.xml",
     "Bootstrap.lua",
     "Libs",
+    "Locales",
     "Core",
     "Game",
     "System",

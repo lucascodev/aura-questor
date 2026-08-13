@@ -89,7 +89,7 @@ function QuestFiltering:Rewrite(decide)
 	end
 
 	if refusedCount > 0 then
-		self.logger:Warn(("%d missões ficaram de fora: o jogo limita quantas dá para rastrear.")
+		self.logger:Warn((Addon.L.FILTER_WATCH_CAP)
 			:format(refusedCount))
 	end
 end
@@ -103,7 +103,7 @@ function QuestFiltering:Apply(filterID)
 		end
 	end
 
-	self.logger:Warn(("Filtro desconhecido: %s."):format(tostring(filterID)))
+	self.logger:Warn((Addon.L.FILTER_UNKNOWN):format(tostring(filterID)))
 end
 
 ---@param groupName string

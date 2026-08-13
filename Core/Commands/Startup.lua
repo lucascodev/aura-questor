@@ -28,7 +28,7 @@ function Startup:Run()
 		return
 	end
 
-	self.logger:Info(("%s v%s carregado. Digite /atq para as opções."):format(
+	self.logger:Info((Addon.L.STARTUP_LOADED):format(
 		self.addonInfo.title,
 		self.addonInfo.version
 	))

@@ -3,9 +3,9 @@ local _, Addon = ...
 --- Names the game reads out of the global namespace to build its key binding
 --- screen. There is no other way in: the binding system predates anything
 --- scoped, so the header, the labels and the actions all have to be globals.
-BINDING_HEADER_AURATRACKERQUESTOR = "Aura Tracker Questor"
-BINDING_NAME_AURATRACKERQUESTOR_TOGGLE = "Mostrar / esconder o rastreador"
-BINDING_NAME_AURATRACKERQUESTOR_OPTIONS = "Abrir as opções"
+BINDING_HEADER_AURATRACKERQUESTOR = Addon.L.BINDING_HEADER
+BINDING_NAME_AURATRACKERQUESTOR_TOGGLE = Addon.L.BINDING_TOGGLE
+BINDING_NAME_AURATRACKERQUESTOR_OPTIONS = Addon.L.BINDING_OPTIONS
 
 --- Bridges the game's key bindings to the addon.
 ---

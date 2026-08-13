@@ -19,11 +19,13 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 - Contorno e sombra da fonte; opção de cortar textos longos com reticências em
   vez de quebrar linha.
 - Integração com CI e empacotamento pelo BigWigs packager.
+- Localização: `Locales/` com `enUS.lua` como padrão e `ptBR.lua` por cima. Uma
+  chave sem tradução cai no inglês em vez de sumir.
 
 ### Alterado
 
 - Estrutura de pastas: `Adapters/` deu lugar a `Game/`, `Modules/`, `UI/`,
-  `Options/` e `System/`.
+  `Options/` e `System/`, e o `Core/` foi agrupado por assunto.
 - Bibliotecas passam a ser baixadas pelo empacotador em vez de commitadas.
 - Missões mundiais são listadas por zona, com o ícone de tipo dentro do pino.
 - Missão concluída mostra onde entregar em vez do contador cheio, e desce para o

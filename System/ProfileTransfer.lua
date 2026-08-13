@@ -1,8 +1,9 @@
 local _, Addon = ...
+local L = Addon.L
 
-local DECODE_FAILURE = "Texto inválido: não parece um perfil exportado."
-local DECOMPRESS_FAILURE = "Texto corrompido: não foi possível descompactar."
-local SHAPE_FAILURE = "O conteúdo não é um perfil."
+local DECODE_FAILURE = Addon.L.PROFILE_DECODE_FAILURE
+local DECOMPRESS_FAILURE = Addon.L.PROFILE_DECOMPRESS_FAILURE
+local SHAPE_FAILURE = Addon.L.PROFILE_SHAPE_FAILURE
 
 --- Turns a profile into text and back.
 ---
