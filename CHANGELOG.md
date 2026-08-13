@@ -5,8 +5,13 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
 ## [Não publicado]
 
+## [0.74.0] - 2026-08-13
+
 ### Adicionado
 
+- Logo próprio, usado na lista de addons do jogo, no botão do minimapa e no
+  cabeçalho do rastreador.
+- Publicação no Wago Addons junto com o CurseForge, pelo mesmo empacotador.
 - Aba **Som**: aviso ao concluir uma missão, com escolha do som e do canal de
   áudio. Os sons vêm do próprio jogo e do acervo compartilhado.
 - Barra de progresso para objetivos que reportam porcentagem, com textura
@@ -24,6 +29,8 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
 ### Alterado
 
+- Cabeçalho do rastreador: o logo vem antes do nome, e uma régua o separa da
+  lista, no mesmo desenho que divide as seções.
 - Estrutura de pastas: `Adapters/` deu lugar a `Game/`, `Modules/`, `UI/`,
   `Options/` e `System/`, e o `Core/` foi agrupado por assunto.
 - Bibliotecas passam a ser baixadas pelo empacotador em vez de commitadas.
