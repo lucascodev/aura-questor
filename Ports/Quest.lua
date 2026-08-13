@@ -1,0 +1,13 @@
+---@meta
+
+--- A quest reduced to what the filters actually need to decide.
+--- Crosses the boundary as plain data, never as a Blizzard quest info table.
+---@class Quest
+---@field questID number
+---@field title string
+---@field isCampaign boolean
+---@field isRecurring boolean Daily or weekly.
+---@field isComplete boolean Every objective done, turn-in pending.
+---@field isOnCurrentMap boolean
+---@field isInstance boolean Dungeon, raid or delve content.
+---@field groupName? string The quest log heading it sits under.
