@@ -27,6 +27,16 @@ local SECTION_LINE_THICKNESS = 1
 local SECTION_LINE_GAP = 4
 local SECTION_HEADER_HEIGHT = 18
 
+--- O mesmo desenho do icone do addon, na altura da linha do titulo.
+local LOGO_TEXTURE = [[Interface\AddOns\AuraTrackerQuestor\Media\Logo]]
+local LOGO_SIZE = 18
+local LOGO_GAP = 6
+
+--- A regua sob o cabecalho repete a das secoes, com o segmento claro na cabeca,
+--- para o painel inteiro ter um so vocabulario visual.
+local HEADER_RULE_GAP = 3
+local HEADER_ACCENT_WIDTH = 34
+
 local EXPANDED_MARK = "-"
 local COLLAPSED_MARK = "+"
 
@@ -115,14 +125,40 @@ function OwnTrackerFrame:Build(addonInfo, position)
 	header:SetHeight(HEADER_HEIGHT)
 	self.header = header
 
+	local logo = header:CreateTexture(nil, "ARTWORK")
+	logo:SetSize(LOGO_SIZE, LOGO_SIZE)
+	logo:SetPoint("LEFT")
+	logo:SetTexture(LOGO_TEXTURE)
+
 	local title = header:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-	title:SetPoint("LEFT")
+	title:SetPoint("LEFT", logo, "RIGHT", LOGO_GAP, 0)
 	title:SetText(addonInfo.title)
 	self.titleText = title
 	title:SetTextColor(HEADER_COLOR.red, HEADER_COLOR.green, HEADER_COLOR.blue)
 
+	local rule = root:CreateTexture(nil, "ARTWORK")
+	rule:SetColorTexture(
+		SECTION_LINE_COLOR.red,
+		SECTION_LINE_COLOR.green,
+		SECTION_LINE_COLOR.blue,
+		SECTION_LINE_COLOR.alpha
+	)
+	rule:SetHeight(SECTION_LINE_THICKNESS)
+	rule:SetPoint("TOPLEFT", header, "BOTTOMLEFT", 0, -HEADER_RULE_GAP)
+	rule:SetPoint("TOPRIGHT", header, "BOTTOMRIGHT", 0, -HEADER_RULE_GAP)
+
+	local accent = root:CreateTexture(nil, "OVERLAY")
+	accent:SetColorTexture(
+		SECTION_ACCENT_COLOR.red,
+		SECTION_ACCENT_COLOR.green,
+		SECTION_ACCENT_COLOR.blue,
+		SECTION_ACCENT_COLOR.alpha
+	)
+	accent:SetSize(HEADER_ACCENT_WIDTH, SECTION_LINE_THICKNESS)
+	accent:SetPoint("TOPLEFT", rule, "TOPLEFT")
+
 	local scroll = CreateFrame("ScrollFrame", nil, root)
-	scroll:SetPoint("TOPLEFT", header, "BOTTOMLEFT", 0, -FRAME_PADDING)
+	scroll:SetPoint("TOPLEFT", rule, "BOTTOMLEFT", 0, -FRAME_PADDING)
 	scroll:SetPoint("BOTTOMRIGHT", root, "BOTTOMRIGHT", -FRAME_PADDING, FRAME_PADDING)
 
 	local content = CreateFrame("Frame", nil, scroll)
