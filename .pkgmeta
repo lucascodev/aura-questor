@@ -19,6 +19,7 @@ ignore:
   - Ports
   - Tests
   - docs
+  - Media/source
   - build.ps1
   - .editorconfig
   - .luacheckrc
