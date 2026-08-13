@@ -47,7 +47,7 @@ Se o comando imprimir algum caminho, a regra foi violada.
 pode ser verificado abrindo o cliente e inspecionando o resultado manualmente.
 Código desacoplado roda em qualquer interpretador Lua.
 
-As ~1.400 linhas do `Core/` são cobertas por [36 testes](../Tests/Run.lua) que
+As ~1.400 linhas do `Core/` são cobertas por [117 testes](../Tests/Run.lua) que
 rodam sem o cliente, em milissegundos, no CI.
 
 ## As pastas

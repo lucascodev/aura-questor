@@ -29,7 +29,7 @@ lua Tests/Run.lua              # todas as suítes
 lua Tests/Run.lua Tracker      # só as de Tests/Core/Tracker/
 ```
 
-115 testes sobre o `Core/`, em Lua puro, sem dependências. O harness carrega
+117 testes sobre o `Core/`, em Lua puro, sem dependências. O harness carrega
 `Locales/` e `Core/` na mesma ordem do `.toc` e simula o vararg que o jogo passa
 para cada arquivo. Retorna código 1 se algum teste falhar.
 
@@ -76,7 +76,7 @@ anotações de tipo, os outros dois não são carregados pelo jogo.
 ## Publicar
 
 ```sh
-git tag v0.70.0
+git tag v0.72.0
 git push --tags
 ```
 
