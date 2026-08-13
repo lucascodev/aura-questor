@@ -6,6 +6,7 @@
 ## Author: Lucascodev
 ## X-License: MIT
 ## X-Curse-Project-ID: 1651416
+## X-Wago-ID: qGYZ1vNg
 ## X-Copyright: Copyright (c) 2026 Lucascodev
 ## IconTexture: Interface\AddOns\AuraTrackerQuestor\Media\Logo
 ## SavedVariables: AuraTrackerQuestorDB

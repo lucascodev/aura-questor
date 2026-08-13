@@ -82,15 +82,23 @@ git push --tags
 
 A tag dispara [`release.yml`](../.github/workflows/release.yml), que roda o
 BigWigs packager: busca as bibliotecas, aplica o `.pkgmeta`, monta o zip e
-publica no GitHub Releases e no CurseForge.
+publica no GitHub Releases, no CurseForge e no Wago Addons.
 
-Antes da primeira tag:
+Cada vitrine precisa de duas coisas, um identificador no `.toc` e um token nos
+secrets do repositório:
 
-1. criar o projeto no CurseForge
-2. guardar `CF_API_KEY` nos secrets do repositório
-3. adicionar `## X-Curse-Project-ID` ao `.toc`
+| Vitrine | `.toc` | Secret |
+| --- | --- | --- |
+| CurseForge | `## X-Curse-Project-ID` | `CF_API_KEY` |
+| Wago Addons | `## X-Wago-ID` | `WAGO_API_TOKEN` |
 
-Sem esses três passos o workflow falha no upload.
+Faltando qualquer um dos dois, o packager pula aquela vitrine e segue: o
+release não falha, e o zip continua sendo publicado no GitHub. É o que permite
+adicionar uma vitrine nova sem parar de lançar enquanto ela não está pronta.
+
+O Wago também oferece importar os GitHub Releases sozinho, em Settings. Fica
+desligado de propósito: com o packager publicando, as duas rotas criariam a
+mesma versão duas vezes.
 
 ## Convenções
 
