@@ -61,6 +61,16 @@ sem abrir o cliente.
 Adicionar um tipo de conteúdo novo é criar uma pasta em `Modules/` com o seu
 `SectionProvider` e registrá-la no `Bootstrap.lua`. Nada mais muda.
 
+### Testes
+
+```sh
+lua Tests/Run.lua
+```
+
+Cobrem o `Core/`, que é Lua puro. O harness carrega os arquivos na mesma ordem
+do `.toc` e não depende de nada instalado, então roda em qualquer binário Lua e
+no CI. Sai com código 1 se algum teste falhar.
+
 ### Bibliotecas
 
 `Libs/` não está no repositório: o empacotador busca cada biblioteca da origem
