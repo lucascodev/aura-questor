@@ -51,7 +51,7 @@ dentro:
 | `Ports/` | contratos de tipo, lidos pelo language server e fora do pacote |
 | `Game/` | lê a API do jogo e não desenha nada |
 | `Modules/` | uma pasta por tipo de conteúdo: o que ela coleta e o que suas entradas fazem |
-| `UI/` | frames |
+| `UI/` | frames: `Entry/` desenha uma entrada, `Tracker/` o painel, `Header/` os botões do topo |
 | `Options/` | páginas de opções |
 | `System/` | chat, comandos, eventos, som e acervo compartilhado |
 | `Bootstrap.lua` | composition root, o único lugar que conhece as implementações |

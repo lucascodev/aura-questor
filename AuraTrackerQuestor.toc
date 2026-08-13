@@ -2,7 +2,7 @@
 ## Title: Aura Tracker Questor
 ## Notes: A standalone objective tracker built on the public quest APIs.
 ## Notes-ptBR: Um rastreador de objetivos autônomo, escrito sobre as APIs públicas do jogo.
-## Version: 0.68.0
+## Version: 0.69.0
 ## Author: Lucascodev
 ## X-License: MIT
 ## X-Copyright: Copyright (c) 2026 Lucascodev
@@ -106,21 +106,24 @@ Modules\InitiativeTask\EntryActions.lua
 Modules\TrackedListSectionProvider.lua
 Modules\EntryActionRouter.lua
 
-# Frames.
+# Frames. Shared pieces first, then the tracker and what hangs off it.
 UI\FontStyler.lua
 UI\ColorPicker.lua
 UI\NamePrompt.lua
-UI\EntryPinStyles.lua
-UI\EntryText.lua
-UI\EntryTooltip.lua
-UI\EntryBlockPool.lua
-UI\TrackerBackdrop.lua
-UI\FramePosition.lua
-UI\OwnTrackerFrame.lua
-UI\HeaderButtonRow.lua
-UI\TrackerFilterButton.lua
-UI\TrackerAchievementButton.lua
 UI\MinimapButton.lua
+
+UI\Entry\PinStyles.lua
+UI\Entry\Text.lua
+UI\Entry\Tooltip.lua
+UI\Entry\BlockPool.lua
+
+UI\Tracker\Backdrop.lua
+UI\Tracker\Position.lua
+UI\Tracker\OwnTrackerFrame.lua
+
+UI\Header\ButtonRow.lua
+UI\Header\FilterButton.lua
+UI\Header\AchievementButton.lua
 
 # Options pages.
 Options\PanelControls.lua
