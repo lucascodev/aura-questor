@@ -1,22 +1,37 @@
 local _, Addon = ...
 
---- Announces that the addon finished loading.
+local Keys = Addon.PreferenceKeys
+
+--- Announces that the addon finished loading, when the player wants it.
 --- Depends on the Logger port, never on the chat frame itself.
 ---@class Startup
 ---@field private logger Logger
+---@field private addonInfo AddonInfo
+---@field private preferences Preferences
 local Startup = {}
 Startup.__index = Startup
 
 ---@param logger Logger
+---@param addonInfo AddonInfo
+---@param preferences Preferences
 ---@return Startup
-function Startup.New(logger)
-	return setmetatable({ logger = logger }, Startup)
+function Startup.New(logger, addonInfo, preferences)
+	return setmetatable({
+		logger = logger,
+		addonInfo = addonInfo,
+		preferences = preferences,
+	}, Startup)
 end
 
----@param title string
----@param version string
-function Startup:Run(title, version)
-	self.logger:Info(("%s v%s carregado."):format(title, version))
+function Startup:Run()
+	if not self.preferences:Get(Keys.ANNOUNCE_ON_LOAD) then
+		return
+	end
+
+	self.logger:Info(("%s v%s carregado. Digite /atq para as opções."):format(
+		self.addonInfo.title,
+		self.addonInfo.version
+	))
 end
 
 Addon.Startup = Startup

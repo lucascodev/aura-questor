@@ -1,0 +1,184 @@
+local _, Addon = ...
+
+local DEFAULT_NAME = "Padrão"
+
+--- Tables a profile owns besides its settings. Named here so migration and
+--- creation cannot drift apart.
+local PROFILE_TABLES = {
+	"ownTrackerPosition",
+	"collapsedSections",
+	"hiddenCategories",
+	"hiddenSections",
+	"minimapButton",
+}
+
+--- Named sets of settings, with one active per character.
+---
+--- Holds the raw SavedVariables table and nothing else — no game API — so the
+--- whole thing is testable outside the client.
+---@class Profiles
+---@field private database table
+---@field private characterKey string
+local Profiles = {}
+Profiles.__index = Profiles
+
+---@return table
+local function NewProfile()
+	local profile = { settings = {} }
+
+	for _, name in ipairs(PROFILE_TABLES) do
+		profile[name] = {}
+	end
+
+	return profile
+end
+
+--- Everything used to live loose at the root of the saved table. It is moved
+--- into the first profile rather than discarded: those are settings the player
+--- already made, and losing them to a refactor would be inexcusable.
+---@private
+function Profiles:Migrate()
+	local database = self.database
+
+	if database.profiles then
+		return
+	end
+
+	local moved = NewProfile()
+
+	for _, name in ipairs(PROFILE_TABLES) do
+		if type(database[name]) == "table" then
+			moved[name] = database[name]
+			database[name] = nil
+		end
+	end
+
+	-- Clearing a key already visited is allowed while traversing, so the loose
+	-- settings can be lifted and removed in one pass.
+	for key, value in pairs(database) do
+		moved.settings[key] = value
+		database[key] = nil
+	end
+
+	database.profiles = { [DEFAULT_NAME] = moved }
+	database.characters = {}
+end
+
+---@param database table The SavedVariables root.
+---@param characterKey string
+---@return Profiles
+function Profiles.New(database, characterKey)
+	local profiles = setmetatable({
+		database = database,
+		characterKey = characterKey,
+	}, Profiles)
+
+	profiles:Migrate()
+
+	return profiles
+end
+
+---@return string
+function Profiles:CurrentName()
+	return self.database.characters[self.characterKey] or DEFAULT_NAME
+end
+
+--- The active profile, created on demand so a character pointed at a deleted
+--- profile still gets somewhere to write instead of erroring.
+---@return table
+function Profiles:Current()
+	local name = self:CurrentName()
+
+	if not self.database.profiles[name] then
+		self.database.profiles[name] = NewProfile()
+	end
+
+	return self.database.profiles[name]
+end
+
+---@return string[]
+function Profiles:Names()
+	local names = {}
+
+	for name in pairs(self.database.profiles) do
+		table.insert(names, name)
+	end
+
+	table.sort(names)
+
+	return names
+end
+
+---@param name string
+function Profiles:Select(name)
+	self.database.characters[self.characterKey] = name
+end
+
+--- A new profile starts empty, which means every preference falls back to its
+--- default — the same state a fresh install has.
+---@param name string
+function Profiles:Create(name)
+	if self.database.profiles[name] then
+		return
+	end
+
+	self.database.profiles[name] = NewProfile()
+end
+
+---@param source table
+---@return table
+local function DeepCopy(source)
+	local copy = {}
+
+	for key, value in pairs(source) do
+		copy[key] = type(value) == "table" and DeepCopy(value) or value
+	end
+
+	return copy
+end
+
+--- Takes a profile from outside. The stored tables are filled in from a fresh
+--- one so a profile exported by an older version, missing a table added since,
+--- still lands complete instead of erroring the first time it is read.
+---@param name string
+---@param profile table
+function Profiles:Import(name, profile)
+	local complete = NewProfile()
+
+	complete.settings = profile.settings or {}
+
+	for _, tableName in ipairs(PROFILE_TABLES) do
+		if type(profile[tableName]) == "table" then
+			complete[tableName] = profile[tableName]
+		end
+	end
+
+	self.database.profiles[name] = complete
+end
+
+---@param name string
+function Profiles:CopyCurrentTo(name)
+	self.database.profiles[name] = DeepCopy(self:Current())
+end
+
+--- The active profile is never removed: a character must always have somewhere
+--- to write, and deleting what you are standing on is a trap.
+---@param name string
+---@return boolean removed
+function Profiles:Delete(name)
+	if name == self:CurrentName() then
+		return false
+	end
+
+	self.database.profiles[name] = nil
+
+	for characterKey, profileName in pairs(self.database.characters) do
+		if profileName == name then
+			self.database.characters[characterKey] = nil
+		end
+	end
+
+	return true
+end
+
+Addon.Profiles = Profiles

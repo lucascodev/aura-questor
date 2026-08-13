@@ -1,0 +1,43 @@
+---@meta
+
+--- One line of progress inside an entry.
+---@class TrackerObjective
+---@field text string
+---@field isComplete boolean
+---@field percent? number Share of the whole, drawn as a bar instead of a count.
+
+--- Art drawn inside the pin, where the number would otherwise be. Without a size
+--- the atlas decides.
+---@class TrackerPinIcon
+---@field atlas string
+---@field width? number
+---@field height? number
+
+--- Anything the tracker can show as a trackable item: a quest, an achievement,
+--- a recipe. Providers translate the game's shapes into this one, so the
+--- renderer only ever learns a single vocabulary.
+---@class TrackerEntry
+---@field id number|string
+---@field kind string Which provider produced it, for styling and actions.
+---@field title string
+---@field objectives TrackerObjective[]
+---@field groupName? string What the quest log files it under — zone, campaign, category.
+---@field level? number
+---@field isComplete boolean
+---@field canFindGroup boolean Group content the player may look for a party for.
+---@field tagAtlas? string Badge for what kind of content it is: PvP, group, elite.
+---@field pinAtlas? string Art the source names for itself, used as-is when present.
+---@field pinStyle? string What the pin should look like, in neutral words the
+--- renderer turns into art: normal, campaign, legendary, recurring, important,
+--- meta, worldQuest, bonus, areaPoi.
+---@field pinIcon? TrackerPinIcon Drawn inside the pin, instead of a number.
+---@field isSuperTrackable? boolean Whether the pin can drive the on-screen arrow.
+---@field isSuperTracked? boolean Whether it currently does.
+---@field timeLeftMinutes? number
+
+--- A titled group of entries, drawn in one block.
+---@class TrackerSection
+---@field id string
+---@field title string
+---@field order number Lower comes first.
+---@field entries TrackerEntry[]

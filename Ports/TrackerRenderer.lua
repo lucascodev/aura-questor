@@ -1,0 +1,42 @@
+---@meta
+
+--- How the tracker's text is drawn. Applied as one value, since changing any of
+--- it re-measures the whole layout.
+---@class TrackerFontStyle
+---@field path string
+---@field size number
+---@field flags string Font flag string, already resolved — "" means none.
+---@field hasShadow boolean
+---@field wrapsLongText boolean Off cuts what does not fit with an ellipsis.
+
+---@class TrackerColor
+---@field red number
+---@field green number
+---@field blue number
+
+--- Everything about the panel itself that a preference can change. Texture names
+--- arrive resolved to paths, and nil means the player chose to have none.
+---@class TrackerAppearance
+---@field width number
+---@field height number
+---@field opacity number Between 0 and 1.
+---@field backgroundTexture string?
+---@field backgroundColor TrackerColor
+---@field backgroundInset number
+---@field borderTexture string?
+---@field borderColor TrackerColor
+---@field borderOpacity number Between 0 and 1.
+---@field borderThickness number
+
+--- Draws the sections. The domain hands over what to show; how it looks is
+--- entirely the adapter's business.
+---@class TrackerRenderer
+---@field Render fun(self: TrackerRenderer, sections: TrackerSection[])
+---@field SetShown fun(self: TrackerRenderer, isShown: boolean)
+---@field SetAppearance fun(self: TrackerRenderer, appearance: TrackerAppearance)
+---@field SetFont fun(self: TrackerRenderer, style: TrackerFontStyle)
+---@field SetItemButtonsShown fun(self: TrackerRenderer, isShown: boolean)
+---@field SetProgressBarTexture fun(self: TrackerRenderer, path: string)
+---@field SetScale fun(self: TrackerRenderer, scale: number)
+---@field SetEditing fun(self: TrackerRenderer, isEditing: boolean)
+---@field ResetPosition fun(self: TrackerRenderer)
