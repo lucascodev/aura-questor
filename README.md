@@ -1,7 +1,7 @@
 # Aura Tracker Questor
 
 Um rastreador de objetivos autônomo para World of Warcraft, escrito sobre as
-APIs públicas do jogo.
+APIs públicas do jogo. Em inglês e português.
 
 Ele não decora o rastreador da Blizzard: desenha o próprio, lendo os mesmos
 dados que o jogo expõe. É a diferença que faz um addon sobreviver a um patch,
@@ -46,6 +46,7 @@ dentro:
 
 | Pasta | Responsabilidade |
 |---|---|
+| `Locales/` | textos, `enUS.lua` como padrão e as traduções por cima |
 | `Core/` | regras em Lua puro, agrupadas por assunto: `Preferences/`, `Filtering/`, `Tracker/`, `Commands/`. **Nenhuma API do WoW** |
 | `Ports/` | contratos de tipo, lidos pelo language server e fora do pacote |
 | `Game/` | lê a API do jogo e não desenha nada |

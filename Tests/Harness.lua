@@ -5,6 +5,18 @@
 
 local ADDON_NAME = "AuraTrackerQuestor"
 
+--- Locale.lua asks the client which locale to keep. Outside the game there is
+--- no client, so the harness answers for it and the tests read enUS.
+GetLocale = GetLocale or function()
+	return "enUS"
+end
+
+local LOCALE_FILES = {
+	"Locale",
+	"enUS",
+	"ptBR",
+}
+
 --- The order the .toc uses, which matters because a few files read each other
 --- at file scope.
 local CORE_FILES = {
@@ -36,8 +48,8 @@ local Harness = {}
 function Harness.LoadCore()
 	local addon = {}
 
-	for _, name in ipairs(CORE_FILES) do
-		local path = "Core/" .. name .. ".lua"
+	---@param path string
+	local function Load(path)
 		local chunk, failure = loadfile(path)
 
 		if not chunk then
@@ -45,6 +57,14 @@ function Harness.LoadCore()
 		end
 
 		chunk(ADDON_NAME, addon)
+	end
+
+	for _, name in ipairs(LOCALE_FILES) do
+		Load("Locales/" .. name .. ".lua")
+	end
+
+	for _, name in ipairs(CORE_FILES) do
+		Load("Core/" .. name .. ".lua")
 	end
 
 	return addon
@@ -114,6 +134,26 @@ function Harness.Near(actual, expected, tolerance, message)
 			2
 		)
 	end
+end
+
+--- Every Lua file the game loads, read off the .toc so the list cannot drift
+--- from what actually ships.
+---@return string[]
+function Harness.RuntimeFiles()
+	local paths = {}
+	local toc = assert(io.open("AuraTrackerQuestor.toc", "r"))
+
+	for line in toc:lines() do
+		local path = line:match("^%s*(%S.-%.lua)%s*$")
+
+		if path and not path:match("^Libs") then
+			table.insert(paths, (path:gsub("\\", "/")))
+		end
+	end
+
+	toc:close()
+
+	return paths
 end
 
 ---@return number exitCode

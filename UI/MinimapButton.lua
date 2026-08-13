@@ -2,8 +2,8 @@ local ADDON_NAME, Addon = ...
 
 local ICON = "Interface\\ICONS\\INV_Misc_Map_01"
 
-local LEFT_HINT = "Clique: mostrar ou esconder"
-local RIGHT_HINT = "Clique direito: opções"
+local LEFT_HINT = Addon.L.MINIMAP_LEFT_HINT
+local RIGHT_HINT = Addon.L.MINIMAP_RIGHT_HINT
 
 --- The minimap button, by way of the broker object behind it.
 ---

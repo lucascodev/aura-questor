@@ -1,4 +1,5 @@
 local _, Addon = ...
+local L = Addon.L
 
 local ENTRY_KIND = "scenario"
 
@@ -6,10 +7,10 @@ local ENTRY_KIND = "scenario"
 --- and the quests can wait until they are out of it.
 
 local SECONDS_PER_MINUTE = 60
-local REMAINING_LABEL = "Tempo restante: %s"
-local OVERTIME_LABEL = "Fora do tempo: %s"
-local KEYSTONE_LABEL = "Pedra-chave nível %d"
-local DEATHS_LABEL = "Mortes: %d"
+local REMAINING_LABEL = Addon.L.SCENARIO_REMAINING
+local OVERTIME_LABEL = Addon.L.SCENARIO_OVERTIME
+local KEYSTONE_LABEL = Addon.L.SCENARIO_KEYSTONE
+local DEATHS_LABEL = Addon.L.SCENARIO_DEATHS
 local AFFIXES_SEPARATOR = ", "
 
 --- SectionProvider for scenarios, including Mythic+ dungeons.

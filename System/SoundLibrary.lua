@@ -1,20 +1,21 @@
 local _, Addon = ...
+local L = Addon.L
 
 local SOUND_MEDIA = "sound"
 local NONE_ID = "none"
-local NONE_LABEL = "Nenhum"
+local NONE_LABEL = Addon.L.SOUND_NONE
 
 local SHARED_NONE = "None"
 
 local BUILT_IN = {
-	{ id = "questComplete", label = "Missão concluída", kit = "UI_AUTO_QUEST_COMPLETE" },
-	{ id = "questForward", label = "Objetivo cumprido", kit = "UI_QUEST_ROLLING_FORWARD_01" },
-	{ id = "worldQuest", label = "Missão mundial", kit = "UI_WORLDQUEST_START" },
-	{ id = "stageEnd", label = "Fim de estágio", kit = "UI_SCENARIO_STAGE_END" },
-	{ id = "activity", label = "Atividade concluída", kit = "TRADING_POST_UI_COMPLETING_ACTIVITIES" },
-	{ id = "talent", label = "Confirmação", kit = "UI_CLASS_TALENT_APPLY_COMPLETE" },
-	{ id = "popup", label = "Aviso", kit = "TUTORIAL_POPUP" },
-	{ id = "ping", label = "Ping do mapa", kit = "MAP_PING" },
+	{ id = "questComplete", label = Addon.L.SOUND_QUEST_COMPLETE, kit = "UI_AUTO_QUEST_COMPLETE" },
+	{ id = "questForward", label = Addon.L.SOUND_QUEST_FORWARD, kit = "UI_QUEST_ROLLING_FORWARD_01" },
+	{ id = "worldQuest", label = Addon.L.SOUND_WORLD_QUEST, kit = "UI_WORLDQUEST_START" },
+	{ id = "stageEnd", label = Addon.L.SOUND_STAGE_END, kit = "UI_SCENARIO_STAGE_END" },
+	{ id = "activity", label = Addon.L.SOUND_ACTIVITY, kit = "TRADING_POST_UI_COMPLETING_ACTIVITIES" },
+	{ id = "talent", label = Addon.L.SOUND_TALENT, kit = "UI_CLASS_TALENT_APPLY_COMPLETE" },
+	{ id = "popup", label = Addon.L.SOUND_POPUP, kit = "TUTORIAL_POPUP" },
+	{ id = "ping", label = Addon.L.SOUND_PING, kit = "MAP_PING" },
 }
 
 ---@class SoundLibrary

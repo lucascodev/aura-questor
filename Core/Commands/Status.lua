@@ -16,7 +16,7 @@ function StatusCommand.New(logger, addonInfo)
 end
 
 function StatusCommand:Run()
-	self.logger:Info(("%s v%s ativo."):format(self.addonInfo.title, self.addonInfo.version))
+	self.logger:Info((Addon.L.STATUS_ACTIVE):format(self.addonInfo.title, self.addonInfo.version))
 end
 
 Addon.StatusCommand = StatusCommand

@@ -1,4 +1,5 @@
 local _, Addon = ...
+local L = Addon.L
 
 local NO_FLAGS = ""
 local NONE_ID = "none"
@@ -8,11 +9,11 @@ local FontFlags = {}
 
 ---@type PreferenceChoice[]
 FontFlags.Choices = {
-	{ id = NONE_ID, label = "Nenhum" },
-	{ id = "OUTLINE", label = "Contorno" },
-	{ id = "THICKOUTLINE", label = "Contorno grosso" },
-	{ id = "MONOCHROME", label = "Sem suavização" },
-	{ id = "MONOCHROME,OUTLINE", label = "Sem suavização, com contorno" },
+	{ id = NONE_ID, label = L.FONT_FLAG_NONE },
+	{ id = "OUTLINE", label = L.FONT_FLAG_OUTLINE },
+	{ id = "THICKOUTLINE", label = L.FONT_FLAG_THICK_OUTLINE },
+	{ id = "MONOCHROME", label = L.FONT_FLAG_MONOCHROME },
+	{ id = "MONOCHROME,OUTLINE", label = L.FONT_FLAG_MONOCHROME_OUTLINE },
 }
 
 ---@param id string

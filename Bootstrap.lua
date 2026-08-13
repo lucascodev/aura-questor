@@ -4,29 +4,30 @@
 local ADDON_NAME, Addon = ...
 
 local Keys = Addon.PreferenceKeys
+local L = Addon.L
 
 local STATUS_ARGUMENT = "status"
 local HELP_ARGUMENT = "ajuda"
 local RESET_ARGUMENT = "posicao"
 
 local SLASH_COMMANDS = {
-	{ command = "/atq", description = "abre as opções" },
-	{ command = "/atq ajuda", description = "mostra esta lista" },
-	{ command = "/atq status", description = "confirma que o addon está ativo" },
-	{ command = "/atq posicao", description = "devolve o rastreador ao lugar padrão" },
+	{ command = "/atq", description = L.COMMAND_OPTIONS },
+	{ command = "/atq ajuda", description = L.COMMAND_HELP },
+	{ command = "/atq status", description = L.COMMAND_STATUS },
+	{ command = "/atq posicao", description = L.COMMAND_RESET },
 }
 
-local NEW_PROFILE_QUESTION = "Nome do novo perfil:"
-local COPY_PROFILE_QUESTION = "Copiar as configurações atuais para qual nome?"
-local DELETE_PROFILE_QUESTION = "Nome do perfil a apagar:"
-local DELETE_ACTIVE_WARNING = "O perfil em uso não pode ser apagado."
-local EXPORT_MESSAGE = "Copie o texto abaixo (Ctrl+C):"
-local IMPORT_QUESTION = "Cole o texto de um perfil exportado:"
+local NEW_PROFILE_QUESTION = L.PROFILE_NEW_QUESTION
+local COPY_PROFILE_QUESTION = L.PROFILE_COPY_QUESTION
+local DELETE_PROFILE_QUESTION = L.PROFILE_DELETE_QUESTION
+local DELETE_ACTIVE_WARNING = L.PROFILE_DELETE_ACTIVE
+local EXPORT_MESSAGE = L.PROFILE_EXPORT_MESSAGE
+local IMPORT_QUESTION = L.PROFILE_IMPORT_QUESTION
 
 --- Imports land in one known profile rather than in a name the text carries:
 --- an import that silently overwrote whatever it was named after would be a
 --- trap, and this one is always the same, visible place.
-local IMPORTED_PROFILE_NAME = "Importado"
+local IMPORTED_PROFILE_NAME = L.PROFILE_IMPORTED_NAME
 
 local ADDON_AUTHOR = "Lucascodev"
 local ADDON_LICENSE = "MIT"
@@ -262,13 +263,13 @@ local function Build()
 		Addon.PreferenceCatalog,
 		preferences,
 		{
-			{ label = "Versão", value = addonInfo.version },
-			{ label = "Autor", value = ADDON_AUTHOR },
-			{ label = "Licença", value = ADDON_LICENSE },
-			{ label = "Comandos", value = "/atq  ·  /atq ajuda  ·  /atq status" },
+			{ label = L.INFO_VERSION, value = addonInfo.version },
+			{ label = L.INFO_AUTHOR, value = ADDON_AUTHOR },
+			{ label = L.INFO_LICENSE, value = ADDON_LICENSE },
+			{ label = L.INFO_COMMANDS, value = "/atq  ·  /atq ajuda  ·  /atq status" },
 			-- Plain separators: the game font has no arrow glyph, and the one
 			-- used before rendered as an empty box.
-			{ label = "Atalhos", value = "Opções  >  Atalhos  >  Aura Tracker Questor" },
+			{ label = L.INFO_BINDINGS, value = L.INFO_BINDINGS_PATH },
 		},
 		{
 			fonts = Addon.MediaLibrary.FontChoices,
