@@ -4,7 +4,6 @@ local ENTRY_KIND = "scenario"
 
 --- Above everything else: a scenario is what the player is doing right now,
 --- and the quests can wait until they are out of it.
-local SECTION_ORDER = 5
 
 local SECONDS_PER_MINUTE = 60
 local REMAINING_LABEL = "Tempo restante: %s"
@@ -186,7 +185,7 @@ function ScenarioSectionProvider:Collect()
 		{
 			id = "scenario",
 			title = isDungeon and TRACKER_HEADER_DUNGEON or TRACKER_HEADER_SCENARIO,
-			order = SECTION_ORDER,
+			order = Addon.SectionOrder.scenario,
 			entries = {
 				{
 					id = scenarioName,

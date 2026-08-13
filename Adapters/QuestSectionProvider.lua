@@ -2,9 +2,6 @@ local _, Addon = ...
 
 local ENTRY_KIND = "quest"
 
-local CAMPAIGN_ORDER = 10
-local QUEST_ORDER = 20
-
 --- SectionProvider for the quest log.
 ---
 --- Reads only what is being watched, which is what a tracker shows, and splits
@@ -123,13 +120,13 @@ function QuestSectionProvider:Collect()
 	local campaign = {
 		id = "campaign",
 		title = TRACKER_HEADER_CAMPAIGN_QUESTS,
-		order = CAMPAIGN_ORDER,
+		order = Addon.SectionOrder.campaign,
 		entries = {},
 	}
 	local quests = {
 		id = "quests",
 		title = TRACKER_HEADER_QUESTS,
-		order = QUEST_ORDER,
+		order = Addon.SectionOrder.quests,
 		entries = {},
 	}
 

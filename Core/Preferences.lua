@@ -6,14 +6,20 @@ local _, Addon = ...
 ---@class Preferences
 ---@field private catalog Preference[]
 ---@field private values table<string, boolean|number>
+---@field private onChanged fun(changedKey: string)
 local Preferences = {}
 Preferences.__index = Preferences
 
 ---@param catalog Preference[]
 ---@param values table<string, boolean|number>
+---@param onChanged fun(changedKey: string)
 ---@return Preferences
-function Preferences.New(catalog, values)
-	local preferences = setmetatable({ catalog = catalog, values = values }, Preferences)
+function Preferences.New(catalog, values, onChanged)
+	local preferences = setmetatable({
+		catalog = catalog,
+		values = values,
+		onChanged = onChanged,
+	}, Preferences)
 	preferences:FillGapsWithDefaults()
 
 	return preferences
@@ -38,7 +44,19 @@ end
 ---@param key string
 ---@param value boolean|number|string
 function Preferences:Set(key, value)
+	if self.values[key] == value then
+		return
+	end
+
 	self.values[key] = value
+	self.onChanged(key)
+end
+
+--- Announces a change the Settings API already wrote into the values table on
+--- its own, so a native control and a hand-built one reach the same place.
+---@param key string
+function Preferences:Notify(key)
+	self.onChanged(key)
 end
 
 --- The raw table, for the Settings API to write into directly.

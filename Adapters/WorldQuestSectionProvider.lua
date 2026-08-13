@@ -1,7 +1,6 @@
 local _, Addon = ...
 
 local ENTRY_KIND = "worldQuest"
-local SECTION_ORDER = 30
 
 --- SectionProvider for world quests.
 ---
@@ -91,7 +90,7 @@ function WorldQuestSectionProvider:Collect()
 		{
 			id = "worldQuests",
 			title = TRACKER_HEADER_WORLD_QUESTS,
-			order = SECTION_ORDER,
+			order = Addon.SectionOrder.worldQuests,
 			entries = entries,
 		},
 	}

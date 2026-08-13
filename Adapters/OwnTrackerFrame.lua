@@ -246,17 +246,9 @@ function OwnTrackerFrame:AcquireSectionHeader()
 	return header
 end
 
---- Collapsed sections are remembered by id, and an expanded one drops its key
---- rather than storing false, so the saved table only ever holds what differs
---- from the default.
 ---@param sectionID string
 function OwnTrackerFrame:ToggleSection(sectionID)
-	if self.collapsedSections[sectionID] then
-		self.collapsedSections[sectionID] = nil
-	else
-		self.collapsedSections[sectionID] = true
-	end
-
+	Addon.ToggleSet.Toggle(self.collapsedSections, sectionID)
 	self:Render(self.lastSections)
 end
 

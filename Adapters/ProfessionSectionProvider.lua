@@ -1,7 +1,6 @@
 local _, Addon = ...
 
 local ENTRY_KIND = "recipe"
-local SECTION_ORDER = 60
 
 local IS_RECRAFT = true
 
@@ -66,7 +65,7 @@ function ProfessionSectionProvider:Collect()
 		{
 			id = "recipes",
 			title = PROFESSIONS_TRACKER_HEADER_PROFESSION,
-			order = SECTION_ORDER,
+			order = Addon.SectionOrder.recipes,
 			entries = entries,
 		},
 	}

@@ -3,7 +3,6 @@ local _, Addon = ...
 local Keys = Addon.PreferenceKeys
 
 local ENTRY_KIND = "event"
-local SECTION_ORDER = 35
 local SECONDS_PER_MINUTE = 60
 
 --- SectionProvider for world events, read from the event scheduler.
@@ -141,7 +140,7 @@ function EventSectionProvider:Collect()
 		{
 			id = "events",
 			title = EVENTS_LABEL,
-			order = SECTION_ORDER,
+			order = Addon.SectionOrder.events,
 			entries = entries,
 		},
 	}
