@@ -2,3 +2,7 @@
 dist/
 *.bak
 *.log
+
+# Fetched by the packager from .pkgmeta; kept on disk so build.ps1 and the game
+# work locally without a build step.
+Libs/

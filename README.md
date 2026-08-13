@@ -61,6 +61,14 @@ sem abrir o cliente.
 Adicionar um tipo de conteúdo novo é criar uma pasta em `Modules/` com o seu
 `SectionProvider` e registrá-la no `Bootstrap.lua`. Nada mais muda.
 
+### Bibliotecas
+
+`Libs/` não está no repositório: o empacotador busca cada biblioteca da origem
+declarada em `.pkgmeta` na hora do release. Clonar e apontar direto para
+`Interface\AddOns` não funciona sem elas. Para trabalhar localmente, baixe as
+sete de `.pkgmeta` para `Libs/` uma vez, ou instale o
+[BigWigs packager](https://github.com/BigWigsMods/packager) e rode-o com `-d`.
+
 ### Empacotar
 
 ```powershell
