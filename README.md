@@ -69,11 +69,11 @@ A documentação completa está em **[docs/](docs/)**:
 
 | | |
 |---|---|
-| [Arquitetura](docs/arquitetura.md) | as camadas e por que elas existem |
-| [Fluxo de execução](docs/fluxo.md) | do evento do jogo até o pixel na tela |
-| [Adicionar conteúdo](docs/adicionar-conteudo.md) | fazer o rastreador mostrar um tipo novo |
-| [Restrições do WoW](docs/restricoes.md) | taint, combate e as armadilhas já pagas |
-| [Desenvolvimento](docs/desenvolvimento.md) | rodar, testar, empacotar, publicar |
+| [Arquitetura](docs/arquitetura.md) | as camadas e a regra de dependência |
+| [Fluxo de execução](docs/fluxo.md) | inicialização, ciclo de atualização e combate |
+| [Adicionar conteúdo](docs/adicionar-conteudo.md) | implementar um tipo de conteúdo novo |
+| [Restrições do WoW](docs/restricoes.md) | taint, combate e limites da API |
+| [Desenvolvimento](docs/desenvolvimento.md) | ambiente, testes, empacotamento e publicação |
 
 ## Licença
 

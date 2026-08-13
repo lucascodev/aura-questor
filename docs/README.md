@@ -1,19 +1,19 @@
 # Documentação
 
-Como o Aura Tracker Questor é construído por dentro, para quem vai mexer nele.
+Documentação técnica do Aura Tracker Questor, para quem vai modificar o código.
 
-| Documento | Para quando você quer |
+| Documento | Assunto |
 |---|---|
-| [Arquitetura](arquitetura.md) | entender as camadas e por que elas existem |
-| [Fluxo de execução](fluxo.md) | saber o que acontece entre um evento do jogo e um pixel na tela |
-| [Adicionar conteúdo](adicionar-conteudo.md) | fazer o rastreador mostrar um tipo novo de coisa |
-| [Restrições do WoW](restricoes.md) | não repetir os erros que já custaram caro aqui |
-| [Desenvolvimento](desenvolvimento.md) | rodar, testar, empacotar e publicar |
+| [Arquitetura](arquitetura.md) | as camadas e a regra de dependência |
+| [Fluxo de execução](fluxo.md) | inicialização, ciclo de atualização e combate |
+| [Adicionar conteúdo](adicionar-conteudo.md) | implementar um tipo de conteúdo novo |
+| [Restrições do WoW](restricoes.md) | conhecer os limites da API antes de mexer em frame |
+| [Desenvolvimento](desenvolvimento.md) | ambiente, testes, empacotamento e publicação |
 
-## Em uma frase
+## Resumo
 
-O addon lê as **APIs públicas de dados** do jogo, monta uma lista em Lua puro e
-desenha o próprio frame. Ele não decora nem herda nada do rastreador da
+O addon lê as **APIs públicas de dados** do jogo, monta a lista de objetivos em
+Lua puro e desenha o próprio frame. Não modifica nem depende do rastreador da
 Blizzard.
 
 ## O projeto em números

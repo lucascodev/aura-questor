@@ -1,24 +1,24 @@
 # Arquitetura
 
-## A regra
+## A regra de dependência
 
-Uma só, e todo o resto sai dela: **a dependência aponta para dentro**. O `Core/`
-não conhece ninguém; quem fala com o jogo conhece o `Core/`.
+**As dependências apontam para dentro.** O `Core/` não referencia nenhuma outra
+camada; as camadas externas referenciam o `Core/`.
 
 ```mermaid
 flowchart LR
     Bootstrap["Bootstrap.lua<br/><i>composition root</i>"]
 
-    subgraph fora["Fala com o jogo"]
-        Game["Game/<br/>lê a API"]
+    subgraph fora["Acessa a API do jogo"]
+        Game["Game/<br/>leitura da API"]
         Modules["Modules/<br/>um por tipo de conteúdo"]
         UI["UI/<br/>frames"]
         Options["Options/<br/>páginas"]
         System["System/<br/>chat, eventos, som"]
     end
 
-    subgraph dentro["Não sabe que o jogo existe"]
-        Core["Core/<br/>regras em Lua puro"]
+    subgraph dentro["Independente do jogo"]
+        Core["Core/<br/>regras, em Lua puro"]
         Ports["Ports/<br/>contratos de tipo"]
     end
 
@@ -29,31 +29,30 @@ flowchart LR
     Core -.declara.-> Ports
 ```
 
-O `Core/` alcança o mundo de fora **só por objetos injetados**, cujo formato está
-descrito em `Ports/`. Ele nunca chama `C_QuestLog`, nunca cria frame, nunca lê
-`Settings`.
+O `Core/` acessa recursos externos **apenas por objetos injetados**, cujo formato
+está descrito em `Ports/`. Não há chamadas a `C_QuestLog`, `CreateFrame` ou
+`Settings` em nenhum arquivo dele.
 
-Isso é verificável, não é promessa:
+A restrição é verificável:
 
 ```sh
 grep -rlE "C_[A-Za-z]+\.|CreateFrame|Settings\.|LibStub" Core/
 ```
 
-Se algum dia isso imprimir um caminho, a regra foi quebrada.
+Se o comando imprimir algum caminho, a regra foi violada.
 
-## Por que isso vale a pena num addon
+## Motivação
 
-Porque **não existe harness de teste dentro do WoW**. O que estiver amarrado à
-API do jogo só pode ser verificado abrindo o cliente, entrando com um
-personagem e olhando. O que não estiver roda em qualquer Lua, no CI, em
-milissegundos.
+**Não existe framework de teste dentro do WoW.** Código acoplado à API do jogo só
+pode ser verificado abrindo o cliente e inspecionando o resultado manualmente.
+Código desacoplado roda em qualquer interpretador Lua.
 
 As ~1.400 linhas do `Core/` são cobertas por [36 testes](../Tests/Run.lua) que
-rodam sem o jogo. É o retorno concreto da regra de dependência.
+rodam sem o cliente, em milissegundos, no CI.
 
 ## As pastas
 
-| Pasta | O que vive ali | Pode tocar a API do jogo? |
+| Pasta | Conteúdo | Acessa a API do jogo |
 |---|---|---|
 | `Core/` | filtros, ordenação, perfis, montagem das seções | **não** |
 | `Ports/` | contratos de tipo, lidos pelo language server | não é código |
@@ -64,29 +63,29 @@ rodam sem o jogo. É o retorno concreto da regra de dependência.
 | `Options/` | páginas de opções | sim |
 | `System/` | chat, comandos, eventos, som, acervo compartilhado | sim |
 
-`Ports/` não é empacotado. São arquivos `---@meta`, sem código executável, que o
-language server usa para tipar o resto. A regra de dependência é conferida na
-edição, não em tempo de execução.
+`Ports/` não é empacotado. São arquivos `---@meta`, sem código executável, usados
+pelo language server para tipar o restante. A regra de dependência é verificada
+em tempo de edição, não em execução.
 
-## Os contratos que sustentam tudo
+## Contratos principais
 
-Três portas carregam o peso:
+Três portas concentram a maior parte do acoplamento:
 
-**`SectionProvider`** — `Collect(): TrackerSection[]`. É como um tipo de conteúdo
-entra no rastreador. Os 10 providers não se conhecem.
+**`SectionProvider`**, `Collect(): TrackerSection[]`. É o ponto de entrada de um
+tipo de conteúdo no rastreador. Os 10 providers são independentes entre si.
 
-**`TrackerRenderer`** — recebe as seções prontas e desenha. O `Core/` sabe *o
-que* mostrar; o renderer decide *como*.
+**`TrackerRenderer`** recebe as seções montadas e as desenha. O `Core/` define
+*o que* exibir; o renderer define *como*.
 
-**`EntryActions`** — o que uma entrada faz quando clicada. O
+**`EntryActions`** define o comportamento de uma entrada ao ser clicada. O
 [`EntryActionRouter`](../Modules/EntryActionRouter.lua) despacha por
-`entry.kind`, e os métodos opcionais (`Describe`, `Rewards`, `SuperTrack`) são
-verificados por capacidade, não por herança.
+`entry.kind`. Os métodos opcionais (`Describe`, `Rewards`, `SuperTrack`) são
+verificados por presença antes da chamada, em vez de exigirem herança.
 
-## A moeda comum
+## Estrutura de dados comum
 
-Todo provider traduz a forma do jogo para uma só estrutura, para o renderer
-aprender **um** vocabulário em vez de dez:
+Cada provider traduz o formato do jogo para uma estrutura única, de modo que o
+renderer trate um só formato em vez de dez:
 
 ```mermaid
 classDiagram
@@ -114,33 +113,35 @@ classDiagram
 ```
 
 Uma conquista, uma receita de profissão e uma missão mundial chegam ao
-`EntryBlockPool` com o mesmo formato. É por isso que o `percent` virou barra de
-progresso em todos os tipos de uma vez, sem tocar em provider nenhum.
+`EntryBlockPool` no mesmo formato. Por isso o campo `percent` passou a ser
+desenhado como barra de progresso em todos os tipos de uma vez, sem alteração em
+nenhum provider.
 
-## Onde a ordem de carga importa
+## Ordem de carregamento
 
 O namespace é uma tabela plana (`Addon.QuestFilters`, `Addon.HexColor`), então
-mover arquivo não quebra referência. Mas alguns arquivos **leem outros em escopo
-de arquivo**, e aí a ordem no `.toc` é obrigatória:
+mover um arquivo não quebra referências. Alguns arquivos, porém, **leem outros em
+escopo de arquivo**, e nesses casos a ordem no `.toc` é obrigatória:
 
 - `Locales/` antes de tudo: o catálogo de preferências lê os rótulos ao carregar
 - `Preferences/Keys`, `FontFlags`, `SortModes` e `SoundChannels` antes de
   `Preferences/Catalog`
 - `Filtering/FilterIds` antes de `Filtering/Filters`
 
-O resto se resolve em tempo de execução e pode ficar em qualquer ordem.
+Os demais resolvem suas referências em tempo de execução e podem ser listados em
+qualquer ordem.
 
-## O que foi decidido e por quê
+## Decisões de projeto
 
-**Desenhar o próprio frame em vez de decorar o da Blizzard.** A abordagem antiga
-batia no teto do taint: `SetScale`, `SetPoint` e `Hide` num frame com filho
-protegido são bloqueados. Consumir a API de *dados* em vez do código de *UI*
-troca a superfície mais instável do jogo pela mais estável. Ver
-[restrições](restricoes.md).
+**Frame próprio em vez de modificar o da Blizzard.** A abordagem anterior esbarrou
+no taint: `SetScale`, `SetPoint` e `Hide` são bloqueados em frames com filho
+protegido. Consumir a API de *dados* em vez do código de *interface* reduz a
+exposição a mudanças entre patches, porque a primeira muda menos que a segunda.
+Ver [restrições](restricoes.md).
 
-**Preferências como dados.** Adicionar uma preferência é uma entrada em
-[`Core/Preferences/Catalog.lua`](../Core/Preferences/Catalog.lua). Nenhum adapter
-muda: o painel de opções lê o catálogo e desenha o controle certo.
+**Preferências como dados.** Adicionar uma preferência é acrescentar uma entrada
+em [`Core/Preferences/Catalog.lua`](../Core/Preferences/Catalog.lua). Nenhum
+adapter muda: o painel de opções lê o catálogo e cria o controle correspondente.
 
-**Um provider por tipo de conteúdo.** Adicionar um tipo não toca em nada que já
-funciona. Ver [adicionar conteúdo](adicionar-conteudo.md).
+**Um provider por tipo de conteúdo.** Adicionar um tipo não exige alteração em
+código existente. Ver [adicionar conteúdo](adicionar-conteudo.md).
