@@ -6,15 +6,18 @@ local ADDON_NAME, Addon = ...
 local Keys = Addon.PreferenceKeys
 local L = Addon.L
 
-local STATUS_ARGUMENT = "status"
-local HELP_ARGUMENT = "ajuda"
-local RESET_ARGUMENT = "posicao"
+--- Cada acao aceita o termo em ingles e o em portugues: quem le a interface
+--- traduzida digita o que esta escrito nela, e quem le em ingles digita o que
+--- esta escrito na dele.
+local STATUS_ARGUMENTS = { status = true }
+local HELP_ARGUMENTS = { help = true, ajuda = true }
+local RESET_ARGUMENTS = { reset = true, posicao = true }
 
 local SLASH_COMMANDS = {
 	{ command = "/atq", description = L.COMMAND_OPTIONS },
-	{ command = "/atq ajuda", description = L.COMMAND_HELP },
+	{ command = "/atq " .. L.COMMAND_HELP_ARGUMENT, description = L.COMMAND_HELP },
 	{ command = "/atq status", description = L.COMMAND_STATUS },
-	{ command = "/atq posicao", description = L.COMMAND_RESET },
+	{ command = "/atq " .. L.COMMAND_RESET_ARGUMENT, description = L.COMMAND_RESET },
 }
 
 local NEW_PROFILE_QUESTION = L.PROFILE_NEW_QUESTION
@@ -266,7 +269,7 @@ local function Build()
 			{ label = L.INFO_VERSION, value = addonInfo.version },
 			{ label = L.INFO_AUTHOR, value = ADDON_AUTHOR },
 			{ label = L.INFO_LICENSE, value = ADDON_LICENSE },
-			{ label = L.INFO_COMMANDS, value = "/atq  ·  /atq ajuda  ·  /atq status" },
+			{ label = L.INFO_COMMANDS, value = ("/atq  ·  /atq %s  ·  /atq status"):format(L.COMMAND_HELP_ARGUMENT) },
 			-- Plain separators: the game font has no arrow glyph, and the one
 			-- used before rendered as an empty box.
 			{ label = L.INFO_BINDINGS, value = L.INFO_BINDINGS_PATH },
@@ -360,21 +363,21 @@ local function Build()
 	local help = Addon.HelpCommand.New(logger, SLASH_COMMANDS)
 
 	commands:Register("atq", function(argument)
-		local command = strtrim(argument)
+		local command = strtrim(argument):lower()
 
-		if command == STATUS_ARGUMENT then
+		if STATUS_ARGUMENTS[command] then
 			status:Run()
 			return
 		end
 
 		-- A frame dragged off screen cannot be reached to be dragged back, and
 		-- the options panel has no plain button to put this on.
-		if command == RESET_ARGUMENT then
+		if RESET_ARGUMENTS[command] then
 			ownTracker:ResetPosition()
 			return
 		end
 
-		if command == HELP_ARGUMENT then
+		if HELP_ARGUMENTS[command] then
 			help:Run()
 			return
 		end

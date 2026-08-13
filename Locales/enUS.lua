@@ -160,6 +160,8 @@ Addon.RegisterLocale("enUS", {
 	SCENARIO_DEATHS = "Deaths: %d",
 
 	-- Slash commands
+	COMMAND_HELP_ARGUMENT = "help",
+	COMMAND_RESET_ARGUMENT = "reset",
 	COMMAND_OPTIONS = "opens the options",
 	COMMAND_HELP = "shows this list",
 	COMMAND_STATUS = "confirms the addon is running",

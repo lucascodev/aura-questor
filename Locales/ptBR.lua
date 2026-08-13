@@ -148,6 +148,8 @@ Addon.RegisterLocale("ptBR", {
 	SCENARIO_KEYSTONE = "Pedra-chave nível %d",
 	SCENARIO_DEATHS = "Mortes: %d",
 
+	COMMAND_HELP_ARGUMENT = "ajuda",
+	COMMAND_RESET_ARGUMENT = "posicao",
 	COMMAND_OPTIONS = "abre as opções",
 	COMMAND_HELP = "mostra esta lista",
 	COMMAND_STATUS = "confirma que o addon está ativo",
