@@ -46,7 +46,7 @@ dentro:
 
 | Pasta | Responsabilidade |
 |---|---|
-| `Core/` | regras em Lua puro: filtros, ordenação, perfis. **Nenhuma API do WoW** |
+| `Core/` | regras em Lua puro, agrupadas por assunto: `Preferences/`, `Filtering/`, `Tracker/`, `Commands/`. **Nenhuma API do WoW** |
 | `Ports/` | contratos de tipo, lidos pelo language server e fora do pacote |
 | `Game/` | lê a API do jogo e não desenha nada |
 | `Modules/` | uma pasta por tipo de conteúdo: o que ela coleta e o que suas entradas fazem |
