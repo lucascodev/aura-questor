@@ -8,7 +8,7 @@ local IS_RECRAFT = true
 --- SectionProvider for tracked profession recipes.
 ---
 --- Recipes are tracked in two independent lists, plain and recraft, and the same
---- recipe can be in both — which is why the recraft ones carry the game's own
+--- recipe can be in both, which is why the recraft ones carry the game's own
 --- "Recrafting" wording rather than appearing as a duplicate.
 ---
 ---@class ProfessionSectionProvider : SectionProvider

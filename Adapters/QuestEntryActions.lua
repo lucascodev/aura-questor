@@ -7,7 +7,7 @@ local REWARD_ICON_SIZE = 14
 local CHOICE_LOOT_CURRENCY = 1
 local CHOICE_HEADING = "Escolha uma:"
 
---- EntryActions for quests, including world quests — both live in the quest log
+--- EntryActions for quests, including world quests, both live in the quest log
 --- and answer to the same calls.
 ---@class QuestEntryActions : EntryActions
 local QuestEntryActions = {}
@@ -62,7 +62,7 @@ end
 --- The quest's own briefing text.
 ---
 --- Reading it means selecting the quest, and the selection is global state the
---- quest log reads too — so whatever was selected is put back. Skipping that
+--- quest log reads too, so whatever was selected is put back. Skipping that
 --- would make hovering the tracker quietly change what the quest log shows.
 ---@param entry TrackerEntry
 ---@return string?
@@ -110,7 +110,7 @@ local function AddGuaranteed(rewards, questID)
 end
 
 --- Rewards the player picks between, which are a separate list from the
---- guaranteed ones — reading only the latter is why a quest paying four
+--- guaranteed ones, reading only the latter is why a quest paying four
 --- reputation choices looked like it paid nothing.
 ---@param rewards string[]
 ---@param questID number
@@ -144,7 +144,7 @@ end
 ---
 --- Icons are inlined because a reward you recognise at a glance is the whole
 --- point of showing it here instead of just naming it. Selecting the quest is
---- required — the choice API reads the selected one — and the previous
+--- required (the choice API reads the selected one) and the previous
 --- selection goes back, since the quest log shares that state.
 ---@param entry TrackerEntry
 ---@return string[]

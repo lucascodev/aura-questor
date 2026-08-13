@@ -21,7 +21,7 @@
 ---@field kind string Which provider produced it, for styling and actions.
 ---@field title string
 ---@field objectives TrackerObjective[]
----@field groupName? string What the quest log files it under — zone, campaign, category.
+---@field groupName? string What the quest log files it under: zone, campaign, category.
 ---@field level? number
 ---@field isComplete boolean
 ---@field canFindGroup boolean Group content the player may look for a party for.

@@ -61,7 +61,7 @@ local function ReadEntry(questID)
 end
 
 --- World quests belong to the zone they are in, and the task table is exactly
---- that list — tracked ones included.
+--- that list, tracked ones included.
 ---@return number[]
 local function CollectQuestIDs()
 	local questIDs = {}

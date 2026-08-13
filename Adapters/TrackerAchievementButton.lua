@@ -3,12 +3,12 @@ local _, Addon = ...
 local BUTTON_SIZE = 24
 
 --- A font string centres on its bounding box, descender space included, which
---- leaves the letter sitting low inside the frame. One pixel up puts it back —
+--- leaves the letter sitting low inside the frame. One pixel up puts it back,
 --- the same correction the numbered quest pins needed.
 local LABEL_OFFSET_Y = 1
 
 --- The red frame the tracker already uses around a quest item, empty of any
---- glyph — which is what lets a letter sit inside it and still look like it
+--- glyph, which is what lets a letter sit inside it and still look like it
 --- belongs beside the filter button.
 local FRAME_ATLAS = "UI-QuestTrackerButton-QuestItem-Frame"
 local HIGHLIGHT_ATLAS = "ui-questtrackerbutton-red-highlight"
@@ -17,7 +17,7 @@ local BUTTON_LABEL = "A"
 local LABEL_COLOR = { red = 1, green = 0.95, blue = 0.85 }
 
 --- The binding the game itself uses for the achievement panel, so the tooltip
---- shows whatever key the player actually has set — and nothing extra if they
+--- shows whatever key the player actually has set, and nothing extra if they
 --- have none.
 local ACHIEVEMENT_BINDING = "TOGGLEACHIEVEMENT"
 

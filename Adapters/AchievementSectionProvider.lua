@@ -44,7 +44,7 @@ local function ReadCriteria(achievementID)
 end
 
 --- Asks the tracking system first, since that is where the achievement came
---- from, and only then the achievement API — whose data is not always loaded
+--- from, and only then the achievement API, whose data is not always loaded
 --- and answers with an empty name when it is not.
 ---@param achievementID number
 ---@return string?

@@ -2,7 +2,7 @@ local _, Addon = ...
 
 --- Maps each quest to the heading it sits under in the quest log.
 ---
---- The log is a flat list where headers introduce the quests beneath them — a
+--- The log is a flat list where headers introduce the quests beneath them, a
 --- zone, a campaign, a category. Walking it once yields the grouping, which the
 --- tracker shows under each title and the filters use to offer them by group.
 ---@class QuestGroupReader

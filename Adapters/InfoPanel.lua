@@ -4,7 +4,7 @@ local PAGE_NAME = "Informações"
 local SUBTITLE = "Rastreador de objetivos próprio, construído sobre as APIs públicas do jogo."
 
 --- Measured from the top of the page. The title is set in the huge font, which
---- is far taller than it looks in a constant — the first spacing here left the
+--- is far taller than it looks in a constant, the first spacing here left the
 --- subtitle printed across it.
 local PADDING = 20
 local SUBTITLE_GAP = 56
@@ -26,7 +26,7 @@ local ACCENT_COLOR = { red = 0.95, green = 0.72, blue = 0.25, alpha = 1 }
 --- The about page.
 ---
 --- Built as a canvas rather than a list because a list page is made of
---- controls, and there is nothing here to change — only to read. It also
+--- controls, and there is nothing here to change, only to read. It also
 --- borrows the tracker's own look: quiet labels, gold values, and a rule with a
 --- bright head, so the options page and the tracker read as one addon.
 ---@class InfoPanel

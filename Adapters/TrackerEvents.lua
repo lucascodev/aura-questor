@@ -1,6 +1,6 @@
 local _, Addon = ...
 
---- QUEST_LOG_UPDATE fires in bursts — several times for a single quest turn-in.
+--- QUEST_LOG_UPDATE fires in bursts, several times for a single quest turn-in.
 --- Collapsing a burst into one refresh is what keeps the rebuild off the frame
 --- budget.
 local REFRESH_DELAY = 0.15

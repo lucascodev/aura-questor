@@ -2,7 +2,7 @@ local _, Addon = ...
 
 --- EntryActions for the running scenario.
 ---
---- A scenario has no page to open and cannot be untracked — the player is
+--- A scenario has no page to open and cannot be untracked, the player is
 --- simply in it. Both members are here to satisfy the contract, and the empty
 --- menu means right-clicking shows nothing rather than dead options.
 ---@class ScenarioEntryActions : EntryActions

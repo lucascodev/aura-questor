@@ -3,7 +3,7 @@ local _, Addon = ...
 --- Applies a filter by rewriting what the tracker watches.
 ---
 --- Filtering is an action, not a mode: nothing here runs on its own. The player
---- clicks a filter, the watch list is rebuilt once, and that is the end of it —
+--- clicks a filter, the watch list is rebuilt once, and that is the end of it,
 --- which is why there is no "off" to go back to.
 ---
 --- Nothing touches a frame either. The tracker redraws itself from the watch
