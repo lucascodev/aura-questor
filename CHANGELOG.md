@@ -5,6 +5,8 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
 ## [Não publicado]
 
+## [0.76.0] - 2026-08-14
+
 ### Adicionado
 
 - Integração com o TomTom, na aba **Integração** das opções: a seta segue a
