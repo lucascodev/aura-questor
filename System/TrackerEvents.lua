@@ -24,6 +24,9 @@ local EVENTS = {
 	"TRACKED_RECIPE_UPDATE",
 	-- Reagent counts are inventory, so gathering one has to redraw the line.
 	"BAG_UPDATE_DELAYED",
+	-- Using a quest item starts its cooldown without touching the quest log;
+	-- this is what redraws the sweep on the item button.
+	"BAG_UPDATE_COOLDOWN",
 	"PERKS_ACTIVITIES_TRACKED_UPDATED",
 	"PERKS_ACTIVITIES_TRACKED_LIST_CHANGED",
 	"INITIATIVE_TASKS_TRACKED_UPDATED",

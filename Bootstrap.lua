@@ -322,6 +322,12 @@ local function Build()
 		selectSort = function(modeID)
 			optionsPanel:SelectValue(Keys.SORT_MODE, modeID)
 		end,
+		isCompletedAtTop = function()
+			return preferences:Get(Keys.COMPLETED_AT_TOP)
+		end,
+		toggleCompletedAtTop = function()
+			optionsPanel:SelectValue(Keys.COMPLETED_AT_TOP, not preferences:Get(Keys.COMPLETED_AT_TOP))
+		end,
 		isEventsEnabled = function()
 			return preferences:Get(Keys.EVENTS_ENABLED)
 		end,

@@ -61,6 +61,8 @@ Addon.RegisterLocale("ptBR", {
 	PREF_SHOW_ITEM_BUTTONS_TIP = "O item usável ao lado do nome da missão. É ele que faz o rastreador parar de atualizar em combate; desligado desde o login, isso não acontece.",
 	PREF_SORT_MODE = "Ordenação",
 	PREF_SORT_MODE_TIP = "Como ordenar as entradas dentro de cada seção.",
+	PREF_COMPLETED_AT_TOP = "Concluídas no topo",
+	PREF_COMPLETED_AT_TOP_TIP = "Agrupa as entradas concluídas no topo da seção em vez do fim.",
 	PREF_EVENTS_ENABLED = "Rastrear eventos",
 	PREF_EVENTS_ENABLED_TIP = "Mostra a seção de eventos do mundo.",
 	PREF_BONUS_ZONE_WIDE = "Objetivos bônus da zona inteira",

@@ -5,6 +5,15 @@
 ---@field text string
 ---@field isComplete boolean
 ---@field percent? number Share of the whole, drawn as a bar instead of a count.
+---@field card? TrackerObjectiveCard Drawn as a framed card instead of a line.
+---@field widgetSetID? number The game renders the whole set in place of the
+--- line: the wave timer, the Delve header with tier, lives and modifiers.
+
+--- A line worth pulling out of the list: the stage of a scenario.
+---@class TrackerObjectiveCard
+---@field highlight string The large text, the one thing being watched.
+---@field heading? string Sits above the highlight, smaller.
+---@field atlas? string Art for the frame. Absent falls back to a plain box.
 
 --- Art drawn inside the pin, where the number would otherwise be. Without a size
 --- the atlas decides.
@@ -20,6 +29,8 @@
 ---@field id number|string
 ---@field kind string Which provider produced it, for styling and actions.
 ---@field title string
+---@field hidesTitle? boolean A card already carries the name, so the title line
+--- would print it twice. The title itself stays, for the tooltip and the id.
 ---@field objectives TrackerObjective[]
 ---@field groupName? string What the quest log files it under: zone, campaign, category.
 ---@field level? number

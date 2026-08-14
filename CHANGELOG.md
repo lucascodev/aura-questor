@@ -5,6 +5,42 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
 ## [Não publicado]
 
+## [0.75.0] - 2026-08-13
+
+### Adicionado
+
+- Estágio de cenário em destaque: um card com a arte que o próprio cenário
+  declara e, quando o passo publica widgets, o bloco da própria Blizzard,
+  com cronômetro de onda ou o cabeçalho de Imersão com nível, vidas e
+  modificadores, tudo se atualizando sozinho.
+- Botão de item também em missões mundiais e objetivos bônus, à direita do
+  bloco, com moldura, contador de cargas, relógio de recarga e o ícone em
+  vermelho fora de alcance.
+- Opção **Concluídas no topo**, no menu de filtro e nas opções, para agrupar
+  as entradas concluídas no topo da seção em vez do fim.
+
+### Alterado
+
+- A seção diz **Masmorra** em qualquer masmorra, não só em Mítica+, e diz
+  **Imersões** dentro de uma Delve.
+- Missão com objetivo em porcentagem mostra a linha e a barra, em vez de uma
+  barra sem texto.
+- Quebrar textos longos passou a ser o padrão em contas novas; perfis
+  existentes mantêm a escolha feita.
+
+### Corrigido
+
+- Erro de ancoragem quando uma missão com item entrava na lista: a área de
+  rolagem estava presa a uma textura, e frame protegido não aceita isso.
+- O clique no botão de item não disparava: o registro de cliques não casava
+  com o `ActionButtonUseKeyDown`.
+- Em combate, o rastreador com botão de item não tenta mais mexer em frames
+  protegidos: escala, tamanho, rolagem, modo de edição e visibilidade
+  esperam o combate acabar, e o refresh que segue o fim do combate aplica
+  tudo de uma vez.
+- O rastreador da Blizzard só é tocado quando o estado pedido muda, em vez
+  de a cada atualização.
+
 ## [0.74.0] - 2026-08-13
 
 ### Adicionado

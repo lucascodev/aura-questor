@@ -53,7 +53,9 @@ end
 --- the order they were tracked in.
 ---@private
 ---@param sections TrackerSection[]
-function TrackerContent:SinkCompleted(sections)
+function TrackerContent:GroupCompleted(sections)
+	local isAtTop = self.preferences:Get(Keys.COMPLETED_AT_TOP) == true
+
 	for _, section in ipairs(sections) do
 		local pending = {}
 		local completed = {}
@@ -62,11 +64,14 @@ function TrackerContent:SinkCompleted(sections)
 			table.insert(entry.isComplete and completed or pending, entry)
 		end
 
-		for _, entry in ipairs(completed) do
-			table.insert(pending, entry)
+		local first = isAtTop and completed or pending
+		local second = isAtTop and pending or completed
+
+		for _, entry in ipairs(second) do
+			table.insert(first, entry)
 		end
 
-		section.entries = pending
+		section.entries = first
 	end
 end
 
@@ -87,7 +92,7 @@ function TrackerContent:Build()
 	end)
 
 	self:SortEntries(sections)
-	self:SinkCompleted(sections)
+	self:GroupCompleted(sections)
 
 	return sections
 end

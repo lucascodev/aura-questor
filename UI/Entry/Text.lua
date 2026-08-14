@@ -81,7 +81,7 @@ end
 --- collected into a single list first and drawn by one loop. Only objectives get
 --- the dash: the others are context, not progress.
 ---@param entry TrackerEntry
----@return { text: string, color: table, percent: number? }[]
+---@return { text: string, color: table, percent: number?, card: TrackerObjectiveCard?, widgetSetID: number? }[]
 function EntryText.Rows(entry)
 	local rows = {}
 
@@ -90,11 +90,23 @@ function EntryText.Rows(entry)
 	end
 
 	for _, objective in ipairs(entry.objectives) do
+		-- Card e widget têm moldura própria, então o traço de objetivo sobraria.
+		local isFramed = objective.card ~= nil or objective.widgetSetID ~= nil
+
+		local color = objective.isComplete and OBJECTIVE_COMPLETE_COLOR or OBJECTIVE_COLOR
+
 		table.insert(rows, {
-			text = "- " .. HighlightProgress(objective.text),
-			color = objective.isComplete and OBJECTIVE_COMPLETE_COLOR or OBJECTIVE_COLOR,
-			percent = objective.percent,
+			text = isFramed and objective.text or ("- " .. HighlightProgress(objective.text)),
+			color = color,
+			card = objective.card,
+			widgetSetID = objective.widgetSetID,
 		})
+
+		-- A barra diz a fração, não o que está sendo medido. Sozinha, "0%" não
+		-- informa nada, então ela vem depois da linha em vez de no lugar dela.
+		if objective.percent and not isFramed then
+			table.insert(rows, { text = objective.text, color = color, percent = objective.percent })
+		end
 	end
 
 	if entry.timeLeftMinutes and entry.timeLeftMinutes > 0 then

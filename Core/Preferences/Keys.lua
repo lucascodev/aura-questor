@@ -13,6 +13,7 @@ local PreferenceKeys = {
 	BONUS_ZONE_WIDE = "bonusZoneWide",
 	EVENTS_ENABLED = "eventsEnabled",
 	SORT_MODE = "sortMode",
+	COMPLETED_AT_TOP = "completedAtTop",
 	TRACKER_WIDTH = "trackerWidth",
 	TRACKER_HEIGHT = "trackerHeight",
 	PANEL_OPACITY = "panelOpacity",
