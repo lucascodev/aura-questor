@@ -47,6 +47,26 @@ redesenho até `PLAYER_REGEN_ENABLED`.
 Atributos de botão seguro também não podem ser alterados em combate. É a mesma
 limitação do rastreador da Blizzard.
 
+## Taint no mapa: um erro conhecido e sem correção
+
+Abrir os detalhes de uma missão a partir de um addon —
+`QuestMapFrame_OpenToQuestDetails` — executa toda a máquina do mapa em contexto
+inseguro, e cada variável que ela escreve nessa passada fica manchada. Quando o
+próprio jogo repassa por essas variáveis mais tarde, dentro de combate, as
+chamadas protegidas dos pins (`SetPassThroughButtons`,
+`SetPropagateMouseClicks`) são bloqueadas, e o `ADDON_ACTION_BLOCKED` culpa
+quem manchou primeiro: este addon.
+
+A assinatura no BugSack é uma pilha que nasce num clique (no nosso painel ou no
+rastreador da Blizzard, quando os dois estão ligados), atravessa
+`QuestMapFrame_OpenToQuestDetails` e morre em `CheckMouseButtonPassthrough` nos
+providers do mapa.
+
+Não existe forma sem taint de um addon abrir os detalhes de missão; todo
+rastreador de terceiros carrega esse mesmo erro. O efeito real é só a flag de
+clique-atravessa dos pins ficar desatualizada até o fim do combate; nenhuma
+funcionalidade se perde.
+
 ## Medir frames
 
 `GetBottom()` e funções semelhantes devolvem coordenadas de tela que podem estar
