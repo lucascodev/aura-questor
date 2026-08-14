@@ -5,6 +5,14 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
 ## [Não publicado]
 
+## [0.76.1] - 2026-08-14
+
+### Corrigido
+
+- O modo de exibição do mapa só é escrito quando muda de verdade. Reescrever o
+  valor que já estava lá manchava o campo que o atalho de mapa lê, e abrir o
+  mapa em combate gerava avisos de ação bloqueada em nome do addon.
+
 ## [0.76.0] - 2026-08-14
 
 ### Adicionado
