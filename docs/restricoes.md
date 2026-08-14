@@ -67,6 +67,12 @@ rastreador de terceiros carrega esse mesmo erro. O efeito real é só a flag de
 clique-atravessa dos pins ficar desatualizada até o fim do combate; nenhuma
 funcionalidade se perde.
 
+O que dá para fazer é encolher a janela: o modo de exibição do mapa só é
+escrito quando muda de verdade (`MapNavigator.Open`), porque reescrever o valor
+que já está lá mancharia o campo que o atalho de mapa da Blizzard lê a cada
+tecla M. Quando a própria Blizzard reescreve o campo, a mancha some até o
+próximo toque nosso.
+
 ## Medir frames
 
 `GetBottom()` e funções semelhantes devolvem coordenadas de tela que podem estar
