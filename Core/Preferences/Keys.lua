@@ -14,6 +14,7 @@ local PreferenceKeys = {
 	EVENTS_ENABLED = "eventsEnabled",
 	SORT_MODE = "sortMode",
 	COMPLETED_AT_TOP = "completedAtTop",
+	TOMTOM_ENABLED = "tomTomEnabled",
 	TRACKER_WIDTH = "trackerWidth",
 	TRACKER_HEIGHT = "trackerHeight",
 	PANEL_OPACITY = "panelOpacity",
@@ -35,6 +36,7 @@ local PreferenceKeys = {
 	PROGRESS_BAR_TEXTURE = "progressBarTexture",
 	SHOW_FILTER_BUTTON = "showFilterButton",
 	SHOW_ACHIEVEMENT_BUTTON = "showAchievementButton",
+	SHOW_INTEGRATION_BUTTON = "showIntegrationButton",
 	SHOW_MINIMAP_BUTTON = "showMinimapButton",
 	SHOW_ITEM_BUTTONS = "showItemButtons",
 }

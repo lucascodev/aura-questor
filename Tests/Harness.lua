@@ -40,6 +40,7 @@ local CORE_FILES = {
 	"Commands/Status",
 	"Commands/Help",
 	"Commands/Startup",
+	"Integration/WaypointSync",
 }
 
 local Harness = {}

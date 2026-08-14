@@ -71,10 +71,14 @@ local display
 local filterButton
 ---@type TrackerAchievementButton
 local achievementButton
+---@type TrackerIntegrationButton
+local integrationButton
 ---@type OwnTrackerFrame
 local ownTracker
 ---@type MinimapButton
 local minimapButton
+---@type WaypointSync
+local waypointSync
 
 --- Composition root: the only place allowed to know every concrete implementation.
 local function Build()
@@ -118,8 +122,32 @@ local function Build()
 			if changedKey == Keys.SOUND_QUEST_COMPLETE then
 				PlayCompletionSound()
 			end
+
+			-- Desligar a integração recolhe a seta na hora, sem esperar evento.
+			if changedKey == Keys.TOMTOM_ENABLED and waypointSync then
+				waypointSync:Sync()
+			end
 		end
 	)
+
+	local waypointArrow = Addon.TomTomArrow.New(addonInfo.title)
+	waypointSync = Addon.WaypointSync.New(Addon.WaypointReader.Current, waypointArrow, function()
+		return preferences:Get(Keys.TOMTOM_ENABLED) == true
+	end)
+
+	---@type EntryWaypoints
+	local waypoints = {
+		isAvailable = function()
+			return Addon.TomTomArrow.IsAvailable() and preferences:Get(Keys.TOMTOM_ENABLED) == true
+		end,
+		send = function(entry)
+			local target = Addon.WaypointReader.ForQuest(entry.id, entry.kind)
+
+			if target and target.x then
+				waypointArrow:SetWaypoint(target)
+			end
+		end,
+	}
 
 	local hiddenCategories = profile.hiddenCategories
 	local categories = Addon.AchievementCategories.New(
@@ -139,12 +167,12 @@ local function Build()
 	-- A world quest is a real quest and answers to the same actions. A bonus
 	-- objective is not: it has no quest log page and was never tracked on
 	-- purpose, so it gets its own, shorter set.
-	local questActions = Addon.QuestEntryActions.New()
+	local questActions = Addon.QuestEntryActions.New(waypoints)
 	local collectableActions = Addon.CollectableEntryActions.New()
 	local actions = Addon.EntryActionRouter.New({
 		quest = questActions,
 		worldQuest = questActions,
-		bonus = Addon.BonusEntryActions.New(),
+		bonus = Addon.BonusEntryActions.New(waypoints),
 		achievement = Addon.AchievementEntryActions.New(),
 		event = Addon.EventEntryActions.New(),
 		scenario = Addon.ScenarioEntryActions.New(),
@@ -198,6 +226,7 @@ local function Build()
 
 	local function RefreshFromGame()
 		display:Refresh()
+		waypointSync:Sync()
 
 		if #completion:Detect(display:Sections()) > 0 then
 			PlayCompletionSound()
@@ -350,6 +379,10 @@ local function Build()
 
 	achievementButton = Addon.TrackerAchievementButton.New(Addon.AchievementPanel.Open)
 
+	integrationButton = Addon.TrackerIntegrationButton.New(function()
+		optionsPanel:OpenIntegrations()
+	end)
+
 	local function ToggleTracker()
 		optionsPanel:SelectValue(
 			Keys.OWN_TRACKER_ENABLED,
@@ -363,6 +396,7 @@ local function Build()
 
 	widgets[Keys.SHOW_FILTER_BUTTON] = filterButton
 	widgets[Keys.SHOW_ACHIEVEMENT_BUTTON] = achievementButton
+	widgets[Keys.SHOW_INTEGRATION_BUTTON] = integrationButton
 	widgets[Keys.SHOW_MINIMAP_BUTTON] = minimapButton
 
 	local status = Addon.StatusCommand.New(logger, addonInfo)
@@ -407,8 +441,11 @@ local function Start()
 
 	filterButton:Attach(headerButtons)
 	achievementButton:Attach(headerButtons)
+	integrationButton:Attach(headerButtons)
 	minimapButton:Attach()
 	display:Refresh()
+	-- Entrar no jogo já supervisionando uma missão também merece a seta.
+	waypointSync:Sync()
 	startup:Run()
 end
 

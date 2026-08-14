@@ -17,7 +17,7 @@ local GROUP_COLOR = { red = 0.45, green = 0.65, blue = 0.9 }
 local EntryText = {}
 
 EntryText.TITLE_COLOR = { red = 1, green = 0.82, blue = 0 }
-EntryText.TITLE_COMPLETE_COLOR = { red = 0.55, green = 0.85, blue = 0.55 }
+EntryText.TITLE_COMPLETE_COLOR = { red = 0.1, green = 1, blue = 0.1 }
 
 --- The one the arrow is following reads brighter than the rest. The pin already
 --- says so, but only if you are looking at the pin.

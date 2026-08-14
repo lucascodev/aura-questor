@@ -9,6 +9,9 @@ local SWATCH_SIZE = 22
 local SWATCH_BORDER = 1
 local SWATCH_LABEL_GAP = 8
 local CHECKBOX_LABEL_GAP = 4
+local CLASSIC_CHECK_SIZE = 28
+local CLASSIC_LABEL_GAP = 2
+local DISABLED_ALPHA = 0.5
 
 local LABEL_COLOR = { red = 0.95, green = 0.72, blue = 0.25 }
 local SWATCH_BORDER_COLOR = { red = 0.35, green = 0.33, blue = 0.28, alpha = 1 }
@@ -116,6 +119,56 @@ function PanelControls.Button(parent, options)
 	button:SetScript("OnClick", options.run)
 
 	return button
+end
+
+--- O checkbox clássico de marca dourada, o mesmo das páginas de opções dos
+--- addons tradicionais. Desabilitado aparece desmarcado e escurecido: o
+--- template não tem arte própria de desabilitado, e uma marca acesa num
+--- controle que não pode agir afirmaria um estado que não existe.
+---@param parent table
+---@param options { label: string, get: fun(): boolean, set: fun(value: boolean), isEnabled: (fun(): boolean)?, tooltip: string? }
+---@return table
+function PanelControls.ClassicCheckbox(parent, options)
+	local checkbox = CreateFrame("CheckButton", nil, parent, "UICheckButtonTemplate")
+	checkbox:SetSize(CLASSIC_CHECK_SIZE, CLASSIC_CHECK_SIZE)
+
+	local label = checkbox.Text
+
+	if not label then
+		label = checkbox:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+		label:SetPoint("LEFT", checkbox, "RIGHT", CLASSIC_LABEL_GAP, 0)
+	end
+
+	label:SetText(options.label)
+
+	checkbox:SetScript("OnClick", function(owner)
+		options.set(owner:GetChecked() == true)
+	end)
+
+	if options.tooltip then
+		checkbox:SetScript("OnEnter", function(owner)
+			GameTooltip:SetOwner(owner, "ANCHOR_RIGHT")
+			GameTooltip:SetText(options.label)
+			GameTooltip:AddLine(options.tooltip, 1, 1, 1, true)
+			GameTooltip:Show()
+		end)
+		checkbox:SetScript("OnLeave", function()
+			GameTooltip:Hide()
+		end)
+	end
+
+	function checkbox:Refresh()
+		local isEnabled = options.isEnabled == nil or options.isEnabled()
+
+		checkbox:SetChecked(isEnabled and options.get())
+		checkbox:SetEnabled(isEnabled)
+		checkbox:SetAlpha(isEnabled and 1 or DISABLED_ALPHA)
+		label:SetFontObject(isEnabled and GameFontHighlight or GameFontDisable)
+	end
+
+	checkbox:Refresh()
+
+	return checkbox
 end
 
 ---@param parent table

@@ -6,12 +6,14 @@ local _, Addon = ...
 --- the quest log and the player never chose to track it, so opening details and
 --- untracking are not offered. Only the map is.
 ---@class BonusEntryActions : EntryActions
+---@field private waypoints EntryWaypoints?
 local BonusEntryActions = {}
 BonusEntryActions.__index = BonusEntryActions
 
+---@param waypoints EntryWaypoints?
 ---@return BonusEntryActions
-function BonusEntryActions.New()
-	return setmetatable({}, BonusEntryActions)
+function BonusEntryActions.New(waypoints)
+	return setmetatable({ waypoints = waypoints }, BonusEntryActions)
 end
 
 --- A task reports its zone through the task API first; the quest log's answer is
@@ -33,7 +35,7 @@ end
 ---@param entry TrackerEntry
 ---@return EntryMenuItem[]
 function BonusEntryActions:MenuItems(entry)
-	return {
+	local items = {
 		{
 			label = OBJECTIVES_SHOW_QUEST_MAP,
 			run = function()
@@ -41,6 +43,17 @@ function BonusEntryActions:MenuItems(entry)
 			end,
 		},
 	}
+
+	if self.waypoints and self.waypoints.isAvailable() then
+		table.insert(items, {
+			label = Addon.L.MENU_SEND_TO_TOMTOM,
+			run = function()
+				self.waypoints.send(entry)
+			end,
+		})
+	end
+
+	return items
 end
 
 Addon.BonusEntryActions = BonusEntryActions
