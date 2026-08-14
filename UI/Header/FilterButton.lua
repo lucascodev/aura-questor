@@ -9,6 +9,7 @@ local CATEGORIES_LABEL = Addon.L.MENU_CATEGORIES
 local SECTIONS_LABEL = Addon.L.MENU_SECTIONS
 local UNTRACK_ALL_LABEL = Addon.L.MENU_UNTRACK_ALL
 local TRACK_EVENTS_LABEL = Addon.L.MENU_TRACK_EVENTS
+local COMPLETED_AT_TOP_LABEL = Addon.L.PREF_COMPLETED_AT_TOP
 local SHOW_ALL_LABEL = Addon.L.MENU_CHECK_ALL
 local HIDE_ALL_LABEL = Addon.L.MENU_UNCHECK_ALL
 
@@ -66,6 +67,12 @@ function TrackerFilterButton:AddSorting(rootDescription)
 			self.commands.selectSort(modeID)
 		end, mode.id)
 	end
+
+	rootDescription:CreateCheckbox(
+		COMPLETED_AT_TOP_LABEL,
+		self.commands.isCompletedAtTop,
+		self.commands.toggleCompletedAtTop
+	)
 end
 
 ---@private

@@ -157,8 +157,12 @@ function OwnTrackerFrame:Build(addonInfo, position)
 	accent:SetSize(HEADER_ACCENT_WIDTH, SECTION_LINE_THICKNESS)
 	accent:SetPoint("TOPLEFT", rule, "TOPLEFT")
 
+	-- Ancorado ao cabeçalho, não à régua: o botão de item de missão é protegido,
+	-- e o jogo recusa ancorar frame protegido a uma cadeia que passa por textura.
+	local scrollTop = HEADER_RULE_GAP + SECTION_LINE_THICKNESS + FRAME_PADDING
+
 	local scroll = CreateFrame("ScrollFrame", nil, root)
-	scroll:SetPoint("TOPLEFT", rule, "BOTTOMLEFT", 0, -FRAME_PADDING)
+	scroll:SetPoint("TOPLEFT", header, "BOTTOMLEFT", 0, -scrollTop)
 	scroll:SetPoint("BOTTOMRIGHT", root, "BOTTOMRIGHT", -FRAME_PADDING, FRAME_PADDING)
 
 	local content = CreateFrame("Frame", nil, scroll)
@@ -167,6 +171,10 @@ function OwnTrackerFrame:Build(addonInfo, position)
 
 	scroll:EnableMouseWheel(true)
 	scroll:SetScript("OnMouseWheel", function(frame, delta)
+		if self:IsLockedByCombat() then
+			return
+		end
+
 		local hidden = math.max(0, content:GetHeight() - frame:GetHeight())
 		local wanted = frame:GetVerticalScroll() - delta * WHEEL_STEP
 
@@ -329,6 +337,10 @@ end
 --- and not on every quest update.
 ---@param appearance TrackerAppearance
 function OwnTrackerFrame:SetAppearance(appearance)
+	if self:IsLockedByCombat() then
+		return
+	end
+
 	self.root:SetSize(appearance.width, appearance.height)
 	self.content:SetWidth(appearance.width - FRAME_PADDING * 2)
 
@@ -365,6 +377,10 @@ end
 --- moving deliberate, and the outline says the frame is listening.
 ---@param isEditing boolean
 function OwnTrackerFrame:SetEditing(isEditing)
+	if self:IsLockedByCombat() then
+		return
+	end
+
 	self.root:EnableMouse(isEditing)
 	self.editOutline:SetShown(isEditing)
 end
@@ -373,6 +389,10 @@ end
 --- width and height only change how much room the list has.
 ---@param scale number
 function OwnTrackerFrame:SetScale(scale)
+	if self:IsLockedByCombat() then
+		return
+	end
+
 	self.root:SetScale(scale)
 end
 

@@ -16,10 +16,31 @@ local BAR_BACKGROUND_COLOR = { red = 0, green = 0, blue = 0, alpha = 0.55 }
 local BAR_FILL_COLOR = { red = 0.16, green = 0.55, blue = 0.28 }
 local BAR_COMPLETE_COLOR = { red = 0.35, green = 0.35, blue = 0.35 }
 
---- Sized to sit on the title's line rather than tower over it, now that it is
---- inline instead of parked in the corner.
-local ITEM_SIZE = 22
-local ITEM_GAP = 4
+--- A countdown gets a card of its own: the number is the thing being watched,
+--- and as one more dashed line it reads like a footnote.
+local CARD_PADDING = 8
+local CARD_GAP = 4
+local CARD_HIGHLIGHT_SIZE_DELTA = 9
+local CARD_BACKDROP = {
+	bgFile = "Interface\\Buttons\\WHITE8X8",
+	edgeFile = "Interface\\Buttons\\WHITE8X8",
+	edgeSize = 1,
+}
+local CARD_BACKGROUND_COLOR = { red = 0.04, green = 0.05, blue = 0.09, alpha = 0.75 }
+local CARD_BORDER_COLOR = { red = 0.32, green = 0.29, blue = 0.24, alpha = 1 }
+
+--- Hung off the right edge, on the block's vertical centre: at the head of the
+--- title it squeezed the name aside to make room for the icon.
+local ITEM_SIZE = 32
+local ITEM_GAP = 6
+local ITEM_ICON_INSET = 2
+--- The standard trim that cuts the baked-in edge off an icon before framing it.
+local ITEM_ICON_CROP = 0.08
+local ITEM_BORDER_ATLAS = "UI-HUD-ActionBar-IconFrame"
+--- Andar não dispara evento, então o alcance é conferido por tempo, no mesmo
+--- ritmo e vermelho do botão de item da Blizzard.
+local ITEM_RANGE_INTERVAL = 0.3
+local ITEM_OUT_OF_RANGE_COLOR = { red = 1, green = 0.1, blue = 0.1 }
 local TAG_SIZE = 18
 local TAG_GAP = 3
 local GROUP_SIZE = 20
@@ -120,6 +141,8 @@ local function CreateBlock(parent, actions)
 		group = group,
 		lines = {},
 		bars = {},
+		cards = {},
+		widgets = {},
 	}
 
 	-- Clicking the pin of what is already being followed lets go of it, the way
@@ -212,6 +235,47 @@ end
 
 ---@param block table
 ---@return table
+local function CreateWidgetContainer(block)
+	return CreateFrame("Frame", nil, block.frame, "UIWidgetContainerTemplate")
+end
+
+---@param block table
+---@return table
+local function CreateCard(block)
+	local card = CreateFrame("Frame", nil, block.frame, "BackdropTemplate")
+	card:SetBackdrop(CARD_BACKDROP)
+	card:SetBackdropColor(
+		CARD_BACKGROUND_COLOR.red,
+		CARD_BACKGROUND_COLOR.green,
+		CARD_BACKGROUND_COLOR.blue,
+		CARD_BACKGROUND_COLOR.alpha
+	)
+	card:SetBackdropBorderColor(
+		CARD_BORDER_COLOR.red,
+		CARD_BORDER_COLOR.green,
+		CARD_BORDER_COLOR.blue,
+		CARD_BORDER_COLOR.alpha
+	)
+
+	local art = card:CreateTexture(nil, "BACKGROUND")
+	art:SetAllPoints()
+	art:Hide()
+
+	local heading = card:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+	heading:SetJustifyH("LEFT")
+
+	local highlight = card:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+	highlight:SetJustifyH("LEFT")
+
+	card.art = art
+	card.heading = heading
+	card.highlight = highlight
+
+	return card
+end
+
+---@param block table
+---@return table
 local function CreateLine(block)
 	local line = block.frame:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 	line:SetJustifyH("LEFT")
@@ -229,11 +293,61 @@ end
 local function CreateItemButton(block)
 	local item = CreateFrame("Button", nil, block.frame, "SecureActionButtonTemplate")
 	item:SetSize(ITEM_SIZE, ITEM_SIZE)
-	item:SetPoint("TOPLEFT", block.frame, "TOPLEFT", BADGE_SIZE + BADGE_GAP, 0)
+	-- Anchored once, to the RIGHT: the vertical centre follows the block's
+	-- height on its own, and a protected frame cannot be re-anchored in combat.
+	item:SetPoint("RIGHT")
 	item:SetAttribute("type", "item")
+	-- Since 10.0 the secure handler only fires when the registered press matches
+	-- the ActionButtonUseKeyDown cvar. Registering both instead would make the
+	-- handler toggle pass-through on every click, a protected call in combat.
+	item:RegisterForClicks(GetCVarBool("ActionButtonUseKeyDown") and "AnyDown" or "AnyUp")
 
 	block.icon = item:CreateTexture(nil, "ARTWORK")
-	block.icon:SetAllPoints()
+	block.icon:SetPoint("TOPLEFT", ITEM_ICON_INSET, -ITEM_ICON_INSET)
+	block.icon:SetPoint("BOTTOMRIGHT", -ITEM_ICON_INSET, ITEM_ICON_INSET)
+	block.icon:SetTexCoord(
+		ITEM_ICON_CROP,
+		1 - ITEM_ICON_CROP,
+		ITEM_ICON_CROP,
+		1 - ITEM_ICON_CROP
+	)
+
+	if C_Texture.GetAtlasInfo(ITEM_BORDER_ATLAS) then
+		local border = item:CreateTexture(nil, "OVERLAY")
+		border:SetAllPoints()
+		border:SetAtlas(ITEM_BORDER_ATLAS)
+	end
+
+	block.itemCooldown = CreateFrame("Cooldown", nil, item, "CooldownFrameTemplate")
+	block.itemCooldown:SetAllPoints(block.icon)
+
+	block.itemCount = item:CreateFontString(nil, "OVERLAY", "NumberFontNormalSmall")
+	block.itemCount:SetPoint("BOTTOMRIGHT", -ITEM_ICON_INSET, ITEM_ICON_INSET)
+
+	-- OnUpdate only runs while the button is shown, so the check costs nothing
+	-- when no entry carries an item.
+	local sinceCheck = 0
+	item:SetScript("OnUpdate", function(_, elapsed)
+		sinceCheck = sinceCheck + elapsed
+
+		if sinceCheck < ITEM_RANGE_INTERVAL then
+			return
+		end
+
+		sinceCheck = 0
+
+		local isInRange = block.entry and Addon.QuestItemSource.InRange(block.entry)
+
+		if isInRange == false then
+			block.icon:SetVertexColor(
+				ITEM_OUT_OF_RANGE_COLOR.red,
+				ITEM_OUT_OF_RANGE_COLOR.green,
+				ITEM_OUT_OF_RANGE_COLOR.blue
+			)
+		else
+			block.icon:SetVertexColor(1, 1, 1)
+		end
+	end)
 
 	return item
 end
@@ -267,6 +381,14 @@ local function UpdateItem(pool, block, entry)
 
 	block.item:SetAttribute("item", item.link)
 	block.icon:SetTexture(item.texture or FALLBACK_ICON)
+	-- A recycled button may still be red from the entry it drew before.
+	block.icon:SetVertexColor(1, 1, 1)
+
+	-- One charge is implied by the button existing; only more is worth a number.
+	block.itemCount:SetShown(item.charges > 1)
+	block.itemCount:SetText(item.charges)
+	block.itemCooldown:SetCooldown(item.cooldownStart, item.cooldownDuration)
+
 	block.item:Show()
 
 	return true
@@ -289,6 +411,90 @@ end
 ---@param path string
 function EntryBlockPool:SetProgressBarTexture(path)
 	self.progressBarTexture = path
+end
+
+--- Devolve a altura, porque ela sai do tamanho da fonte escolhida e o layout
+--- não tem como saber antes de o texto estar posto.
+--- Registrar de novo o mesmo conjunto destruiria e recriaria cada widget a
+--- cada refresh; o jogo mantém o conteúdo vivo sozinho.
+---@private
+---@param container table
+---@param widgetSetID number
+---@return number
+function EntryBlockPool:ApplyWidgetSet(container, widgetSetID)
+	if container.widgetSetID ~= widgetSetID then
+		container:RegisterForWidgetSet(widgetSetID, DefaultWidgetLayout)
+	end
+
+	container:Show()
+
+	return math.max(container:GetHeight(), 1)
+end
+
+---@private
+---@param card table
+---@param content TrackerObjectiveCard
+---@param width number
+---@return number
+function EntryBlockPool:ApplyCard(card, content, width)
+	local textWidth = width - CARD_PADDING * 2
+	local top = CARD_PADDING
+
+	card:SetWidth(width)
+
+	-- Com arte própria a moldura desenhada sobraria por baixo dela, aparecendo
+	-- nas beiradas onde o atlas é transparente.
+	local hasArt = content.atlas ~= nil
+	local frameAlpha = hasArt and 0 or 1
+
+	card.art:SetShown(hasArt)
+	card:SetBackdropColor(
+		CARD_BACKGROUND_COLOR.red,
+		CARD_BACKGROUND_COLOR.green,
+		CARD_BACKGROUND_COLOR.blue,
+		CARD_BACKGROUND_COLOR.alpha * frameAlpha
+	)
+	card:SetBackdropBorderColor(
+		CARD_BORDER_COLOR.red,
+		CARD_BORDER_COLOR.green,
+		CARD_BORDER_COLOR.blue,
+		frameAlpha
+	)
+
+	if hasArt then
+		card.art:SetAtlas(content.atlas)
+	end
+
+	if content.heading then
+		card.heading:SetText(content.heading)
+		card.heading:SetWidth(textWidth)
+		card.heading:ClearAllPoints()
+		card.heading:SetPoint("TOPLEFT", CARD_PADDING, -top)
+		card.heading:Show()
+
+		if self.fontStyle then
+			Addon.FontStyler.Apply(card.heading, self.fontStyle, LINE_SIZE_DELTA)
+		end
+
+		top = top + card.heading:GetStringHeight() + CARD_GAP
+	else
+		card.heading:Hide()
+	end
+
+	card.highlight:SetText(content.highlight)
+	card.highlight:SetWidth(textWidth)
+	card.highlight:ClearAllPoints()
+	card.highlight:SetPoint("TOPLEFT", CARD_PADDING, -top)
+
+	if self.fontStyle then
+		Addon.FontStyler.Apply(card.highlight, self.fontStyle, CARD_HIGHLIGHT_SIZE_DELTA)
+	end
+
+	top = top + card.highlight:GetStringHeight()
+
+	card:SetHeight(top + CARD_PADDING)
+
+	return card:GetHeight()
 end
 
 ---@private
@@ -406,26 +612,26 @@ function EntryBlockPool:Build(entry, width, index)
 		block.tag:SetAtlas(entry.tagAtlas)
 	end
 
-	-- The item takes the head of the title's line, the group eye and the tag the
-	-- tail; objectives keep the same indent either way, so the column stays
-	-- straight down the list.
+	-- The item hangs off the right edge; the group eye and the tag take the tail
+	-- of the title's line. Objectives keep the same indent either way, so the
+	-- column stays straight down the list.
 	local objectiveLeft = hasPin and BADGE_SIZE + BADGE_GAP or 0
-	local titleLeft = objectiveLeft + (hasItem and ITEM_SIZE + ITEM_GAP or 0)
+	local itemWidth = hasItem and ITEM_SIZE + ITEM_GAP or 0
 	local groupWidth = entry.canFindGroup and GROUP_SIZE + GROUP_GAP or 0
 	local tagWidth = entry.tagAtlas and TAG_SIZE + TAG_GAP or 0
 
 	local titleColor = Addon.EntryText.TitleColor(entry, isSuperTracked)
-	block.title:SetWidth(width - titleLeft - groupWidth - tagWidth)
-	block.title:SetText(Addon.EntryText.Title(entry))
+	block.title:SetWidth(width - objectiveLeft - groupWidth - tagWidth - itemWidth)
+	block.title:SetText(entry.hidesTitle and "" or Addon.EntryText.Title(entry))
 	block.title:SetTextColor(titleColor.red, titleColor.green, titleColor.blue)
 
 	-- Everything lines up against the title's own line, not against the pin.
 	-- Measuring the row by the pin instead pushed the objectives a full pin
 	-- height below the name and left a hole under every quest.
-	local titleHeight = block.title:GetStringHeight()
+	local titleHeight = entry.hidesTitle and 0 or block.title:GetStringHeight()
 
 	block.title:ClearAllPoints()
-	block.title:SetPoint("TOPLEFT", block.frame, "TOPLEFT", titleLeft, 0)
+	block.title:SetPoint("TOPLEFT", block.frame, "TOPLEFT", objectiveLeft, 0)
 
 	local pinSize = BADGE_SIZE
 
@@ -438,10 +644,6 @@ function EntryBlockPool:Build(entry, width, index)
 		block.badge:SetPoint("TOPLEFT", block.frame, "TOPLEFT", (BADGE_SIZE - pinSize) / 2, 0)
 	end
 
-	if hasItem then
-		CenterInRow(block.item, "TOPLEFT", objectiveLeft, titleHeight, ITEM_SIZE)
-	end
-
 	if entry.canFindGroup then
 		CenterInRow(block.group, "TOPRIGHT", 0, titleHeight, GROUP_SIZE)
 	end
@@ -452,12 +654,35 @@ function EntryBlockPool:Build(entry, width, index)
 
 	local height = titleHeight
 	local rows = Addon.EntryText.Rows(entry)
-	local rowWidth = width - objectiveLeft
+	local rowWidth = width - objectiveLeft - itemWidth
 	local usedLines = 0
 	local usedBars = 0
+	local usedCards = 0
+	local usedWidgets = 0
 
 	for _, row in ipairs(rows) do
-		if row.percent then
+		if row.widgetSetID then
+			usedWidgets = usedWidgets + 1
+
+			local container = block.widgets[usedWidgets] or CreateWidgetContainer(block)
+			block.widgets[usedWidgets] = container
+
+			container:ClearAllPoints()
+			container:SetPoint("TOPLEFT", block.frame, "TOPLEFT", objectiveLeft, -(height + LINE_SPACING))
+
+			height = height + LINE_SPACING + self:ApplyWidgetSet(container, row.widgetSetID)
+		elseif row.card then
+			usedCards = usedCards + 1
+
+			local card = block.cards[usedCards] or CreateCard(block)
+			block.cards[usedCards] = card
+
+			card:ClearAllPoints()
+			card:SetPoint("TOPLEFT", block.frame, "TOPLEFT", objectiveLeft, -(height + LINE_SPACING))
+			card:Show()
+
+			height = height + LINE_SPACING + self:ApplyCard(card, row.card, rowWidth)
+		elseif row.percent then
 			usedBars = usedBars + 1
 
 			local bar = block.bars[usedBars] or CreateBar(block)
@@ -492,13 +717,27 @@ function EntryBlockPool:Build(entry, width, index)
 		block.lines[lineIndex]:Hide()
 	end
 
+	for cardIndex = usedCards + 1, #block.cards do
+		block.cards[cardIndex]:Hide()
+	end
+
+	for widgetIndex = usedWidgets + 1, #block.widgets do
+		local container = block.widgets[widgetIndex]
+
+		if container.widgetSetID then
+			container:UnregisterForWidgetSet()
+		end
+
+		container:Hide()
+	end
+
 	for barIndex = usedBars + 1, #block.bars do
 		block.bars[barIndex]:Hide()
 	end
 
-	-- A one-line entry can be shorter than its own pin; the block still has to
-	-- contain it.
-	height = math.max(height, hasPin and pinSize or 0)
+	-- A one-line entry can be shorter than its own pin or its item button; the
+	-- block still has to contain them.
+	height = math.max(height, hasPin and pinSize or 0, hasItem and ITEM_SIZE or 0)
 	block.frame:SetHeight(height)
 
 	return block, height

@@ -11,6 +11,13 @@ local OVERTIME_LABEL = Addon.L.SCENARIO_OVERTIME
 local KEYSTONE_LABEL = Addon.L.SCENARIO_KEYSTONE
 local DEATHS_LABEL = Addon.L.SCENARIO_DEATHS
 local AFFIXES_SEPARATOR = ", "
+local DUNGEON_INSTANCE_TYPE = "party"
+local WIDGET_SET_RETURN = 12
+local TEXTURE_KIT_RETURN = 12
+local DELVE_WIDGET_TYPE = Enum.UIWidgetVisualizationType
+	and Enum.UIWidgetVisualizationType.ScenarioHeaderDelves
+local DEFAULT_TEXTURE_KIT = "evergreen-scenario"
+local HEADER_ATLAS_SUFFIX = "-trackerheader"
 
 --- SectionProvider for scenarios, including Mythic+ dungeons.
 ---@class ScenarioSectionProvider : SectionProvider
@@ -22,16 +29,32 @@ function ScenarioSectionProvider.New()
 	return setmetatable({}, ScenarioSectionProvider)
 end
 
---- Weighted and pre-formatted criteria already read as sentences; the rest are
---- bare counts that need the numbers put in front of them.
+--- Pre-formatted criteria already read as sentences; the rest are bare counts
+--- that need the numbers put in front of them.
 ---@param criteria table
 ---@return string
 local function FormatCriteria(criteria)
-	if criteria.isWeightedProgress or criteria.isFormatted then
+	if criteria.isFormatted then
 		return criteria.description
 	end
 
 	return ("%d/%d %s"):format(criteria.quantity, criteria.totalQuantity, criteria.description)
+end
+
+--- Weighted progress is a share of the whole, not a count of things: the
+--- quantity is already the percentage, and it belongs in a bar.
+---@param criteria table
+---@return TrackerObjective
+local function AsObjective(criteria)
+	if criteria.isWeightedProgress then
+		return {
+			text = criteria.description,
+			percent = criteria.quantity,
+			isComplete = criteria.completed == true,
+		}
+	end
+
+	return { text = FormatCriteria(criteria), isComplete = criteria.completed == true }
 end
 
 ---@param objectives TrackerObjective[]
@@ -46,10 +69,7 @@ local function AddCriteria(objectives)
 		local criteria = C_ScenarioInfo.GetCriteriaInfo(index)
 
 		if criteria then
-			table.insert(objectives, {
-				text = FormatCriteria(criteria),
-				isComplete = criteria.completed == true,
-			})
+			table.insert(objectives, AsObjective(criteria))
 		end
 	end
 end
@@ -148,16 +168,68 @@ local function AddChallengeInfo(objectives)
 	})
 end
 
+--- Cada cenário declara o seu conjunto de arte, e o fundo do bloco segue dele
+--- por nome. Quando o atlas não existe naquela versão do cliente, o card volta
+--- para a caixa lisa em vez de sumir.
+---@return string?
+local function ReadHeaderAtlas()
+	local textureKit = select(TEXTURE_KIT_RETURN, C_Scenario.GetInfo()) or DEFAULT_TEXTURE_KIT
+	local atlas = textureKit .. HEADER_ATLAS_SUFFIX
+
+	if not C_Texture.GetAtlasInfo(atlas) then
+		return nil
+	end
+
+	return atlas
+end
+
+--- Mítica+ não serve de teste: uma masmorra normal também é masmorra, e só o
+--- tipo da instância separa isso de um cenário a céu aberto.
+---@return boolean
+local function IsInDungeon()
+	local _, instanceType = IsInInstance()
+
+	return instanceType == DUNGEON_INSTANCE_TYPE
+end
+
 ---@param stageName string
 ---@param currentStage number
 ---@param numStages number
 ---@return string
-local function FormatTitle(stageName, currentStage, numStages)
+local function FormatStage(stageName, currentStage, numStages)
 	if numStages <= 1 then
 		return stageName
 	end
 
 	return ("%s (%d/%d)"):format(stageName, currentStage, numStages)
+end
+
+--- O passo pode publicar um conjunto de widgets: o cronômetro de onda, o
+--- cabeçalho de Imersão com nível, vidas e modificadores. Quando existe, o
+--- próprio jogo desenha esse bloco, e correr atrás de cada temporada com
+--- desenho nosso deixa de ser necessário.
+---@return number?
+---@return boolean isDelve
+local function ReadWidgetSet()
+	local widgetSetID = select(WIDGET_SET_RETURN, C_Scenario.GetStepInfo())
+
+	if not widgetSetID or widgetSetID == 0 then
+		return nil, false
+	end
+
+	local widgets = C_UIWidgetManager.GetAllWidgetsBySetID(widgetSetID)
+
+	if not widgets or #widgets == 0 then
+		return nil, false
+	end
+
+	for _, widget in ipairs(widgets) do
+		if widget.widgetType == DELVE_WIDGET_TYPE then
+			return widgetSetID, true
+		end
+	end
+
+	return widgetSetID, false
 end
 
 ---@return TrackerSection[]
@@ -172,6 +244,28 @@ function ScenarioSectionProvider:Collect()
 	local stageName, stageDescription = C_Scenario.GetStepInfo()
 	local objectives = {}
 
+	-- Numa masmorra o estágio é a própria masmorra: não há nome a repetir, e o
+	-- card passa a ser o título em vez de vir abaixo dele.
+	local hasOwnStage = stageName and stageName ~= "" and stageName ~= scenarioName
+	local stageLabel = hasOwnStage and FormatStage(stageName, currentStage, numStages)
+		or scenarioName
+
+	local widgetSetID, isDelve = ReadWidgetSet()
+
+	if widgetSetID then
+		table.insert(objectives, {
+			text = stageLabel,
+			widgetSetID = widgetSetID,
+			isComplete = false,
+		})
+	else
+		table.insert(objectives, {
+			text = stageLabel,
+			card = { highlight = stageLabel, atlas = ReadHeaderAtlas() },
+			isComplete = false,
+		})
+	end
+
 	if stageDescription and stageDescription ~= "" then
 		table.insert(objectives, { text = stageDescription, isComplete = false })
 	end
@@ -179,18 +273,28 @@ function ScenarioSectionProvider:Collect()
 	AddCriteria(objectives)
 	AddChallengeInfo(objectives)
 
-	local isDungeon = C_ChallengeMode.GetActiveChallengeMapID() ~= nil
+	-- Numa Imersão o nome do cenário é a própria categoria, já localizado pelo
+	-- jogo, e o widget carrega o nome da Delve. Promovido a título da seção,
+	-- nada sobra para a linha de título dizer.
+	local title = TRACKER_HEADER_SCENARIO
+
+	if isDelve then
+		title = scenarioName
+	elseif IsInDungeon() then
+		title = TRACKER_HEADER_DUNGEON
+	end
 
 	return {
 		{
 			id = "scenario",
-			title = isDungeon and TRACKER_HEADER_DUNGEON or TRACKER_HEADER_SCENARIO,
+			title = title,
 			order = Addon.SectionOrder.scenario,
 			entries = {
 				{
 					id = scenarioName,
 					kind = ENTRY_KIND,
-					title = FormatTitle(stageName or scenarioName, currentStage, numStages),
+					title = scenarioName,
+					hidesTitle = not hasOwnStage or isDelve,
 					objectives = objectives,
 					isComplete = false,
 					canFindGroup = false,

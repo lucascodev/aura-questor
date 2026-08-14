@@ -7,13 +7,13 @@ return function(Addon, T, Support)
 
 	---@param providers SectionProvider[]
 	---@param sortMode string?
+	---@param values table?
 	---@return TrackerContent
-	local function Content(providers, sortMode)
-		return Addon.TrackerContent.New(
-			providers,
-			Addon.SortModes,
-			Preferences({ sortMode = sortMode or "none" })
-		)
+	local function Content(providers, sortMode, values)
+		values = values or {}
+		values.sortMode = sortMode or "none"
+
+		return Addon.TrackerContent.New(providers, Addon.SortModes, Preferences(values))
 	end
 
 	T.Suite("TrackerContent", function()
@@ -62,6 +62,20 @@ return function(Addon, T, Support)
 			T.Equals(entries[1].title, "aberta")
 			T.Equals(entries[2].title, "pronta A")
 			T.Equals(entries[3].title, "pronta B")
+		end)
+
+		T.Test("com a preferencia ligada as concluidas sobem para o topo", function()
+			local entries = Content({
+				Support.Provider("quests", 20, {
+					Support.Entry({ id = 1, title = "pronta A", isComplete = true }),
+					Support.Entry({ id = 2, title = "aberta" }),
+					Support.Entry({ id = 3, title = "pronta B", isComplete = true }),
+				}),
+			}, nil, { completedAtTop = true }):Build()[1].entries
+
+			T.Equals(entries[1].title, "pronta A")
+			T.Equals(entries[2].title, "pronta B")
+			T.Equals(entries[3].title, "aberta")
 		end)
 
 		T.Test("sem ordenacao a ordem da fonte e preservada", function()

@@ -117,7 +117,7 @@ local PreferenceCatalog = {
 		key = Keys.WRAP_LONG_TEXT,
 		page = L.PAGE_APPEARANCE,
 		kind = "boolean",
-		default = false,
+		default = true,
 		label = L.PREF_WRAP_TEXT,
 		tooltip = L.PREF_WRAP_TEXT_TIP,
 	},
@@ -233,6 +233,14 @@ local PreferenceCatalog = {
 		label = L.PREF_SORT_MODE,
 		tooltip = L.PREF_SORT_MODE_TIP,
 		choices = Addon.SortModes,
+	},
+	{
+		key = Keys.COMPLETED_AT_TOP,
+		page = L.PAGE_CONTENT,
+		kind = "boolean",
+		default = false,
+		label = L.PREF_COMPLETED_AT_TOP,
+		tooltip = L.PREF_COMPLETED_AT_TOP_TIP,
 	},
 	{
 		key = Keys.EVENTS_ENABLED,

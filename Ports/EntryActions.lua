@@ -23,3 +23,5 @@
 ---@field link string
 ---@field texture number|string
 ---@field charges number
+---@field cooldownStart number
+---@field cooldownDuration number

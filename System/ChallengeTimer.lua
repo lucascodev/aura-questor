@@ -2,7 +2,8 @@ local _, Addon = ...
 
 local TICK_SECONDS = 1
 
---- Drives a refresh once a second while a Mythic+ run is going.
+--- Drives a refresh once a second while a Mythic+ run is going. A scenario
+--- clock does not need it: the game keeps the embedded widget alive on its own.
 ---
 --- The tracker is otherwise event-driven, and a clock has no event: nothing
 --- fires when a second passes. This is the one place that needs a ticker, and it

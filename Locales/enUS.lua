@@ -63,6 +63,8 @@ Addon.RegisterLocale("enUS", {
 	PREF_SHOW_ITEM_BUTTONS_TIP = "The usable item beside a quest name. It is what stops the tracker updating in combat; off since login, that does not happen.",
 	PREF_SORT_MODE = "Sorting",
 	PREF_SORT_MODE_TIP = "How to order the entries inside each section.",
+	PREF_COMPLETED_AT_TOP = "Completed at the top",
+	PREF_COMPLETED_AT_TOP_TIP = "Gathers completed entries at the top of their section instead of the bottom.",
 	PREF_EVENTS_ENABLED = "Track events",
 	PREF_EVENTS_ENABLED_TIP = "Shows the world events section.",
 	PREF_BONUS_ZONE_WIDE = "Bonus objectives across the zone",

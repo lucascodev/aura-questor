@@ -2,7 +2,7 @@
 ## Title: Aura Tracker Questor
 ## Notes: A standalone objective tracker built on the public quest APIs.
 ## Notes-ptBR: Um rastreador de objetivos autônomo, escrito sobre as APIs públicas do jogo.
-## Version: 0.74.0
+## Version: 0.75.0
 ## Author: Lucascodev
 ## X-License: MIT
 ## X-Curse-Project-ID: 1651416
@@ -79,6 +79,7 @@ Game\Quest\ItemSource.lua
 Game\Achievement\CategoryReader.lua
 Game\Achievement\Tracking.lua
 Game\Achievement\Panel.lua
+
 
 # Chat, commands, events and shared media.
 System\ChatLogger.lua
