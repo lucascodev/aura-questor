@@ -2,6 +2,9 @@
 ## Title: Aura Tracker Questor
 ## Notes: A standalone objective tracker built on the public quest APIs.
 ## Notes-ptBR: Um rastreador de objetivos autônomo, escrito sobre as APIs públicas do jogo.
+## Notes-esES: Un rastreador de objetivos independiente, construido sobre las API públicas del juego.
+## Notes-esMX: Un rastreador de objetivos independiente, construido sobre las API públicas del juego.
+## Notes-frFR: Un suivi d'objectifs autonome, construit sur les API publiques du jeu.
 ## Version: 0.75.0
 ## Author: Lucascodev
 ## X-License: MIT
@@ -10,6 +13,7 @@
 ## X-Copyright: Copyright (c) 2026 Lucascodev
 ## IconTexture: Interface\AddOns\AuraTrackerQuestor\Media\Logo
 ## SavedVariables: AuraTrackerQuestorDB
+## OptionalDeps: TomTom
 ## Category-enUS: Quests
 ## Category-ptBR: Missões
 
@@ -31,6 +35,8 @@ Libs\LibDeflate\LibDeflate.lua
 Locales\Locale.lua
 Locales\enUS.lua
 Locales\ptBR.lua
+Locales\esES.lua
+Locales\frFR.lua
 
 # Rules, in plain Lua. Nothing here knows the game exists.
 Core\HexColor.lua
@@ -60,12 +66,15 @@ Core\Commands\Status.lua
 Core\Commands\Help.lua
 Core\Commands\Startup.lua
 
+Core\Integration\WaypointSync.lua
+
 # Reads the game and draws nothing.
 Game\AddonMetadata.lua
 Game\BlizzardTracker.lua
 Game\ClassColor.lua
 Game\SuperTracking.lua
 Game\MapNavigator.lua
+Game\WaypointReader.lua
 
 # Three readers, one shape: all of them answer with TrackerObjective[].
 Game\Objectives\QuestReader.lua
@@ -91,6 +100,7 @@ System\SoundPlayer.lua
 System\ProfileTransfer.lua
 System\TrackerEvents.lua
 System\ChallengeTimer.lua
+System\TomTomArrow.lua
 
 # One folder per kind of content: what it collects, and what its entries do.
 Modules\Scenario\SectionProvider.lua
@@ -131,12 +141,14 @@ UI\Tracker\OwnTrackerFrame.lua
 UI\Header\ButtonRow.lua
 UI\Header\FilterButton.lua
 UI\Header\AchievementButton.lua
+UI\Header\IntegrationButton.lua
 
 # Options pages.
 Options\PanelControls.lua
-Options\InfoPanel.lua
+Options\MainPanel.lua
 Options\BackgroundPanel.lua
 Options\ProfilePanel.lua
+Options\IntegrationPanel.lua
 Options\OptionsPanel.lua
 
 Bootstrap.lua

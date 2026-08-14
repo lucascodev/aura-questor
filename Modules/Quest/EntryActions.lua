@@ -5,17 +5,19 @@ local REWARD_ICON_SIZE = 14
 --- The game reports a choice as either an item or a currency, and each is read
 --- through a different call.
 local CHOICE_LOOT_CURRENCY = 1
-local CHOICE_HEADING = "Escolha uma:"
+local CHOICE_HEADING = Addon.L.REWARD_CHOICE_HEADING
 
 --- EntryActions for quests, including world quests, both live in the quest log
 --- and answer to the same calls.
 ---@class QuestEntryActions : EntryActions
+---@field private waypoints EntryWaypoints?
 local QuestEntryActions = {}
 QuestEntryActions.__index = QuestEntryActions
 
+---@param waypoints EntryWaypoints?
 ---@return QuestEntryActions
-function QuestEntryActions.New()
-	return setmetatable({}, QuestEntryActions)
+function QuestEntryActions.New(waypoints)
+	return setmetatable({ waypoints = waypoints }, QuestEntryActions)
 end
 
 ---@param entry TrackerEntry
@@ -167,7 +169,7 @@ end
 ---@param entry TrackerEntry
 ---@return EntryMenuItem[]
 function QuestEntryActions:MenuItems(entry)
-	return {
+	local items = {
 		{
 			label = OBJECTIVES_VIEW_IN_QUESTLOG,
 			run = function()
@@ -187,6 +189,17 @@ function QuestEntryActions:MenuItems(entry)
 			end,
 		},
 	}
+
+	if self.waypoints and self.waypoints.isAvailable() then
+		table.insert(items, {
+			label = Addon.L.MENU_SEND_TO_TOMTOM,
+			run = function()
+				self.waypoints.send(entry)
+			end,
+		})
+	end
+
+	return items
 end
 
 Addon.QuestEntryActions = QuestEntryActions

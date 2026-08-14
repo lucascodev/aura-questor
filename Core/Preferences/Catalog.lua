@@ -4,6 +4,7 @@ local Keys = Addon.PreferenceKeys
 local L = Addon.L
 
 local BACKGROUND_PANEL = "background"
+local INTEGRATION_PANEL = "integration"
 
 --- Every preference the addon exposes, as data.
 --- Adding an entry here is enough for it to be persisted and to show up in the
@@ -210,6 +211,14 @@ local PreferenceCatalog = {
 		tooltip = L.PREF_SHOW_ACHIEVEMENT_BUTTON_TIP,
 	},
 	{
+		key = Keys.SHOW_INTEGRATION_BUTTON,
+		page = L.PAGE_BUTTONS,
+		kind = "boolean",
+		default = true,
+		label = L.PREF_SHOW_INTEGRATION_BUTTON,
+		tooltip = L.PREF_SHOW_INTEGRATION_BUTTON_TIP,
+	},
+	{
 		key = Keys.SHOW_MINIMAP_BUTTON,
 		page = L.PAGE_BUTTONS,
 		kind = "boolean",
@@ -291,6 +300,13 @@ local PreferenceCatalog = {
 		default = true,
 		label = L.PREF_ANNOUNCE_ON_LOAD,
 		tooltip = L.PREF_ANNOUNCE_ON_LOAD_TIP,
+	},
+	{
+		key = Keys.TOMTOM_ENABLED,
+		panel = INTEGRATION_PANEL,
+		kind = "boolean",
+		default = false,
+		label = L.PREF_TOMTOM,
 	},
 }
 

@@ -24,6 +24,7 @@ local SUITES = {
 	"Core/Tracker/CompletionWatcher",
 	"Core/Tracker/AchievementCategories",
 	"Core/Commands",
+	"Core/Integration/WaypointSync",
 	"Locales",
 }
 

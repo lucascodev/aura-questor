@@ -5,6 +5,31 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
 ## [Não publicado]
 
+### Adicionado
+
+- Integração com o TomTom, na aba **Integração** das opções: a seta segue a
+  missão supervisionada, criada ao clicar no pin ou ao selecionar pelo mapa, e
+  o menu de contexto ganha **Enviar ao TomTom**. A linha mostra a versão do
+  addon quando presente; instalado mas desativado aparece em cor secundária, e
+  a integração nasce desligada, para o jogador ligar.
+- Botão **I** no cabeçalho do rastreador, com tooltip, abrindo direto a página
+  de Integração. Desligável na página Botões, como os demais.
+- Traduções para **espanhol** (esES e esMX) e **francês** (frFR), com testes de
+  paridade cobrindo as quatro línguas.
+
+### Alterado
+
+- A tela principal das opções apresenta o addon: os interruptores gerais e as
+  informações de versão, autor e comandos num lugar só. A subpágina
+  Informações saiu da lista.
+- Título de missão concluída no verde de "pronto para entregar" do jogo, em
+  vez do tom pastel.
+
+### Corrigido
+
+- O cabeçalho "Escolha uma:" das recompensas de escolha estava fixo em
+  português e aparecia assim em qualquer idioma.
+
 ## [0.75.0] - 2026-08-13
 
 ### Adicionado

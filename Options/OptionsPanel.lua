@@ -22,6 +22,9 @@ local CUSTOM_PANELS = {
 	background = function(category, catalog, preferences)
 		Addon.BackgroundPanel.Register(category, catalog, preferences)
 	end,
+	integration = function(category, _, preferences)
+		return Addon.IntegrationPanel.Register(category, preferences)
+	end,
 }
 
 ---@param addonInfo AddonInfo
@@ -104,32 +107,34 @@ function OptionsPanel:AddPanel(category, name)
 		return
 	end
 
-	self.panels[name] = true
-	CUSTOM_PANELS[name](category, self.catalog, self.preferences)
+	-- Guarda a subcategoria quando o painel a devolve, para poder abrir a
+	-- página direto; true marca só que o painel já foi registrado.
+	self.panels[name] = CUSTOM_PANELS[name](category, self.catalog, self.preferences) or true
 end
 
 function OptionsPanel:Register()
-	local category = Settings.RegisterVerticalLayoutCategory(self.addonInfo.title)
+	-- A raiz é desenhada à mão: interruptores gerais e os fatos do addon juntos,
+	-- para a primeira tela apresentar o addon em vez de esconder isso numa
+	-- subpágina.
+	local category = Addon.MainPanel.Register(
+		self.addonInfo,
+		self.catalog,
+		self.preferences,
+		self.info
+	)
 	local pages = {}
 
 	for _, preference in ipairs(self.catalog) do
 		if preference.panel then
 			self:AddPanel(category, preference.panel)
-		else
-			local target = category
-
-			if preference.page then
-				pages[preference.page] = pages[preference.page]
-					or Settings.RegisterVerticalLayoutSubcategory(category, preference.page)
-				target = pages[preference.page]
-			end
-
-			self:AddControl(target, preference)
+		elseif preference.page then
+			pages[preference.page] = pages[preference.page]
+				or Settings.RegisterVerticalLayoutSubcategory(category, preference.page)
+			self:AddControl(pages[preference.page], preference)
 		end
 	end
 
 	Addon.ProfilePanel.Register(category, self.profileCommands)
-	Addon.InfoPanel.Register(category, self.addonInfo, self.info)
 
 	Settings.RegisterAddOnCategory(category)
 	self.category = category
@@ -154,6 +159,17 @@ end
 
 function OptionsPanel:Open()
 	Settings.OpenToCategory(self.category:GetID())
+end
+
+function OptionsPanel:OpenIntegrations()
+	local panel = self.panels.integration
+
+	if type(panel) == "table" then
+		Settings.OpenToCategory(panel:GetID())
+		return
+	end
+
+	self:Open()
 end
 
 Addon.OptionsPanel = OptionsPanel

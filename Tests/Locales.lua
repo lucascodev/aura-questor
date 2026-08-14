@@ -15,7 +15,12 @@ return function(Addon, T, Support, Harness)
 	end
 
 	local english = Entries("Locales/enUS.lua")
-	local portuguese = Entries("Locales/ptBR.lua")
+
+	local translations = {
+		ptBR = Entries("Locales/ptBR.lua"),
+		esES = Entries("Locales/esES.lua"),
+		frFR = Entries("Locales/frFR.lua"),
+	}
 
 	---@param text string
 	---@return number
@@ -30,30 +35,42 @@ return function(Addon, T, Support, Harness)
 			T.IsTrue(next(english) ~= nil)
 		end)
 
-		T.Test("ptBR nao inventa chave que o enUS nao tem", function()
-			for key in pairs(portuguese) do
-				T.IsTrue(english[key] ~= nil, key .. " so existe em ptBR")
+		T.Test("nenhuma traducao inventa chave que o enUS nao tem", function()
+			for name, entries in pairs(translations) do
+				for key in pairs(entries) do
+					T.IsTrue(english[key] ~= nil, key .. " so existe em " .. name)
+				end
 			end
 		end)
 
-		T.Test("enUS cobre tudo que o ptBR traduz", function()
-			for key in pairs(english) do
-				T.IsTrue(portuguese[key] ~= nil, key .. " nao foi traduzido")
+		T.Test("toda traducao cobre o enUS inteiro", function()
+			for name, entries in pairs(translations) do
+				for key in pairs(english) do
+					T.IsTrue(entries[key] ~= nil, key .. " nao foi traduzido em " .. name)
+				end
 			end
 		end)
 
-		T.Test("marcadores de formato batem entre os dois", function()
-			for key, text in pairs(english) do
-				T.Equals(
-					Placeholders(portuguese[key]),
-					Placeholders(text),
-					key .. " tem contagem de marcadores diferente"
-				)
+		T.Test("marcadores de formato batem em toda traducao", function()
+			for name, entries in pairs(translations) do
+				for key, text in pairs(english) do
+					T.Equals(
+						Placeholders(entries[key]),
+						Placeholders(text),
+						("%s.%s tem contagem de marcadores diferente"):format(name, key)
+					)
+				end
 			end
 		end)
 
 		T.Test("nenhum texto esta vazio", function()
-			for name, entries in pairs({ enUS = english, ptBR = portuguese }) do
+			local all = { enUS = english }
+
+			for name, entries in pairs(translations) do
+				all[name] = entries
+			end
+
+			for name, entries in pairs(all) do
 				for key, text in pairs(entries) do
 					T.IsTrue(text ~= "", ("%s.%s esta vazio"):format(name, key))
 				end

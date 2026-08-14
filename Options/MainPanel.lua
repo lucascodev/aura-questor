@@ -1,15 +1,13 @@
 local _, Addon = ...
 
-local PAGE_NAME = Addon.L.PAGE_INFO
 local SUBTITLE = Addon.L.INFO_SUBTITLE
 
---- Measured from the top of the page. The title is set in the huge font, which
---- is far taller than it looks in a constant, the first spacing here left the
---- subtitle printed across it.
 local PADDING = 20
 local SUBTITLE_GAP = 56
 local RULE_GAP = 82
-local FIRST_LINE_GAP = 104
+local CONTROLS_TOP = 108
+local CONTROL_HEIGHT = 36
+local FACTS_GAP = 24
 local LINE_HEIGHT = 24
 local LABEL_WIDTH = 110
 
@@ -23,27 +21,19 @@ local VALUE_COLOR = { red = 1, green = 0.82, blue = 0 }
 local RULE_COLOR = { red = 0.26, green = 0.24, blue = 0.20, alpha = 0.9 }
 local ACCENT_COLOR = { red = 0.95, green = 0.72, blue = 0.25, alpha = 1 }
 
---- The about page.
----
---- Built as a canvas rather than a list because a list page is made of
---- controls, and there is nothing here to change, only to read. It also
---- borrows the tracker's own look: quiet labels, gold values, and a rule with a
---- bright head, so the options page and the tracker read as one addon.
----@class InfoPanel
-local InfoPanel = {}
+--- A página raiz: os interruptores gerais e os fatos do addon num lugar só,
+--- para a primeira tela já apresentar o que ele é.
+---@class MainPanel
+local MainPanel = {}
 
 ---@param frame table
 ---@param color table
 ---@param width number
----@param offset number
----@return table
-local function AddRule(frame, color, width, offset)
+local function AddRule(frame, color, width)
 	local rule = frame:CreateTexture(nil, "ARTWORK")
 	rule:SetColorTexture(color.red, color.green, color.blue, color.alpha)
 	rule:SetSize(width, RULE_THICKNESS)
-	rule:SetPoint("TOPLEFT", PADDING, offset)
-
-	return rule
+	rule:SetPoint("TOPLEFT", PADDING, -RULE_GAP)
 end
 
 ---@param frame table
@@ -62,12 +52,29 @@ local function AddLine(frame, offset, label, value)
 	valueText:SetTextColor(VALUE_COLOR.red, VALUE_COLOR.green, VALUE_COLOR.blue)
 end
 
----@param category table Parent category the page hangs under.
+--- As preferências sem página são as gerais, e moram na raiz.
+---@param catalog Preference[]
+---@return Preference[]
+local function RootPreferences(catalog)
+	local roots = {}
+
+	for _, preference in ipairs(catalog) do
+		if not preference.page and not preference.panel then
+			table.insert(roots, preference)
+		end
+	end
+
+	return roots
+end
+
 ---@param addonInfo AddonInfo
+---@param catalog Preference[]
+---@param preferences Preferences
 ---@param entries { label: string, value: string }[]
-function InfoPanel.Register(category, addonInfo, entries)
+---@return table category
+function MainPanel.Register(addonInfo, catalog, preferences, entries)
 	local frame = CreateFrame("Frame")
-	frame.name = PAGE_NAME
+	frame.name = addonInfo.title
 
 	local title = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalHuge")
 	title:SetPoint("TOPLEFT", PADDING, -PADDING)
@@ -78,19 +85,43 @@ function InfoPanel.Register(category, addonInfo, entries)
 	subtitle:SetText(SUBTITLE)
 	subtitle:SetTextColor(SUBTITLE_COLOR.red, SUBTITLE_COLOR.green, SUBTITLE_COLOR.blue)
 
-	-- The same rule the tracker draws under a section: a long quiet line with a
-	-- short bright segment at its head.
-	AddRule(frame, RULE_COLOR, RULE_WIDTH, -RULE_GAP)
-	AddRule(frame, ACCENT_COLOR, ACCENT_WIDTH, -RULE_GAP)
+	AddRule(frame, RULE_COLOR, RULE_WIDTH)
+	AddRule(frame, ACCENT_COLOR, ACCENT_WIDTH)
 
-	local offset = -FIRST_LINE_GAP
+	local controls = {}
+	local offset = -CONTROLS_TOP
+
+	for _, preference in ipairs(RootPreferences(catalog)) do
+		local checkbox = Addon.PanelControls.ClassicCheckbox(frame, {
+			label = preference.label,
+			tooltip = preference.tooltip,
+			get = function()
+				return preferences:Get(preference.key) == true
+			end,
+			set = function(value)
+				preferences:Set(preference.key, value)
+			end,
+		})
+		checkbox:SetPoint("TOPLEFT", PADDING, offset)
+		table.insert(controls, checkbox)
+
+		offset = offset - CONTROL_HEIGHT
+	end
+
+	offset = offset - FACTS_GAP
 
 	for _, entry in ipairs(entries) do
 		AddLine(frame, offset, entry.label, entry.value)
 		offset = offset - LINE_HEIGHT
 	end
 
-	Settings.RegisterCanvasLayoutSubcategory(category, frame, PAGE_NAME)
+	frame:SetScript("OnShow", function()
+		for _, control in ipairs(controls) do
+			control:Refresh()
+		end
+	end)
+
+	return Settings.RegisterCanvasLayoutCategory(frame, addonInfo.title)
 end
 
-Addon.InfoPanel = InfoPanel
+Addon.MainPanel = MainPanel

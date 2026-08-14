@@ -18,6 +18,11 @@
 ---@field Describe? fun(self: EntryActions, entry: TrackerEntry): string? Extra text for the tooltip.
 ---@field Rewards? fun(self: EntryActions, entry: TrackerEntry): string[] Already formatted, icons included.
 
+--- Manda uma entrada para a seta de navegação, quando há uma disponível.
+---@class EntryWaypoints
+---@field isAvailable fun(): boolean
+---@field send fun(entry: TrackerEntry)
+
 --- The usable item some quests carry, ready to be put on a secure button.
 ---@class EntryItem
 ---@field link string
