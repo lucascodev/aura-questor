@@ -18,7 +18,7 @@ flowchart TD
 
 ## 1. O provider
 
-Implementa a porta [`SectionProvider`](../Ports/SectionProvider.lua), que tem um
+Implementa a porta [`SectionProvider`](../Source/Ports/SectionProvider.lua), que tem um
 método. A responsabilidade é ler a API do jogo e devolver a estrutura comum.
 
 ```lua
@@ -84,13 +84,13 @@ entradas antes de ordenar.
 
 Se a API expõe uma lista de ids mais uma consulta por id, e descreve progresso
 como `requirementsList`, use
-[`TrackedListSectionProvider`](../Modules/TrackedListSectionProvider.lua) em vez
+[`TrackedListSectionProvider`](../Source/Modules/TrackedListSectionProvider.lua) em vez
 de escrever um provider. Ele recebe uma tabela de configuração. Atividades
 Mensais e Tarefas de Iniciativa compartilham essa implementação.
 
 ## 2. A ordem da seção
 
-Uma linha em [`Core/Tracker/SectionOrder.lua`](../Core/Tracker/SectionOrder.lua),
+Uma linha em [`Core/Tracker/SectionOrder.lua`](../Source/Core/Tracker/SectionOrder.lua),
 onde o `id` da seção é a chave. O arquivo concentra a ordem de todas as seções.
 
 ```lua
@@ -102,7 +102,7 @@ Há um teste que falha se duas seções receberem o mesmo número.
 ## 3. As ações
 
 Necessário apenas se a entrada responder ao clique. A porta é
-[`EntryActions`](../Ports/EntryActions.lua) e seus métodos são **opcionais**: o
+[`EntryActions`](../Source/Ports/EntryActions.lua) e seus métodos são **opcionais**: o
 roteador verifica a presença de cada um antes de chamar, então implemente somente
 os que se aplicam.
 
@@ -117,12 +117,12 @@ os que se aplicam.
 | `FindGroup` | o olho verde de conteúdo em grupo |
 
 Um cenário não tem página para abrir nem pode ser desrastreado, e por isso
-[`Modules/Scenario/EntryActions.lua`](../Modules/Scenario/EntryActions.lua)
+[`Modules/Scenario/EntryActions.lua`](../Source/Modules/Scenario/EntryActions.lua)
 implementa quase nada.
 
 ## 4. Registrar
 
-Duas linhas no [`Bootstrap.lua`](../Bootstrap.lua), único arquivo do projeto que
+Duas linhas no [`Bootstrap.lua`](../Source/Bootstrap.lua), único arquivo do projeto que
 conhece implementações concretas:
 
 ```lua
@@ -146,7 +146,7 @@ arquivo empacotado que não consta na lista.
 ## Eventos adicionais
 
 Se o tipo novo depende de um evento ainda não registrado, acrescente-o à lista em
-[`System/TrackerEvents.lua`](../System/TrackerEvents.lua). O agrupamento já está
+[`System/TrackerEvents.lua`](../Source/System/TrackerEvents.lua). O agrupamento já está
 implementado ali; não crie outro frame de eventos.
 
 ## Verificar

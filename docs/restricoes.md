@@ -25,7 +25,7 @@ frame:EnableMouse(false)
 **Nunca** `Hide()`, `SetScale()` ou `SetPoint()` nele. Esse foi o erro que
 quebrou outro addon de rastreador no 12.1, e `Hide()` num frame com filho
 protegido é bloqueado em combate. Ver
-[`Game/BlizzardTracker.lua`](../Game/BlizzardTracker.lua).
+[`Game/BlizzardTracker.lua`](../Source/Game/BlizzardTracker.lua).
 
 ## Frames protegidos e combate
 
@@ -41,7 +41,7 @@ Consequências observadas neste projeto:
 Solução adotada: o botão é criado sob demanda, apenas quando uma missão de fato
 tem item. Enquanto nenhum existir, nada está protegido e o rastreador atualiza
 normalmente em combate. Quando existe,
-[`OwnTrackerFrame:IsLockedByCombat`](../UI/Tracker/OwnTrackerFrame.lua) segura o
+[`OwnTrackerFrame:IsLockedByCombat`](../Source/UI/Tracker/OwnTrackerFrame.lua) segura o
 redesenho até `PLAYER_REGEN_ENABLED`.
 
 Atributos de botão seguro também não podem ser alterados em combate. É a mesma
@@ -119,7 +119,7 @@ consultada.
 O painel de conquistas é *load on demand*. Chamar
 `OpenAchievementFrameToAchievement` direto dá erro; a sequência é
 `AchievementFrame_LoadUI()` e só então abrir e selecionar. Ver
-[`Game/Achievement/Panel.lua`](../Game/Achievement/Panel.lua).
+[`Game/Achievement/Panel.lua`](../Source/Game/Achievement/Panel.lua).
 
 ## Assinaturas contraintuitivas
 

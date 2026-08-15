@@ -18,6 +18,9 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
   addon (licença SIL OFL) e ficam disponíveis no acervo compartilhado.
 - A busca nativa das Opções e o botão Padrões deixam de alcançar essas
   páginas, consequência aceita de desenhá-las por conta própria.
+- As pastas de código desceram para `Source/`, deixando a raiz do addon só com
+  o manifesto, os atalhos, mídia, locales e bibliotecas. Nenhuma mudança de
+  comportamento.
 
 ## [0.76.1] - 2026-08-14
 
