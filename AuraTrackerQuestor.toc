@@ -51,6 +51,7 @@ Core\Preferences\SortModes.lua
 Core\Preferences\SoundChannels.lua
 Core\Preferences\Catalog.lua
 Core\Preferences\Store.lua
+Core\Preferences\Lookup.lua
 
 Core\Filtering\FilterIds.lua
 Core\Filtering\Filters.lua
@@ -144,9 +145,15 @@ UI\Header\AchievementButton.lua
 UI\Header\IntegrationButton.lua
 
 # Options pages.
-Options\PanelControls.lua
+Options\Components\Theme.lua
+Options\Components\Fonts.lua
+Options\Components\Schematic.lua
+Options\Components\Controls.lua
+Options\Components\Page.lua
 Options\MainPanel.lua
-Options\BackgroundPanel.lua
+Options\AppearancePanel.lua
+Options\FramePanel.lua
+Options\ContentPanel.lua
 Options\ProfilePanel.lua
 Options\IntegrationPanel.lua
 Options\OptionsPanel.lua

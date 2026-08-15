@@ -5,6 +5,20 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
 ## [Não publicado]
 
+### Alterado
+
+- As opções foram redesenhadas por inteiro, com identidade própria na paleta
+  do logo: fundo quase preto, cards de seção e um único destaque azul. Oito
+  subpáginas viraram cinco (Aparência, Moldura, Conteúdo, Integração e
+  Perfis), sem remover nenhuma preferência: Avançado entrou na página
+  principal, Botões e Som entraram em Conteúdo, e Fundo e borda virou Moldura.
+  As dicas saíram do tooltip e passaram a texto de apoio na própria linha,
+  interruptores substituíram os checkboxes, e a Integração virou uma lista com
+  versão e estado por addon. As fontes Inter e JetBrains Mono acompanham o
+  addon (licença SIL OFL) e ficam disponíveis no acervo compartilhado.
+- A busca nativa das Opções e o botão Padrões deixam de alcançar essas
+  páginas, consequência aceita de desenhá-las por conta própria.
+
 ## [0.76.1] - 2026-08-14
 
 ### Corrigido

@@ -2,57 +2,23 @@ local _, Addon = ...
 
 local Keys = Addon.PreferenceKeys
 
-local PAGE_NAME = Addon.L.PAGE_INTEGRATION
-local VERSION_LABEL = Addon.L.INTEGRATION_VERSION
-local ADDONS_LABEL = Addon.L.INTEGRATION_ADDONS
-local MISSING_VERSION = "---"
+local VERSION_WIDTH = 96
+local STATE_WIDTH = 110
+local COLUMN_SPACING = 16
+local ROW_PADDING = 14
+local HEADER_HEIGHT = 38
+local MISSING_VERSION = "-"
 
-local PADDING = 20
-local TITLE_GAP = 56
-local SECTION_TOP = 92
-local LIST_TOP = 108
-local BOX_PADDING = 14
-local ROW_HEIGHT = 64
-local VERSION_INDENT = 36
-local VERSION_GAP = 26
-local DESCRIPTION_LEFT = 300
-local DESCRIPTION_WIDTH = 330
-
-local RULE_THICKNESS = 1
-local RULE_WIDTH = 420
-local ACCENT_WIDTH = 60
-local RULE_COLOR = { red = 0.26, green = 0.24, blue = 0.20, alpha = 0.9 }
-local ACCENT_COLOR = { red = 0.95, green = 0.72, blue = 0.25, alpha = 1 }
-
---- A caixa com borda de tooltip é a convenção das páginas de opções clássicas,
---- desenhada por arquivo de textura em vez de template, que muda menos.
-local BOX_BACKDROP = {
-	bgFile = [[Interface\Tooltips\UI-Tooltip-Background]],
-	edgeFile = [[Interface\Tooltips\UI-Tooltip-Border]],
-	tile = true,
-	tileSize = 16,
-	edgeSize = 16,
-	insets = { left = 4, right = 4, top = 4, bottom = 4 },
-}
-local BOX_BACKGROUND_COLOR = { red = 0.08, green = 0.08, blue = 0.08, alpha = 0.8 }
-
-local MISSING_COLOR = { red = 0.55, green = 0.55, blue = 0.55 }
-local DESCRIPTION_COLOR = { red = 1, green = 1, blue = 1 }
-
-local ACTIVE_VALUE = "|cff66d966%s|r"
-
---- Integrações com outros addons, uma linha por addon, desenhada à mão: a
---- Settings API não tem como desabilitar um controle com o motivo ao lado.
 ---@class IntegrationPanel
 local IntegrationPanel = {}
 
 ---@class IntegrationRow
----@field key string Preferência que liga e desliga a integração.
----@field name string Nome próprio do addon, igual em qualquer idioma.
+---@field key string
+---@field name string
 ---@field description string
 ---@field isAvailable fun(): boolean
 ---@field version fun(): string
----@field installedVersion fun(): string? Presente mesmo com o addon desligado.
+---@field installedVersion fun(): string?
 
 ---@return IntegrationRow[]
 local function Integrations()
@@ -68,24 +34,60 @@ local function Integrations()
 	}
 end
 
----@param frame table
----@param color table
----@param width number
-local function AddRule(frame, color, width)
-	local rule = frame:CreateTexture(nil, "ARTWORK")
-	rule:SetColorTexture(color.red, color.green, color.blue, color.alpha)
-	rule:SetSize(width, RULE_THICKNESS)
-	rule:SetPoint("TOPLEFT", PADDING, -TITLE_GAP)
+---@param card table
+---@param text string
+---@param x number
+---@param width number?
+local function HeaderColumn(card, text, x, width)
+	local Theme = Addon.OptionsTheme
+	local label = card:CreateFontString(nil, "ARTWORK")
+	label:SetFontObject(Addon.OptionsFonts.EYEBROW)
+	label:SetPoint("TOPLEFT", x, -Theme.CARD_PADDING)
+	label:SetText(text:upper())
+	label:SetTextColor(Theme.ACCENT_COLOR.red, Theme.ACCENT_COLOR.green, Theme.ACCENT_COLOR.blue)
+
+	if width then
+		label:SetWidth(width)
+		label:SetJustifyH("LEFT")
+	end
 end
 
----@param box table
+---@param card table
 ---@param preferences Preferences
 ---@param row IntegrationRow
----@param offset number
----@return table
-local function AddRow(box, preferences, row, offset)
-	local checkbox = Addon.PanelControls.ClassicCheckbox(box, {
-		label = row.name,
+---@param top number
+---@param nameWidth number
+---@return table line
+---@return number height
+local function AddRow(card, preferences, row, top, nameWidth)
+	local Theme = Addon.OptionsTheme
+	local Fonts = Addon.OptionsFonts
+	local Controls = Addon.OptionsControls
+
+	local name = card:CreateFontString(nil, "ARTWORK")
+	name:SetFontObject(Fonts.STRONG)
+	name:SetPoint("TOPLEFT", Theme.CARD_PADDING, -top)
+	name:SetText(row.name)
+
+	local description = card:CreateFontString(nil, "ARTWORK")
+	description:SetFontObject(Fonts.HINT)
+	description:SetPoint("TOPLEFT", Theme.CARD_PADDING, -(top + name:GetStringHeight() + 4))
+	description:SetWidth(nameWidth)
+	description:SetJustifyH("LEFT")
+	description:SetText(row.description)
+
+	local versionX = Theme.CARD_PADDING + nameWidth + COLUMN_SPACING
+
+	local version = card:CreateFontString(nil, "ARTWORK")
+	version:SetFontObject(Fonts.MONO)
+	version:SetPoint("TOPLEFT", versionX, -(top + 2))
+	version:SetWidth(VERSION_WIDTH)
+	version:SetJustifyH("LEFT")
+
+	local badge = Controls.Badge(card, "", Theme.HINT_COLOR)
+	badge:SetPoint("TOPLEFT", versionX + VERSION_WIDTH + COLUMN_SPACING, -top)
+
+	local switch = Controls.Switch(card, {
 		get = function()
 			return preferences:Get(row.key) == true
 		end,
@@ -94,86 +96,110 @@ local function AddRow(box, preferences, row, offset)
 		end,
 		isEnabled = row.isAvailable,
 	})
-	checkbox:SetPoint("TOPLEFT", BOX_PADDING, offset)
+	switch:SetPoint("TOPRIGHT", -Addon.OptionsTheme.CARD_PADDING, -(top - 4))
 
-	local version = box:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
-	version:SetPoint("TOPLEFT", BOX_PADDING + VERSION_INDENT, offset - VERSION_GAP)
+	local line = {}
 
-	local description = box:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-	description:SetPoint("TOPLEFT", DESCRIPTION_LEFT, offset - 6)
-	description:SetWidth(DESCRIPTION_WIDTH)
-	description:SetJustifyH("LEFT")
-	description:SetText(row.description)
+	function line:Refresh()
+		switch:Refresh()
 
-	return {
-		Refresh = function()
-			checkbox:Refresh()
+		if row.isAvailable() then
+			local isOn = preferences:Get(row.key) == true
 
-			version:SetTextColor(MISSING_COLOR.red, MISSING_COLOR.green, MISSING_COLOR.blue)
+			name:SetTextColor(Theme.TEXT_COLOR.red, Theme.TEXT_COLOR.green, Theme.TEXT_COLOR.blue)
+			description:SetTextColor(Theme.HINT_COLOR.red, Theme.HINT_COLOR.green, Theme.HINT_COLOR.blue)
+			version:SetText(row.version())
+			version:SetTextColor(Theme.TEXT_COLOR.red, Theme.TEXT_COLOR.green, Theme.TEXT_COLOR.blue)
 
-			if row.isAvailable() then
-				version:SetText(VERSION_LABEL:format(ACTIVE_VALUE:format(row.version())))
-				description:SetTextColor(
-					DESCRIPTION_COLOR.red,
-					DESCRIPTION_COLOR.green,
-					DESCRIPTION_COLOR.blue
-				)
-				return
+			if isOn then
+				badge:Paint(Addon.L.INTEGRATION_STATE_ACTIVE, Theme.ACCENT_COLOR)
+			else
+				badge:Paint(Addon.L.INTEGRATION_STATE_OFF, Theme.MUTED_COLOR)
 			end
 
-			version:SetText(VERSION_LABEL:format(row.installedVersion() or MISSING_VERSION))
-			description:SetTextColor(MISSING_COLOR.red, MISSING_COLOR.green, MISSING_COLOR.blue)
-		end,
-	}
+			return
+		end
+
+		local installed = row.installedVersion()
+
+		name:SetTextColor(Theme.HINT_COLOR.red, Theme.HINT_COLOR.green, Theme.HINT_COLOR.blue)
+		description:SetTextColor(Theme.FAINT_COLOR.red, Theme.FAINT_COLOR.green, Theme.FAINT_COLOR.blue)
+		version:SetText(installed or MISSING_VERSION)
+		version:SetTextColor(Theme.FAINT_COLOR.red, Theme.FAINT_COLOR.green, Theme.FAINT_COLOR.blue)
+		badge:Paint(installed and Addon.L.INTEGRATION_STATE_OFF or Addon.L.INTEGRATION_STATE_MISSING, Theme.FAINT_COLOR)
+	end
+
+	line:Refresh()
+
+	local height = name:GetStringHeight() + 4 + description:GetStringHeight()
+
+	return line, math.max(height, Theme.SWITCH_HEIGHT)
 end
 
 ---@param category table
 ---@param preferences Preferences
 ---@return table subcategory
 function IntegrationPanel.Register(category, preferences)
-	local frame = CreateFrame("Frame")
-	frame.name = PAGE_NAME
+	local Theme = Addon.OptionsTheme
+	local page = Addon.OptionsPage.New({
+		title = Addon.L.PAGE_INTEGRATION,
+		subtitle = Addon.L.PAGE_INTEGRATION_HINT,
+	})
 
-	local title = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalHuge")
-	title:SetPoint("TOPLEFT", PADDING, -PADDING)
-	title:SetText(PAGE_NAME)
+	local card = page:AddCard({ top = Theme.CARD_TOP })
 
-	AddRule(frame, RULE_COLOR, RULE_WIDTH)
-	AddRule(frame, ACCENT_COLOR, ACCENT_WIDTH)
+	local nameWidth = 290
 
-	local section = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-	section:SetPoint("TOPLEFT", PADDING, -SECTION_TOP)
-	section:SetText(ADDONS_LABEL)
+	HeaderColumn(card, Addon.L.INTEGRATION_ADDON, Theme.CARD_PADDING, nameWidth)
+	HeaderColumn(card, Addon.L.INFO_VERSION, Theme.CARD_PADDING + nameWidth + COLUMN_SPACING, VERSION_WIDTH)
+	HeaderColumn(
+		card,
+		Addon.L.INTEGRATION_STATE,
+		Theme.CARD_PADDING + nameWidth + COLUMN_SPACING + VERSION_WIDTH + COLUMN_SPACING,
+		STATE_WIDTH
+	)
 
+	local rule = card:CreateTexture(nil, "ARTWORK")
+	rule:SetColorTexture(
+		Theme.BORDER_COLOR.red,
+		Theme.BORDER_COLOR.green,
+		Theme.BORDER_COLOR.blue,
+		Theme.BORDER_COLOR.alpha
+	)
+	rule:SetHeight(Theme.RULE_THICKNESS)
+	rule:SetPoint("TOPLEFT", 0, -HEADER_HEIGHT)
+	rule:SetPoint("TOPRIGHT", 0, -HEADER_HEIGHT)
+
+	local top = HEADER_HEIGHT + ROW_PADDING
 	local integrations = Integrations()
 
-	local box = CreateFrame("Frame", nil, frame, "BackdropTemplate")
-	box:SetBackdrop(BOX_BACKDROP)
-	box:SetBackdropColor(
-		BOX_BACKGROUND_COLOR.red,
-		BOX_BACKGROUND_COLOR.green,
-		BOX_BACKGROUND_COLOR.blue,
-		BOX_BACKGROUND_COLOR.alpha
-	)
-	box:SetPoint("TOPLEFT", PADDING, -LIST_TOP)
-	box:SetPoint("TOPRIGHT", -PADDING, -LIST_TOP)
-	box:SetHeight(#integrations * ROW_HEIGHT + BOX_PADDING * 2)
+	for index, integration in ipairs(integrations) do
+		local line, height = AddRow(card, preferences, integration, top, nameWidth)
+		page:AddRefresh(line)
 
-	local rows = {}
-	local offset = -BOX_PADDING
+		top = top + height + ROW_PADDING
 
-	for _, integration in ipairs(integrations) do
-		table.insert(rows, AddRow(box, preferences, integration, offset))
-		offset = offset - ROW_HEIGHT
+		if index < #integrations then
+			local divider = card:CreateTexture(nil, "ARTWORK")
+			divider:SetColorTexture(
+				Theme.DIVIDER_COLOR.red,
+				Theme.DIVIDER_COLOR.green,
+				Theme.DIVIDER_COLOR.blue,
+				Theme.DIVIDER_COLOR.alpha
+			)
+			divider:SetHeight(Theme.RULE_THICKNESS)
+			divider:SetPoint("TOPLEFT", 0, -top)
+			divider:SetPoint("TOPRIGHT", 0, -top)
+
+			top = top + Theme.RULE_THICKNESS + ROW_PADDING
+		end
 	end
 
-	frame:SetScript("OnShow", function()
-		for _, row in ipairs(rows) do
-			row.Refresh()
-		end
-	end)
+	local height = top + Theme.CARD_PADDING - ROW_PADDING
+	card:SetHeight(height)
+	page:GrowContent(Theme.CARD_TOP + height + Theme.CARD_GAP)
 
-	return (Settings.RegisterCanvasLayoutSubcategory(category, frame, PAGE_NAME))
+	return page:RegisterUnder(category)
 end
 
 Addon.IntegrationPanel = IntegrationPanel

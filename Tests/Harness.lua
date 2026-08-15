@@ -29,6 +29,7 @@ local CORE_FILES = {
 	"Preferences/SoundChannels",
 	"Preferences/Catalog",
 	"Preferences/Store",
+	"Preferences/Lookup",
 	"Filtering/FilterIds",
 	"Filtering/Filters",
 	"Filtering/Filtering",
@@ -41,6 +42,13 @@ local CORE_FILES = {
 	"Commands/Help",
 	"Commands/Startup",
 	"Integration/WaypointSync",
+}
+
+--- Arquivos de Options/ sem nenhuma API do jogo, carregáveis por Lua puro.
+--- Um global do cliente tocado aqui estoura como nil no interpretador.
+local OPTIONS_FILES = {
+	"Components/Theme",
+	"Components/Schematic",
 }
 
 local Harness = {}
@@ -66,6 +74,10 @@ function Harness.LoadCore()
 
 	for _, name in ipairs(CORE_FILES) do
 		Load("Core/" .. name .. ".lua")
+	end
+
+	for _, name in ipairs(OPTIONS_FILES) do
+		Load("Options/" .. name .. ".lua")
 	end
 
 	return addon

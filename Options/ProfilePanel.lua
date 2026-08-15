@@ -1,42 +1,8 @@
 local _, Addon = ...
 
-local PAGE_NAME = Addon.L.PAGE_PROFILES
-
-local PADDING = 20
-local TITLE_GAP = 56
-local LABEL_ROW_GAP = 22
-local ROW_GAP = 60
-local COLUMN_GAP = 250
-
-local RULE_THICKNESS = 1
-local RULE_WIDTH = 420
-local ACCENT_WIDTH = 60
-local RULE_COLOR = { red = 0.26, green = 0.24, blue = 0.20, alpha = 0.9 }
-local ACCENT_COLOR = { red = 0.95, green = 0.72, blue = 0.25, alpha = 1 }
-
-local ACTIVE_LABEL = Addon.L.PROFILE_ACTIVE
-local NEW_LABEL = Addon.L.PROFILE_NEW
-local COPY_LABEL = Addon.L.PROFILE_COPY
-local DELETE_LABEL = Addon.L.PROFILE_DELETE
-local EXPORT_LABEL = Addon.L.PROFILE_EXPORT
-local IMPORT_LABEL = Addon.L.PROFILE_IMPORT
-
---- The profile page.
 ---@class ProfilePanel
 local ProfilePanel = {}
 
----@param frame table
----@param color table
----@param width number
----@param offset number
-local function AddRule(frame, color, width, offset)
-	local rule = frame:CreateTexture(nil, "ARTWORK")
-	rule:SetColorTexture(color.red, color.green, color.blue, color.alpha)
-	rule:SetSize(width, RULE_THICKNESS)
-	rule:SetPoint("TOPLEFT", PADDING, offset)
-end
-
---- A name is both the value and the label, the same shape the media lists take.
 ---@param commands table
 ---@return PreferenceChoice[]
 local function ProfileChoices(commands)
@@ -49,69 +15,136 @@ local function ProfileChoices(commands)
 	return choices
 end
 
----@param category table Parent category the page hangs under.
----@param commands table Everything the page can do to a profile.
-function ProfilePanel.Register(category, commands)
-	local frame = CreateFrame("Frame")
-	frame.name = PAGE_NAME
+---@param commands table
+---@return fun(parent: table, width: number): table
+local function ActiveProfileCell(commands)
+	return function(parent, width)
+		local Theme = Addon.OptionsTheme
+		local Fonts = Addon.OptionsFonts
 
-	local title = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalHuge")
-	title:SetPoint("TOPLEFT", PADDING, -PADDING)
-	title:SetText(PAGE_NAME)
+		local frame = CreateFrame("Frame", nil, parent)
+		frame:SetSize(width, Theme.INPUT_HEIGHT)
 
-	AddRule(frame, RULE_COLOR, RULE_WIDTH, -TITLE_GAP)
-	AddRule(frame, ACCENT_COLOR, ACCENT_WIDTH, -TITLE_GAP)
+		local name = frame:CreateFontString(nil, "ARTWORK")
+		name:SetFontObject(Fonts.BIG)
+		name:SetPoint("LEFT")
+		name:SetTextColor(Theme.TEXT_COLOR.red, Theme.TEXT_COLOR.green, Theme.TEXT_COLOR.blue)
 
-	---@param label string
-	---@param run fun()
-	---@return table
-	local function Button(label, run)
-		return Addon.PanelControls.Button(frame, { label = label, run = run })
+		local hint = frame:CreateFontString(nil, "ARTWORK")
+		hint:SetFontObject(Fonts.HINT)
+		hint:SetPoint("BOTTOMLEFT", name, "BOTTOMRIGHT", 10, 2)
+		hint:SetText(Addon.L.PROFILE_ON_CHARACTER)
+		hint:SetTextColor(Theme.HINT_COLOR.red, Theme.HINT_COLOR.green, Theme.HINT_COLOR.blue)
+
+		local switcher = Addon.OptionsControls.Dropdown(frame, {
+			width = 220,
+			choices = function()
+				return ProfileChoices(commands)
+			end,
+			get = commands.currentProfile,
+			set = commands.selectProfile,
+		})
+		switcher:SetPoint("RIGHT")
+
+		function frame:Refresh()
+			name:SetText(commands.currentProfile())
+			switcher:Refresh()
+		end
+
+		frame:Refresh()
+
+		return frame
 	end
+end
 
-	local rows = {
-		{
-			Addon.PanelControls.Dropdown(frame, {
-				label = ACTIVE_LABEL,
-				choices = function()
-					return ProfileChoices(commands)
-				end,
-				get = commands.currentProfile,
-				set = commands.selectProfile,
+---@param commands table
+---@return fun(parent: table, width: number): table
+local function ManageCell(commands)
+	return function(parent, width)
+		local Theme = Addon.OptionsTheme
+		local Fonts = Addon.OptionsFonts
+		local Controls = Addon.OptionsControls
+
+		local frame = CreateFrame("Frame", nil, parent)
+		frame:SetWidth(width)
+
+		local buttons = {
+			Controls.Button(frame, {
+				label = Addon.L.PROFILE_NEW,
+				run = commands.createProfile,
+				variant = "primary",
 			}),
-		},
-		{
-			Button(NEW_LABEL, commands.createProfile),
-			Button(COPY_LABEL, commands.copyProfile),
-		},
-		{
-			Button(EXPORT_LABEL, commands.exportProfile),
-			Button(IMPORT_LABEL, commands.importProfile),
-		},
-		{
-			Button(DELETE_LABEL, commands.deleteProfile),
-		},
-	}
+			Controls.Button(frame, { label = Addon.L.PROFILE_COPY, run = commands.copyProfile }),
+			Controls.Button(frame, { label = Addon.L.PROFILE_EXPORT, run = commands.exportProfile }),
+			Controls.Button(frame, { label = Addon.L.PROFILE_IMPORT, run = commands.importProfile }),
+		}
 
-	local controls = {}
-	local offset = -TITLE_GAP - LABEL_ROW_GAP - ROW_GAP
+		local x = 0
 
-	for _, row in ipairs(rows) do
-		for index, control in ipairs(row) do
-			control:SetPoint("TOPLEFT", PADDING + (index - 1) * COLUMN_GAP, offset)
-			table.insert(controls, control)
+		for _, button in ipairs(buttons) do
+			button:SetPoint("TOPLEFT", x, 0)
+			x = x + button:GetWidth() + 10
 		end
 
-		offset = offset - ROW_GAP
+		local buttonBottom = 24 + 14
+
+		local divider = frame:CreateTexture(nil, "ARTWORK")
+		divider:SetColorTexture(
+			Theme.DIVIDER_COLOR.red,
+			Theme.DIVIDER_COLOR.green,
+			Theme.DIVIDER_COLOR.blue,
+			Theme.DIVIDER_COLOR.alpha
+		)
+		divider:SetHeight(Theme.RULE_THICKNESS)
+		divider:SetPoint("TOPLEFT", 0, -buttonBottom)
+		divider:SetPoint("TOPRIGHT", 0, -buttonBottom)
+
+		local dangerTop = buttonBottom + Theme.RULE_THICKNESS + 14
+
+		local deleteButton = Controls.Button(frame, {
+			label = Addon.L.PROFILE_DELETE,
+			run = commands.deleteProfile,
+			variant = "danger",
+		})
+		deleteButton:SetPoint("TOPRIGHT", 0, -dangerTop)
+
+		local warning = frame:CreateFontString(nil, "ARTWORK")
+		warning:SetFontObject(Fonts.HINT)
+		warning:SetPoint("TOPLEFT", 0, -(dangerTop + 4))
+		warning:SetWidth(width - deleteButton:GetWidth() - 24)
+		warning:SetJustifyH("LEFT")
+		warning:SetText(Addon.L.PROFILE_DELETE_HINT)
+		warning:SetTextColor(Theme.HINT_COLOR.red, Theme.HINT_COLOR.green, Theme.HINT_COLOR.blue)
+
+		frame:SetHeight(dangerTop + math.max(24, warning:GetStringHeight() + 8))
+
+		function frame:Refresh() end
+
+		return frame
 	end
+end
 
-	frame:SetScript("OnShow", function()
-		for _, control in ipairs(controls) do
-			control:Refresh()
-		end
-	end)
+---@param category table
+---@param commands table
+---@return table subcategory
+function ProfilePanel.Register(category, commands)
+	local page = Addon.OptionsPage.New({
+		title = Addon.L.PAGE_PROFILES,
+		subtitle = Addon.L.PAGE_PROFILES_HINT,
+	})
 
-	Settings.RegisterCanvasLayoutSubcategory(category, frame, PAGE_NAME)
+	page:Mount({
+		{
+			title = Addon.L.PROFILE_ACTIVE,
+			rows = { { { build = ActiveProfileCell(commands), span = 2 } } },
+		},
+		{
+			title = Addon.L.SECTION_MANAGE,
+			rows = { { { build = ManageCell(commands), span = 2 } } },
+		},
+	}, {})
+
+	return page:RegisterUnder(category)
 end
 
 Addon.ProfilePanel = ProfilePanel
