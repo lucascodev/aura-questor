@@ -7,6 +7,9 @@ local REWARD_ICON_SIZE = 14
 local CHOICE_LOOT_CURRENCY = 1
 local CHOICE_HEADING = Addon.L.REWARD_CHOICE_HEADING
 
+local COMPLETE_POPUP = "COMPLETE"
+local OFFER_POPUP = "OFFER"
+
 --- EntryActions for quests, including world quests, both live in the quest log
 --- and answer to the same calls.
 ---@class QuestEntryActions : EntryActions
@@ -20,8 +23,23 @@ function QuestEntryActions.New(waypoints)
 	return setmetatable({ waypoints = waypoints }, QuestEntryActions)
 end
 
+--- Com aviso pendente o clique responde como o banner da Blizzard: abre a
+--- entrega ou a oferta, em vez do diário. Os avisos podem sobrar na fila depois
+--- de resolvidos, daí conferir o estado da missão antes de obedecê-los.
 ---@param entry TrackerEntry
 function QuestEntryActions:OpenDetails(entry)
+	local popUpType = Addon.QuestPopupSource.Find(entry.id)
+
+	if popUpType == COMPLETE_POPUP and C_QuestLog.IsComplete(entry.id) then
+		ShowQuestComplete(entry.id)
+		return
+	end
+
+	if popUpType == OFFER_POPUP and not C_QuestLog.GetLogIndexForQuestID(entry.id) then
+		ShowQuestOffer(entry.id)
+		return
+	end
+
 	QuestMapFrame_OpenToQuestDetails(entry.id)
 end
 
@@ -43,7 +61,7 @@ end
 --- Points the on-screen arrow and the map waypoint at this quest.
 ---@param entry TrackerEntry
 function QuestEntryActions:SuperTrack(entry)
-	C_SuperTrack.SetSuperTrackedQuestID(entry.id)
+	Addon.SuperTracking.SetQuest(entry.id)
 end
 
 --- Opens the group finder already searching for this quest.
@@ -195,6 +213,15 @@ function QuestEntryActions:MenuItems(entry)
 			label = Addon.L.MENU_SEND_TO_TOMTOM,
 			run = function()
 				self.waypoints.send(entry)
+			end,
+		})
+	end
+
+	if entry.kind == "quest" and C_QuestLog.CanAbandonQuest(entry.id) then
+		table.insert(items, {
+			label = ABANDON_QUEST,
+			run = function()
+				QuestMapQuestOptions_AbandonQuest(entry.id)
 			end,
 		})
 	end

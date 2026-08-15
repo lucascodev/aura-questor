@@ -12,7 +12,7 @@
 --- A line worth pulling out of the list: the stage of a scenario.
 ---@class TrackerObjectiveCard
 ---@field highlight string The large text, the one thing being watched.
----@field heading? string Sits above the highlight, smaller.
+---@field caption? string Sits below the highlight, smaller.
 ---@field atlas? string Art for the frame. Absent falls back to a plain box.
 
 --- Art drawn inside the pin, where the number would otherwise be. Without a size

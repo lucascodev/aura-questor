@@ -10,6 +10,9 @@ local EVENTS = {
 	"QUEST_WATCH_LIST_CHANGED",
 	"QUEST_ACCEPTED",
 	"QUEST_REMOVED",
+	-- A missão que se completa à distância chega por aqui, e o aviso dela
+	-- precisa entrar na lista assim que surge.
+	"QUEST_AUTOCOMPLETE",
 	"ZONE_CHANGED_NEW_AREA",
 	"QUEST_WATCH_UPDATE",
 	-- Task quest progress arrives here, not through the quest log.

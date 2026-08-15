@@ -29,7 +29,7 @@ end
 
 ---@param entry TrackerEntry
 function BonusEntryActions:SuperTrack(entry)
-	C_SuperTrack.SetSuperTrackedQuestID(entry.id)
+	Addon.SuperTracking.SetQuest(entry.id)
 end
 
 ---@param entry TrackerEntry

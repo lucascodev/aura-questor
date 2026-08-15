@@ -31,6 +31,7 @@ Addon.RegisterLocale("ptBR", {
 	PROFILE_SWITCH = "Trocar de perfil",
 	PROFILE_DELETE_HINT = "Apagar remove o perfil de todos os personagens que o usam. O perfil em uso não pode ser apagado.",
 	PREF_UNKNOWN = "Preferência desconhecida: %s",
+	OPTIONS_IN_COMBAT = "As opções não abrem durante o combate.",
 	INFO_SUBTITLE = "Rastreador de objetivos próprio, construído sobre as APIs públicas do jogo.",
 	INFO_VERSION = "Versão",
 	INFO_AUTHOR = "Autor",

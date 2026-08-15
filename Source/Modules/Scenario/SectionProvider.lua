@@ -18,6 +18,7 @@ local DELVE_WIDGET_TYPE = Enum.UIWidgetVisualizationType
 	and Enum.UIWidgetVisualizationType.ScenarioHeaderDelves
 local DEFAULT_TEXTURE_KIT = "evergreen-scenario"
 local HEADER_ATLAS_SUFFIX = "-trackerheader"
+local FALLBACK_HEADER_ATLAS = "ScenarioTrackerToast"
 
 --- SectionProvider for scenarios, including Mythic+ dungeons.
 ---@class ScenarioSectionProvider : SectionProvider
@@ -174,13 +175,20 @@ end
 ---@return string?
 local function ReadHeaderAtlas()
 	local textureKit = select(TEXTURE_KIT_RETURN, C_Scenario.GetInfo()) or DEFAULT_TEXTURE_KIT
-	local atlas = textureKit .. HEADER_ATLAS_SUFFIX
 
-	if not C_Texture.GetAtlasInfo(atlas) then
-		return nil
+	local candidates = {
+		textureKit .. HEADER_ATLAS_SUFFIX,
+		DEFAULT_TEXTURE_KIT .. HEADER_ATLAS_SUFFIX,
+		FALLBACK_HEADER_ATLAS,
+	}
+
+	for _, atlas in ipairs(candidates) do
+		if C_Texture.GetAtlasInfo(atlas) then
+			return atlas
+		end
 	end
 
-	return atlas
+	return nil
 end
 
 --- Mítica+ não serve de teste: uma masmorra normal também é masmorra, e só o
@@ -259,9 +267,22 @@ function ScenarioSectionProvider:Collect()
 			isComplete = false,
 		})
 	else
+		local highlight = hasOwnStage and stageName or scenarioName
+		local caption
+
+		if hasOwnStage and numStages > 1 then
+			highlight = currentStage == numStages and SCENARIO_STAGE_FINAL
+				or SCENARIO_STAGE:format(currentStage)
+			caption = stageName
+		end
+
 		table.insert(objectives, {
 			text = stageLabel,
-			card = { highlight = stageLabel, atlas = ReadHeaderAtlas() },
+			card = {
+				highlight = highlight,
+				caption = caption,
+				atlas = ReadHeaderAtlas(),
+			},
 			isComplete = false,
 		})
 	end

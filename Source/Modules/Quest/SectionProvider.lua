@@ -1,6 +1,7 @@
 local _, Addon = ...
 
 local ENTRY_KIND = "quest"
+local COMPLETE_POPUP = "COMPLETE"
 
 --- SectionProvider for the quest log.
 ---
@@ -115,6 +116,59 @@ local function ReadEntry(questID, groupNames)
 	return entry, info.campaignID ~= nil
 end
 
+--- Uma missão oferecida à distância ainda não está no diário, então a entrada
+--- se resume ao aviso da própria Blizzard.
+---@param questID number
+---@return TrackerEntry?
+local function ReadOfferEntry(questID)
+	local title = C_QuestLog.GetTitleForQuestID(questID)
+
+	if not title or title == "" then
+		return nil
+	end
+
+	return {
+		id = questID,
+		kind = ENTRY_KIND,
+		title = title,
+		objectives = { { text = QUEST_WATCH_POPUP_QUEST_DISCOVERED, isComplete = false } },
+		isComplete = false,
+		canFindGroup = false,
+		pinStyle = "normal",
+	}
+end
+
+--- Missões com aviso pendente aparecem mesmo fora da lista de observadas: o
+--- jogador precisa vê-las para poder completar dali.
+---@param campaign TrackerSection
+---@param quests TrackerSection
+---@param groupNames table<number, string>
+---@return table<number, boolean> handled
+local function AddPopupEntries(campaign, quests, groupNames)
+	local handled = {}
+
+	for _, popup in ipairs(Addon.QuestPopupSource.ReadAll()) do
+		if popup.popUpType == COMPLETE_POPUP then
+			local entry, isCampaign = ReadEntry(popup.questID, groupNames)
+
+			if entry and entry.isComplete then
+				entry.objectives = { { text = QUEST_WATCH_POPUP_CLICK_TO_COMPLETE, isComplete = true } }
+				handled[popup.questID] = true
+				table.insert(isCampaign and campaign.entries or quests.entries, entry)
+			end
+		elseif not C_QuestLog.GetLogIndexForQuestID(popup.questID) then
+			local entry = ReadOfferEntry(popup.questID)
+
+			if entry then
+				handled[popup.questID] = true
+				table.insert(quests.entries, entry)
+			end
+		end
+	end
+
+	return handled
+end
+
 ---@return TrackerSection[]
 function QuestSectionProvider:Collect()
 	local campaign = {
@@ -131,10 +185,11 @@ function QuestSectionProvider:Collect()
 	}
 
 	local groupNames = Addon.QuestGroupReader.ReadAll()
+	local handled = AddPopupEntries(campaign, quests, groupNames)
 
 	for index = 1, C_QuestLog.GetNumQuestWatches() do
 		local questID = C_QuestLog.GetQuestIDForQuestWatchIndex(index)
-		if questID then
+		if questID and not handled[questID] then
 			local entry, isCampaign = ReadEntry(questID, groupNames)
 			if entry then
 				table.insert(isCampaign and campaign.entries or quests.entries, entry)

@@ -34,6 +34,7 @@ local entries = {
 	PROFILE_SWITCH = "Cambiar de perfil",
 	PROFILE_DELETE_HINT = "Eliminar quita el perfil de todos los personajes que lo usan. El perfil en uso no se puede eliminar.",
 	PREF_UNKNOWN = "Preferencia desconocida: %s",
+	OPTIONS_IN_COMBAT = "Las opciones no se abren durante el combate.",
 	INFO_SUBTITLE = "Un rastreador de objetivos independiente, construido sobre las API públicas del juego.",
 	INFO_VERSION = "Versión",
 	INFO_AUTHOR = "Autor",

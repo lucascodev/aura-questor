@@ -47,8 +47,9 @@ local PANELS = {
 ---@param info { label: string, value: string }[] Read-only facts for the root page.
 ---@param choiceProviders table<string, fun(): PreferenceChoice[]> Lists resolved on open.
 ---@param profileCommands table Everything the profile page can do.
+---@param logger ChatLogger
 ---@return OptionsPanel
-function OptionsPanel.New(addonInfo, catalog, preferences, info, choiceProviders, profileCommands)
+function OptionsPanel.New(addonInfo, catalog, preferences, info, choiceProviders, profileCommands, logger)
 	return setmetatable({
 		addonInfo = addonInfo,
 		catalog = catalog,
@@ -57,6 +58,7 @@ function OptionsPanel.New(addonInfo, catalog, preferences, info, choiceProviders
 		info = info,
 		choiceProviders = choiceProviders or {},
 		profileCommands = profileCommands,
+		logger = logger,
 	}, OptionsPanel)
 end
 
@@ -86,11 +88,33 @@ function OptionsPanel:SelectValue(key, value)
 	self.preferences:Set(key, value)
 end
 
+--- A Blizzard protege a abertura do painel em combate; tentar mesmo assim
+--- gera ação bloqueada em nome do addon, então o clique vira um aviso.
+---@private
+---@return boolean
+function OptionsPanel:CanOpenNow()
+	if not InCombatLockdown() then
+		return true
+	end
+
+	self.logger:Warn(Addon.L.OPTIONS_IN_COMBAT)
+
+	return false
+end
+
 function OptionsPanel:Open()
+	if not self:CanOpenNow() then
+		return
+	end
+
 	Settings.OpenToCategory(self.category:GetID())
 end
 
 function OptionsPanel:OpenIntegrations()
+	if not self:CanOpenNow() then
+		return
+	end
+
 	local panel = self.panels.integration
 
 	if type(panel) == "table" then

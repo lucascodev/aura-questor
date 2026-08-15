@@ -5,7 +5,7 @@
 ## Notes-esES: Un rastreador de objetivos independiente, construido sobre las API públicas del juego.
 ## Notes-esMX: Un rastreador de objetivos independiente, construido sobre las API públicas del juego.
 ## Notes-frFR: Un suivi d'objectifs autonome, construit sur les API publiques du jeu.
-## Version: 0.76.1
+## Version: 0.77.0
 ## Author: Lucascodev
 ## X-License: MIT
 ## X-Curse-Project-ID: 1651416
@@ -85,6 +85,7 @@ Source\Game\Objectives\ReagentReader.lua
 Source\Game\Quest\LogSource.lua
 Source\Game\Quest\GroupReader.lua
 Source\Game\Quest\ItemSource.lua
+Source\Game\Quest\PopupSource.lua
 
 Source\Game\Achievement\CategoryReader.lua
 Source\Game\Achievement\Tracking.lua

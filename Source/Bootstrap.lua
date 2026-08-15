@@ -235,6 +235,7 @@ local function Build()
 
 	Addon.TrackerEvents.New(RefreshFromGame):Start()
 	Addon.ChallengeTimer.New(RefreshFromGame):Start()
+	Addon.QuestPopupSource.Start()
 
 	-- Switching a profile reloads the interface. Re-pointing every table already
 	-- handed to the frame and the providers would work until one was forgotten,
@@ -307,7 +308,8 @@ local function Build()
 			fonts = Addon.MediaLibrary.FontChoices,
 			sounds = Addon.SoundLibrary.Choices,
 		},
-		profileCommands
+		profileCommands,
+		logger
 	)
 	optionsPanel:Register()
 

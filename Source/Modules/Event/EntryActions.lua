@@ -26,7 +26,7 @@ end
 --- pin API instead.
 ---@param entry TrackerEntry
 function EventEntryActions:SuperTrack(entry)
-	C_SuperTrack.SetSuperTrackedMapPin(Enum.SuperTrackingMapPinType.AreaPOI, entry.id)
+	Addon.SuperTracking.SetMapPin(Enum.SuperTrackingMapPinType.AreaPOI, entry.id)
 end
 
 ---@param entry TrackerEntry
