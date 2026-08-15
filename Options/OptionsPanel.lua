@@ -1,36 +1,50 @@
 local _, Addon = ...
 
 --- An addon only shows up under Options → AddOns if it registers a category.
---- This does it through the native Settings API, so there is no Ace3 and no
---- hand-built frame to keep alive across patches.
+--- Every page is a canvas drawn by the addon; the Settings API only provides
+--- the tree. The price, accepted on purpose: no native search and no Defaults
+--- button, in exchange for full control of label, hint and value.
 ---@class OptionsPanel
 ---@field private addonInfo AddonInfo
 ---@field private catalog Preference[]
 ---@field private preferences Preferences
 ---@field private category table?
----@field private settings table<string, table>
----@field private panels table<string, boolean>
+---@field private panels table<string, table>
 local OptionsPanel = {}
 OptionsPanel.__index = OptionsPanel
 
---- Namespaces the setting ids, which share one global registry with every
---- other addon.
-local VARIABLE_PREFIX = "ATQ_"
-
---- The pages drawn by hand, under the name a preference points at.
-local CUSTOM_PANELS = {
-	background = function(category, catalog, preferences)
-		Addon.BackgroundPanel.Register(category, catalog, preferences)
-	end,
-	integration = function(category, _, preferences)
-		return Addon.IntegrationPanel.Register(category, preferences)
-	end,
+--- The pages, in the order the tree shows them.
+local PANELS = {
+	{
+		name = "appearance",
+		register = function(category, catalog, preferences)
+			return Addon.AppearancePanel.Register(category, catalog, preferences)
+		end,
+	},
+	{
+		name = "frame",
+		register = function(category, catalog, preferences)
+			return Addon.FramePanel.Register(category, catalog, preferences)
+		end,
+	},
+	{
+		name = "content",
+		register = function(category, catalog, preferences)
+			return Addon.ContentPanel.Register(category, catalog, preferences)
+		end,
+	},
+	{
+		name = "integration",
+		register = function(category, _, preferences)
+			return Addon.IntegrationPanel.Register(category, preferences)
+		end,
+	},
 }
 
 ---@param addonInfo AddonInfo
 ---@param catalog Preference[]
 ---@param preferences Preferences
----@param info { label: string, value: string }[] Read-only facts for the about page.
+---@param info { label: string, value: string }[] Read-only facts for the root page.
 ---@param choiceProviders table<string, fun(): PreferenceChoice[]> Lists resolved on open.
 ---@param profileCommands table Everything the profile page can do.
 ---@return OptionsPanel
@@ -39,7 +53,6 @@ function OptionsPanel.New(addonInfo, catalog, preferences, info, choiceProviders
 		addonInfo = addonInfo,
 		catalog = catalog,
 		preferences = preferences,
-		settings = {},
 		panels = {},
 		info = info,
 		choiceProviders = choiceProviders or {},
@@ -47,91 +60,16 @@ function OptionsPanel.New(addonInfo, catalog, preferences, info, choiceProviders
 	}, OptionsPanel)
 end
 
----@private
----@param category table
----@param preference Preference
-function OptionsPanel:AddControl(category, preference)
-	local setting = Settings.RegisterAddOnSetting(
-		category,
-		VARIABLE_PREFIX .. preference.key,
-		preference.key,
-		self.preferences:Values(),
-		preference.kind,
-		preference.label,
-		preference.default
-	)
-
-	setting:SetValueChangedCallback(function()
-		self.preferences:Notify(preference.key)
-	end)
-	self.settings[preference.key] = setting
-
-	-- A dropdown's options are asked for when it opens, so a list that fills as
-	-- addons load can be resolved then instead of at login.
-	local provider = preference.choicesKey and self.choiceProviders[preference.choicesKey]
-
-	if preference.choices or provider then
-		Settings.CreateDropdown(category, setting, function()
-			local container = Settings.CreateControlTextContainer()
-
-			for _, choice in ipairs(provider and provider() or preference.choices) do
-				container:Add(choice.id, choice.label)
-			end
-
-			return container:GetData()
-		end, preference.tooltip)
-		return
-	end
-
-	if preference.kind == "boolean" then
-		Settings.CreateCheckbox(category, setting, preference.tooltip)
-		return
-	end
-
-	local sliderOptions = Settings.CreateSliderOptions(
-		preference.minimum,
-		preference.maximum,
-		preference.step
-	)
-
-	Settings.CreateSlider(category, setting, sliderOptions, preference.tooltip)
-end
-
---- Registered on the first preference that names one, so a hand-built page lands
---- in the tree where the catalog puts it.
----@private
----@param category table
----@param name string
-function OptionsPanel:AddPanel(category, name)
-	if self.panels[name] then
-		return
-	end
-
-	-- Guarda a subcategoria quando o painel a devolve, para poder abrir a
-	-- página direto; true marca só que o painel já foi registrado.
-	self.panels[name] = CUSTOM_PANELS[name](category, self.catalog, self.preferences) or true
-end
-
 function OptionsPanel:Register()
-	-- A raiz é desenhada à mão: interruptores gerais e os fatos do addon juntos,
-	-- para a primeira tela apresentar o addon em vez de esconder isso numa
-	-- subpágina.
 	local category = Addon.MainPanel.Register(
 		self.addonInfo,
 		self.catalog,
 		self.preferences,
 		self.info
 	)
-	local pages = {}
 
-	for _, preference in ipairs(self.catalog) do
-		if preference.panel then
-			self:AddPanel(category, preference.panel)
-		elseif preference.page then
-			pages[preference.page] = pages[preference.page]
-				or Settings.RegisterVerticalLayoutSubcategory(category, preference.page)
-			self:AddControl(pages[preference.page], preference)
-		end
+	for _, panel in ipairs(PANELS) do
+		self.panels[panel.name] = panel.register(category, self.catalog, self.preferences)
 	end
 
 	Addon.ProfilePanel.Register(category, self.profileCommands)
@@ -140,20 +78,11 @@ function OptionsPanel:Register()
 	self.category = category
 end
 
---- The one way to change a preference from outside the panel. A preference the
---- Settings API drew goes through its setting object, which persists the value,
---- refreshes the control and announces the change; one drawn by hand has no
---- control to refresh and goes straight to the store.
+--- Every page is hand drawn, so writing goes straight to the store; the pages
+--- re-read their values on show.
 ---@param key string
 ---@param value boolean|number|string
 function OptionsPanel:SelectValue(key, value)
-	local setting = self.settings[key]
-
-	if setting then
-		setting:SetValue(value)
-		return
-	end
-
 	self.preferences:Set(key, value)
 end
 

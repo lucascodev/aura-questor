@@ -12,11 +12,10 @@
 ---@field kind "boolean"|"number"|"string"|"color" All but "color" are types the Settings API knows.
 ---@field default boolean|number|string
 ---@field label string
----@field tooltip? string Only the controls the Settings API draws carry one.
----@field panel? string Drawn by the named hand-built page, not by the Settings API.
----@field choices? PreferenceChoice[] Present means a dropdown instead of a checkbox.
+---@field tooltip? string Shown as the support text under the label.
+---@field panel? string Page that draws it; absent means the root page.
+---@field choices? PreferenceChoice[] Present means a dropdown instead of a switch.
 ---@field choicesKey? string Names a provider that lists the options when opened.
----@field page? string Sub-page of the options panel it belongs to.
 ---@field minimum? number Only meaningful when kind is "number".
 ---@field maximum? number Only meaningful when kind is "number".
 ---@field step? number Only meaningful when kind is "number".

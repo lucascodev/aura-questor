@@ -3,8 +3,10 @@ local _, Addon = ...
 local Keys = Addon.PreferenceKeys
 local L = Addon.L
 
-local BACKGROUND_PANEL = "background"
+local FRAME_PANEL = "frame"
 local INTEGRATION_PANEL = "integration"
+local APPEARANCE_PANEL = "appearance"
+local CONTENT_PANEL = "content"
 
 --- Every preference the addon exposes, as data.
 --- Adding an entry here is enough for it to be persisted and to show up in the
@@ -27,7 +29,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.TRACKER_WIDTH,
-		page = L.PAGE_APPEARANCE,
+		panel = APPEARANCE_PANEL,
 		kind = "number",
 		default = 320,
 		label = L.PREF_WIDTH,
@@ -38,7 +40,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.TRACKER_HEIGHT,
-		page = L.PAGE_APPEARANCE,
+		panel = APPEARANCE_PANEL,
 		kind = "number",
 		default = 420,
 		label = L.PREF_HEIGHT,
@@ -49,7 +51,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.EDIT_MODE,
-		page = L.PAGE_APPEARANCE,
+		panel = APPEARANCE_PANEL,
 		kind = "boolean",
 		default = false,
 		label = L.PREF_EDIT_MODE,
@@ -57,7 +59,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.TRACKER_SCALE,
-		page = L.PAGE_APPEARANCE,
+		panel = APPEARANCE_PANEL,
 		kind = "number",
 		default = 100,
 		label = L.PREF_SCALE,
@@ -68,7 +70,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.PANEL_OPACITY,
-		page = L.PAGE_APPEARANCE,
+		panel = APPEARANCE_PANEL,
 		kind = "number",
 		default = 88,
 		label = L.PREF_PANEL_OPACITY,
@@ -79,7 +81,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.FONT_SIZE,
-		page = L.PAGE_APPEARANCE,
+		panel = APPEARANCE_PANEL,
 		kind = "number",
 		default = 12,
 		label = L.PREF_FONT_SIZE,
@@ -90,7 +92,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.FONT_NAME,
-		page = L.PAGE_APPEARANCE,
+		panel = APPEARANCE_PANEL,
 		kind = "string",
 		default = "Friz Quadrata TT",
 		label = L.PREF_FONT,
@@ -99,7 +101,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.FONT_FLAG,
-		page = L.PAGE_APPEARANCE,
+		panel = APPEARANCE_PANEL,
 		kind = "string",
 		default = "none",
 		label = L.PREF_FONT_FLAG,
@@ -108,7 +110,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.FONT_SHADOW,
-		page = L.PAGE_APPEARANCE,
+		panel = APPEARANCE_PANEL,
 		kind = "boolean",
 		default = true,
 		label = L.PREF_FONT_SHADOW,
@@ -116,7 +118,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.WRAP_LONG_TEXT,
-		page = L.PAGE_APPEARANCE,
+		panel = APPEARANCE_PANEL,
 		kind = "boolean",
 		default = true,
 		label = L.PREF_WRAP_TEXT,
@@ -124,21 +126,21 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.BACKGROUND_TEXTURE,
-		panel = BACKGROUND_PANEL,
+		panel = FRAME_PANEL,
 		kind = "string",
 		default = "Solid",
 		label = L.PREF_BACKGROUND_TEXTURE,
 	},
 	{
 		key = Keys.BACKGROUND_COLOR,
-		panel = BACKGROUND_PANEL,
+		panel = FRAME_PANEL,
 		kind = "color",
 		default = "050509",
 		label = L.PREF_BACKGROUND_COLOR,
 	},
 	{
 		key = Keys.BACKGROUND_INSET,
-		panel = BACKGROUND_PANEL,
+		panel = FRAME_PANEL,
 		kind = "number",
 		default = 0,
 		label = L.PREF_BACKGROUND_INSET,
@@ -148,28 +150,28 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.BORDER_TEXTURE,
-		panel = BACKGROUND_PANEL,
+		panel = FRAME_PANEL,
 		kind = "string",
 		default = "Solid",
 		label = L.PREF_BORDER_TEXTURE,
 	},
 	{
 		key = Keys.BORDER_COLOR,
-		panel = BACKGROUND_PANEL,
+		panel = FRAME_PANEL,
 		kind = "color",
 		default = "333029",
 		label = L.PREF_BORDER_COLOR,
 	},
 	{
 		key = Keys.BORDER_CLASS_COLOR,
-		panel = BACKGROUND_PANEL,
+		panel = FRAME_PANEL,
 		kind = "boolean",
 		default = false,
 		label = L.PREF_BORDER_CLASS_COLOR,
 	},
 	{
 		key = Keys.BORDER_THICKNESS,
-		panel = BACKGROUND_PANEL,
+		panel = FRAME_PANEL,
 		kind = "number",
 		default = 1,
 		label = L.PREF_BORDER_THICKNESS,
@@ -179,14 +181,14 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.PROGRESS_BAR_TEXTURE,
-		panel = BACKGROUND_PANEL,
+		panel = FRAME_PANEL,
 		kind = "string",
 		default = "Blizzard",
 		label = L.PREF_PROGRESS_BAR_TEXTURE,
 	},
 	{
 		key = Keys.BORDER_OPACITY,
-		panel = BACKGROUND_PANEL,
+		panel = FRAME_PANEL,
 		kind = "number",
 		default = 90,
 		label = L.PREF_BORDER_OPACITY,
@@ -196,7 +198,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.SHOW_FILTER_BUTTON,
-		page = L.PAGE_BUTTONS,
+		panel = CONTENT_PANEL,
 		kind = "boolean",
 		default = true,
 		label = L.PREF_SHOW_FILTER_BUTTON,
@@ -204,7 +206,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.SHOW_ACHIEVEMENT_BUTTON,
-		page = L.PAGE_BUTTONS,
+		panel = CONTENT_PANEL,
 		kind = "boolean",
 		default = true,
 		label = L.PREF_SHOW_ACHIEVEMENT_BUTTON,
@@ -212,7 +214,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.SHOW_INTEGRATION_BUTTON,
-		page = L.PAGE_BUTTONS,
+		panel = CONTENT_PANEL,
 		kind = "boolean",
 		default = true,
 		label = L.PREF_SHOW_INTEGRATION_BUTTON,
@@ -220,7 +222,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.SHOW_MINIMAP_BUTTON,
-		page = L.PAGE_BUTTONS,
+		panel = CONTENT_PANEL,
 		kind = "boolean",
 		default = true,
 		label = L.PREF_SHOW_MINIMAP_BUTTON,
@@ -228,7 +230,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.SHOW_ITEM_BUTTONS,
-		page = L.PAGE_BUTTONS,
+		panel = CONTENT_PANEL,
 		kind = "boolean",
 		default = true,
 		label = L.PREF_SHOW_ITEM_BUTTONS,
@@ -236,7 +238,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.SORT_MODE,
-		page = L.PAGE_CONTENT,
+		panel = CONTENT_PANEL,
 		kind = "string",
 		default = "none",
 		label = L.PREF_SORT_MODE,
@@ -245,7 +247,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.COMPLETED_AT_TOP,
-		page = L.PAGE_CONTENT,
+		panel = CONTENT_PANEL,
 		kind = "boolean",
 		default = false,
 		label = L.PREF_COMPLETED_AT_TOP,
@@ -253,7 +255,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.EVENTS_ENABLED,
-		page = L.PAGE_CONTENT,
+		panel = CONTENT_PANEL,
 		kind = "boolean",
 		default = true,
 		label = L.PREF_EVENTS_ENABLED,
@@ -261,7 +263,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.BONUS_ZONE_WIDE,
-		page = L.PAGE_CONTENT,
+		panel = CONTENT_PANEL,
 		kind = "boolean",
 		default = false,
 		label = L.PREF_BONUS_ZONE_WIDE,
@@ -269,7 +271,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.SOUND_ENABLED,
-		page = L.PAGE_SOUND,
+		panel = CONTENT_PANEL,
 		kind = "boolean",
 		default = true,
 		label = L.PREF_SOUND_ENABLED,
@@ -277,7 +279,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.SOUND_QUEST_COMPLETE,
-		page = L.PAGE_SOUND,
+		panel = CONTENT_PANEL,
 		kind = "string",
 		default = "questComplete",
 		label = L.PREF_SOUND_QUEST_COMPLETE,
@@ -286,7 +288,7 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.SOUND_CHANNEL,
-		page = L.PAGE_SOUND,
+		panel = CONTENT_PANEL,
 		kind = "string",
 		default = "Master",
 		label = L.PREF_SOUND_CHANNEL,
@@ -295,7 +297,6 @@ local PreferenceCatalog = {
 	},
 	{
 		key = Keys.ANNOUNCE_ON_LOAD,
-		page = L.PAGE_ADVANCED,
 		kind = "boolean",
 		default = true,
 		label = L.PREF_ANNOUNCE_ON_LOAD,

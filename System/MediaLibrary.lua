@@ -58,6 +58,9 @@ end
 --- Called once at startup, before anything reads a list.
 function MediaLibrary.RegisterOwnMedia()
 	Media():Register(BORDER_MEDIA, SOLID_NAME, SOLID_TEXTURE)
+	Media():Register(FONT_MEDIA, "Inter", [[Interface\AddOns\AuraTrackerQuestor\Media\Fonts\Inter-Regular.ttf]])
+	Media():Register(FONT_MEDIA, "Inter SemiBold", [[Interface\AddOns\AuraTrackerQuestor\Media\Fonts\Inter-SemiBold.ttf]])
+	Media():Register(FONT_MEDIA, "JetBrains Mono", [[Interface\AddOns\AuraTrackerQuestor\Media\Fonts\JetBrainsMono-Regular.ttf]])
 end
 
 ---@return PreferenceChoice[]

@@ -16,6 +16,7 @@ local SUITES = {
 	"Core/Preferences/Catalog",
 	"Core/Preferences/Choices",
 	"Core/Preferences/Store",
+	"Core/Preferences/Lookup",
 	"Core/Filtering/Filters",
 	"Core/Filtering/Filtering",
 	"Core/Tracker/SectionOrder",
@@ -25,6 +26,8 @@ local SUITES = {
 	"Core/Tracker/AchievementCategories",
 	"Core/Commands",
 	"Core/Integration/WaypointSync",
+	"Options/Schematic",
+	"Options/Pages",
 	"Locales",
 }
 

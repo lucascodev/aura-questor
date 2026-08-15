@@ -59,6 +59,7 @@ read_globals = {
 	"C_TradeSkillUI",
 	"ColorPickerFrame",
 	"Constants",
+	"CreateFont",
 	"CreateFrame",
 	"CreateMinimalSliderFormatter",
 	"DEFAULT_CHAT_FRAME",

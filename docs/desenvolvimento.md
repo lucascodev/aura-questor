@@ -29,9 +29,11 @@ lua Tests/Run.lua              # todas as suítes
 lua Tests/Run.lua Tracker      # só as de Tests/Core/Tracker/
 ```
 
-117 testes sobre o `Core/`, em Lua puro, sem dependências. O harness carrega
-`Locales/` e `Core/` na mesma ordem do `.toc` e simula o vararg que o jogo passa
-para cada arquivo. Retorna código 1 se algum teste falhar.
+Testes sobre o `Core/`, em Lua puro, sem dependências. O harness carrega
+`Locales/`, `Core/` e dois arquivos puros de `Options/Components/` (Theme e
+Schematic, que não tocam API do jogo) na mesma ordem do `.toc` e simula o
+vararg que o jogo passa para cada arquivo. Retorna código 1 se algum teste
+falhar.
 
 `Tests/` espelha a estrutura do projeto: cada suíte fica no caminho equivalente
 ao do módulo que exercita. Fakes e construtores compartilhados vivem em
