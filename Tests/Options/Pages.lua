@@ -1,9 +1,9 @@
 return function(Addon, T)
 	local PAGE_FILES = {
-		appearance = "Options/AppearancePanel.lua",
-		frame = "Options/FramePanel.lua",
-		content = "Options/ContentPanel.lua",
-		integration = "Options/IntegrationPanel.lua",
+		appearance = "Source/Options/AppearancePanel.lua",
+		frame = "Source/Options/FramePanel.lua",
+		content = "Source/Options/ContentPanel.lua",
+		integration = "Source/Options/IntegrationPanel.lua",
 	}
 
 	---@param path string

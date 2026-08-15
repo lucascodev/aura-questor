@@ -20,10 +20,10 @@ Blizzard.
 
 | | |
 |---|---|
-| Arquivos Lua carregados pelo jogo | 92, sendo 85 nossos e 7 de bibliotecas |
-| Linhas no `Core/`, sem uma única API do jogo | ~1.400 |
+| Arquivos Lua carregados pelo jogo | 106, sendo 99 nossos e 7 de bibliotecas |
+| Linhas no `Core/`, sem uma única API do jogo | ~1.600 |
 | Providers de conteúdo, alimentando 11 seções | 10 |
-| Eventos do jogo escutados | 26 |
-| Preferências | 32 |
-| Contratos em `Ports/` | 15 |
-| Testes do `Core/`, rodando fora do cliente | 117 |
+| Eventos do jogo escutados | 27 |
+| Preferências | 35 |
+| Contratos em `Source/Ports/` | 17 |
+| Testes rodando fora do cliente | 141 |

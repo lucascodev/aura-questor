@@ -73,11 +73,11 @@ function Harness.LoadCore()
 	end
 
 	for _, name in ipairs(CORE_FILES) do
-		Load("Core/" .. name .. ".lua")
+		Load("Source/Core/" .. name .. ".lua")
 	end
 
 	for _, name in ipairs(OPTIONS_FILES) do
-		Load("Options/" .. name .. ".lua")
+		Load("Source/Options/" .. name .. ".lua")
 	end
 
 	return addon

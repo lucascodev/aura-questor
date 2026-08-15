@@ -39,123 +39,123 @@ Locales\esES.lua
 Locales\frFR.lua
 
 # Rules, in plain Lua. Nothing here knows the game exists.
-Core\HexColor.lua
-Core\ToggleSet.lua
-Core\Profiles.lua
+Source\Core\HexColor.lua
+Source\Core\ToggleSet.lua
+Source\Core\Profiles.lua
 
 # Keys, choice lists and the catalog that reads them at file scope, so the
 # lists load first.
-Core\Preferences\Keys.lua
-Core\Preferences\FontFlags.lua
-Core\Preferences\SortModes.lua
-Core\Preferences\SoundChannels.lua
-Core\Preferences\Catalog.lua
-Core\Preferences\Store.lua
-Core\Preferences\Lookup.lua
+Source\Core\Preferences\Keys.lua
+Source\Core\Preferences\FontFlags.lua
+Source\Core\Preferences\SortModes.lua
+Source\Core\Preferences\SoundChannels.lua
+Source\Core\Preferences\Catalog.lua
+Source\Core\Preferences\Store.lua
+Source\Core\Preferences\Lookup.lua
 
-Core\Filtering\FilterIds.lua
-Core\Filtering\Filters.lua
-Core\Filtering\Filtering.lua
+Source\Core\Filtering\FilterIds.lua
+Source\Core\Filtering\Filters.lua
+Source\Core\Filtering\Filtering.lua
 
-Core\Tracker\SectionOrder.lua
-Core\Tracker\Content.lua
-Core\Tracker\Display.lua
-Core\Tracker\CompletionWatcher.lua
-Core\Tracker\AchievementCategories.lua
+Source\Core\Tracker\SectionOrder.lua
+Source\Core\Tracker\Content.lua
+Source\Core\Tracker\Display.lua
+Source\Core\Tracker\CompletionWatcher.lua
+Source\Core\Tracker\AchievementCategories.lua
 
-Core\Commands\Status.lua
-Core\Commands\Help.lua
-Core\Commands\Startup.lua
+Source\Core\Commands\Status.lua
+Source\Core\Commands\Help.lua
+Source\Core\Commands\Startup.lua
 
-Core\Integration\WaypointSync.lua
+Source\Core\Integration\WaypointSync.lua
 
 # Reads the game and draws nothing.
-Game\AddonMetadata.lua
-Game\BlizzardTracker.lua
-Game\ClassColor.lua
-Game\SuperTracking.lua
-Game\MapNavigator.lua
-Game\WaypointReader.lua
+Source\Game\AddonMetadata.lua
+Source\Game\BlizzardTracker.lua
+Source\Game\ClassColor.lua
+Source\Game\SuperTracking.lua
+Source\Game\MapNavigator.lua
+Source\Game\WaypointReader.lua
 
 # Three readers, one shape: all of them answer with TrackerObjective[].
-Game\Objectives\QuestReader.lua
-Game\Objectives\RequirementReader.lua
-Game\Objectives\ReagentReader.lua
+Source\Game\Objectives\QuestReader.lua
+Source\Game\Objectives\RequirementReader.lua
+Source\Game\Objectives\ReagentReader.lua
 
-Game\Quest\LogSource.lua
-Game\Quest\GroupReader.lua
-Game\Quest\ItemSource.lua
+Source\Game\Quest\LogSource.lua
+Source\Game\Quest\GroupReader.lua
+Source\Game\Quest\ItemSource.lua
 
-Game\Achievement\CategoryReader.lua
-Game\Achievement\Tracking.lua
-Game\Achievement\Panel.lua
+Source\Game\Achievement\CategoryReader.lua
+Source\Game\Achievement\Tracking.lua
+Source\Game\Achievement\Panel.lua
 
 
 # Chat, commands, events and shared media.
-System\ChatLogger.lua
-System\SlashCommandRegistry.lua
-System\KeyBindings.lua
-System\MediaLibrary.lua
-System\SoundLibrary.lua
-System\SoundPlayer.lua
-System\ProfileTransfer.lua
-System\TrackerEvents.lua
-System\ChallengeTimer.lua
-System\TomTomArrow.lua
+Source\System\ChatLogger.lua
+Source\System\SlashCommandRegistry.lua
+Source\System\KeyBindings.lua
+Source\System\MediaLibrary.lua
+Source\System\SoundLibrary.lua
+Source\System\SoundPlayer.lua
+Source\System\ProfileTransfer.lua
+Source\System\TrackerEvents.lua
+Source\System\ChallengeTimer.lua
+Source\System\TomTomArrow.lua
 
 # One folder per kind of content: what it collects, and what its entries do.
-Modules\Scenario\SectionProvider.lua
-Modules\Scenario\EntryActions.lua
-Modules\Quest\SectionProvider.lua
-Modules\Quest\EntryActions.lua
-Modules\WorldQuest\SectionProvider.lua
-Modules\Event\SectionProvider.lua
-Modules\Event\EntryActions.lua
-Modules\BonusObjective\SectionProvider.lua
-Modules\BonusObjective\EntryActions.lua
-Modules\Achievement\SectionProvider.lua
-Modules\Achievement\EntryActions.lua
-Modules\Profession\SectionProvider.lua
-Modules\Profession\EntryActions.lua
-Modules\Collectable\SectionProvider.lua
-Modules\Collectable\EntryActions.lua
-Modules\MonthlyActivity\EntryActions.lua
-Modules\InitiativeTask\EntryActions.lua
-Modules\TrackedListSectionProvider.lua
-Modules\EntryActionRouter.lua
+Source\Modules\Scenario\SectionProvider.lua
+Source\Modules\Scenario\EntryActions.lua
+Source\Modules\Quest\SectionProvider.lua
+Source\Modules\Quest\EntryActions.lua
+Source\Modules\WorldQuest\SectionProvider.lua
+Source\Modules\Event\SectionProvider.lua
+Source\Modules\Event\EntryActions.lua
+Source\Modules\BonusObjective\SectionProvider.lua
+Source\Modules\BonusObjective\EntryActions.lua
+Source\Modules\Achievement\SectionProvider.lua
+Source\Modules\Achievement\EntryActions.lua
+Source\Modules\Profession\SectionProvider.lua
+Source\Modules\Profession\EntryActions.lua
+Source\Modules\Collectable\SectionProvider.lua
+Source\Modules\Collectable\EntryActions.lua
+Source\Modules\MonthlyActivity\EntryActions.lua
+Source\Modules\InitiativeTask\EntryActions.lua
+Source\Modules\TrackedListSectionProvider.lua
+Source\Modules\EntryActionRouter.lua
 
 # Frames. Shared pieces first, then the tracker and what hangs off it.
-UI\FontStyler.lua
-UI\ColorPicker.lua
-UI\NamePrompt.lua
-UI\MinimapButton.lua
+Source\UI\FontStyler.lua
+Source\UI\ColorPicker.lua
+Source\UI\NamePrompt.lua
+Source\UI\MinimapButton.lua
 
-UI\Entry\PinStyles.lua
-UI\Entry\Text.lua
-UI\Entry\Tooltip.lua
-UI\Entry\BlockPool.lua
+Source\UI\Entry\PinStyles.lua
+Source\UI\Entry\Text.lua
+Source\UI\Entry\Tooltip.lua
+Source\UI\Entry\BlockPool.lua
 
-UI\Tracker\Backdrop.lua
-UI\Tracker\Position.lua
-UI\Tracker\OwnTrackerFrame.lua
+Source\UI\Tracker\Backdrop.lua
+Source\UI\Tracker\Position.lua
+Source\UI\Tracker\OwnTrackerFrame.lua
 
-UI\Header\ButtonRow.lua
-UI\Header\FilterButton.lua
-UI\Header\AchievementButton.lua
-UI\Header\IntegrationButton.lua
+Source\UI\Header\ButtonRow.lua
+Source\UI\Header\FilterButton.lua
+Source\UI\Header\AchievementButton.lua
+Source\UI\Header\IntegrationButton.lua
 
 # Options pages.
-Options\Components\Theme.lua
-Options\Components\Fonts.lua
-Options\Components\Schematic.lua
-Options\Components\Controls.lua
-Options\Components\Page.lua
-Options\MainPanel.lua
-Options\AppearancePanel.lua
-Options\FramePanel.lua
-Options\ContentPanel.lua
-Options\ProfilePanel.lua
-Options\IntegrationPanel.lua
-Options\OptionsPanel.lua
+Source\Options\Components\Theme.lua
+Source\Options\Components\Fonts.lua
+Source\Options\Components\Schematic.lua
+Source\Options\Components\Controls.lua
+Source\Options\Components\Page.lua
+Source\Options\MainPanel.lua
+Source\Options\AppearancePanel.lua
+Source\Options\FramePanel.lua
+Source\Options\ContentPanel.lua
+Source\Options\ProfilePanel.lua
+Source\Options\IntegrationPanel.lua
+Source\Options\OptionsPanel.lua
 
-Bootstrap.lua
+Source\Bootstrap.lua
