@@ -49,8 +49,8 @@ limitação do rastreador da Blizzard.
 
 ## Taint no mapa: um erro conhecido e sem correção
 
-Abrir os detalhes de uma missão a partir de um addon —
-`QuestMapFrame_OpenToQuestDetails` — executa toda a máquina do mapa em contexto
+Abrir os detalhes de uma missão a partir de um addon, via
+`QuestMapFrame_OpenToQuestDetails`, executa toda a máquina do mapa em contexto
 inseguro, e cada variável que ela escreve nessa passada fica manchada. Quando o
 próprio jogo repassa por essas variáveis mais tarde, dentro de combate, as
 chamadas protegidas dos pins (`SetPassThroughButtons`,
