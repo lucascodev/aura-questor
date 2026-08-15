@@ -16,7 +16,7 @@ manual-changelog:
   markup-type: markdown
 
 ignore:
-  - Ports
+  - Source/Ports
   - Tests
   - docs
   - Media/source

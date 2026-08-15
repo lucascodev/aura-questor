@@ -17,16 +17,10 @@ $Staging = Join-Path $Output $AddonName
 $Runtime = @(
     "$AddonName.toc",
     "Bindings.xml",
-    "Bootstrap.lua",
     "Media",
     "Libs",
     "Locales",
-    "Core",
-    "Game",
-    "System",
-    "Modules",
-    "UI",
-    "Options"
+    "Source"
 )
 
 $tocPath = Join-Path $Root "$AddonName.toc"
@@ -42,6 +36,11 @@ foreach ($item in $Runtime) {
     if (-not (Test-Path $source)) { throw "Missing: $item" }
     Copy-Item $source -Destination $Staging -Recurse
 }
+
+# O que o .pkgmeta ignora no release tambem sai do pacote local, para os dois
+# zips serem o mesmo addon.
+Remove-Item (Join-Path $Staging "Source\Ports") -Recurse -Force
+Remove-Item (Join-Path $Staging "Media\source") -Recurse -Force
 
 # A file listed in the .toc but absent from the package fails at load time, in
 # the player's client, with no clue why. Cheaper to catch it here.
