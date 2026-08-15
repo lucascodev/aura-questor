@@ -32,6 +32,7 @@ Addon.RegisterLocale("enUS", {
 	PROFILE_SWITCH = "Switch profile",
 	PROFILE_DELETE_HINT = "Deleting removes the profile from every character using it. The profile in use cannot be deleted.",
 	PREF_UNKNOWN = "Unknown preference: %s",
+	OPTIONS_IN_COMBAT = "The options cannot be opened during combat.",
 	INFO_SUBTITLE = "A standalone objective tracker built on the game's public APIs.",
 	INFO_VERSION = "Version",
 	INFO_AUTHOR = "Author",

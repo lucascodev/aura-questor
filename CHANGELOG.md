@@ -21,6 +21,30 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 - As pastas de código desceram para `Source/`, deixando a raiz do addon só com
   o manifesto, os atalhos, mídia, locales e bibliotecas. Nenhuma mudança de
   comportamento.
+- O rastreador adota a tipografia das opções: Inter vira a fonte padrão em
+  instalações novas (perfis existentes mantêm a escolha), e as porcentagens
+  das barras de progresso passam a JetBrains Mono, que alinha os dígitos.
+
+### Adicionado
+
+- Menu de contexto de missão ganhou **Abandonar missão**, com a confirmação
+  da própria Blizzard, apenas quando a missão pode ser abandonada.
+- Missão que se completa à distância aparece na lista mesmo sem estar sendo
+  observada, com o aviso da Blizzard no lugar dos objetivos, e o clique abre a
+  janela de recompensa dali. Vale também para missões oferecidas à distância,
+  que mostram "Nova missão descoberta" e abrem a oferta ao clicar.
+
+### Corrigido
+
+- O card de estágio ficava sem a arte da Blizzard quando o cenário não
+  declarava um conjunto próprio: a busca parava antes das reservas. Agora o
+  card veste a arte no tamanho dela e segue o desenho do jogo, com o número do
+  estágio em destaque, o nome menor embaixo e **Estágio Final** no último.
+- Supervisionar uma entrada durante o combate manchava o refresh dos pins do
+  mapa e gerava avisos de ação bloqueada. A escrita agora espera o combate
+  acabar; só o último clique vale.
+- Abrir as opções em combate é protegido pelo jogo desde o 12.x e caía em
+  ação bloqueada. O clique agora avisa no chat e não tenta.
 
 ## [0.76.1] - 2026-08-14
 

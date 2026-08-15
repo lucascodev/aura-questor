@@ -73,6 +73,14 @@ que já está lá mancharia o campo que o atalho de mapa da Blizzard lê a cada
 tecla M. Quando a própria Blizzard reescreve o campo, a mancha some até o
 próximo toque nosso.
 
+Na mesma família: escrever a supervisão (`C_SuperTrack`) dentro de combate
+dispara na hora o refresh dos pins do mapa em contexto manchado, e o
+`SetPassThroughButtons` de cada pin é bloqueado. Por isso `SuperTracking`
+adia a escrita para o fim do combate; só o último pedido vale.
+
+Abrir o painel de opções (`Settings.OpenToCategory`) também é protegido em
+combate desde o 12.x. `OptionsPanel` avisa no chat e não tenta.
+
 ## Medir frames
 
 `GetBottom()` e funções semelhantes devolvem coordenadas de tela que podem estar

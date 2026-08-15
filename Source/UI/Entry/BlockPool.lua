@@ -20,6 +20,8 @@ local BAR_COMPLETE_COLOR = { red = 0.35, green = 0.35, blue = 0.35 }
 --- and as one more dashed line it reads like a footnote.
 local CARD_PADDING = 8
 local CARD_GAP = 4
+local CARD_ART_TEXT_INSET_X = 15
+local CARD_ART_TEXT_INSET_Y = 14
 local CARD_HIGHLIGHT_SIZE_DELTA = 9
 local CARD_BACKDROP = {
 	bgFile = "Interface\\Buttons\\WHITE8X8",
@@ -261,15 +263,15 @@ local function CreateCard(block)
 	art:SetAllPoints()
 	art:Hide()
 
-	local heading = card:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-	heading:SetJustifyH("LEFT")
-
-	local highlight = card:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+	local highlight = card:CreateFontString(nil, "ARTWORK", "GameFontHighlightLarge")
 	highlight:SetJustifyH("LEFT")
 
+	local caption = card:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
+	caption:SetJustifyH("LEFT")
+
 	card.art = art
-	card.heading = heading
 	card.highlight = highlight
+	card.caption = caption
 
 	return card
 end
@@ -437,15 +439,16 @@ end
 ---@param width number
 ---@return number
 function EntryBlockPool:ApplyCard(card, content, width)
-	local textWidth = width - CARD_PADDING * 2
-	local top = CARD_PADDING
-
-	card:SetWidth(width)
-
 	-- Com arte própria a moldura desenhada sobraria por baixo dela, aparecendo
-	-- nas beiradas onde o atlas é transparente.
+	-- nas beiradas onde o atlas é transparente. A borda decorada do atlas também
+	-- pede recuos maiores para o texto não sentar sobre o desenho.
 	local hasArt = content.atlas ~= nil
 	local frameAlpha = hasArt and 0 or 1
+	local paddingLeft = hasArt and CARD_ART_TEXT_INSET_X or CARD_PADDING
+	local top = hasArt and CARD_ART_TEXT_INSET_Y or CARD_PADDING
+	local textWidth = width - paddingLeft * 2
+
+	card:SetWidth(width)
 
 	card.art:SetShown(hasArt)
 	card:SetBackdropColor(
@@ -465,26 +468,10 @@ function EntryBlockPool:ApplyCard(card, content, width)
 		card.art:SetAtlas(content.atlas)
 	end
 
-	if content.heading then
-		card.heading:SetText(content.heading)
-		card.heading:SetWidth(textWidth)
-		card.heading:ClearAllPoints()
-		card.heading:SetPoint("TOPLEFT", CARD_PADDING, -top)
-		card.heading:Show()
-
-		if self.fontStyle then
-			Addon.FontStyler.Apply(card.heading, self.fontStyle, LINE_SIZE_DELTA)
-		end
-
-		top = top + card.heading:GetStringHeight() + CARD_GAP
-	else
-		card.heading:Hide()
-	end
-
 	card.highlight:SetText(content.highlight)
 	card.highlight:SetWidth(textWidth)
 	card.highlight:ClearAllPoints()
-	card.highlight:SetPoint("TOPLEFT", CARD_PADDING, -top)
+	card.highlight:SetPoint("TOPLEFT", paddingLeft, -top)
 
 	if self.fontStyle then
 		Addon.FontStyler.Apply(card.highlight, self.fontStyle, CARD_HIGHLIGHT_SIZE_DELTA)
@@ -492,9 +479,34 @@ function EntryBlockPool:ApplyCard(card, content, width)
 
 	top = top + card.highlight:GetStringHeight()
 
-	card:SetHeight(top + CARD_PADDING)
+	if content.caption then
+		card.caption:SetText(content.caption)
+		card.caption:SetWidth(textWidth)
+		card.caption:ClearAllPoints()
+		card.caption:SetPoint("TOPLEFT", paddingLeft, -(top + CARD_GAP))
+		card.caption:Show()
 
-	return card:GetHeight()
+		if self.fontStyle then
+			Addon.FontStyler.Apply(card.caption, self.fontStyle, LINE_SIZE_DELTA)
+		end
+
+		top = top + CARD_GAP + card.caption:GetStringHeight()
+	else
+		card.caption:Hide()
+	end
+
+	local height = top + CARD_PADDING
+
+	-- A arte tem altura própria; um card mais baixo cortaria a moldura no meio
+	-- do desenho.
+	if hasArt then
+		local atlasInfo = C_Texture.GetAtlasInfo(content.atlas)
+		height = math.max(height, atlasInfo.height)
+	end
+
+	card:SetHeight(height)
+
+	return height
 end
 
 ---@private
@@ -509,7 +521,7 @@ function EntryBlockPool:ApplyBar(bar, percent)
 	bar.label:SetFormattedText(PERCENTAGE_STRING, percent)
 
 	if self.fontStyle then
-		Addon.FontStyler.Apply(bar.label, self.fontStyle, LINE_SIZE_DELTA)
+		Addon.FontStyler.ApplyMono(bar.label, self.fontStyle, LINE_SIZE_DELTA)
 	end
 end
 

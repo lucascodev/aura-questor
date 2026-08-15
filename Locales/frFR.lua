@@ -32,6 +32,7 @@ Addon.RegisterLocale("frFR", {
 	PROFILE_SWITCH = "Changer de profil",
 	PROFILE_DELETE_HINT = "Supprimer retire le profil de tous les personnages qui l'utilisent. Le profil utilisé ne peut pas être supprimé.",
 	PREF_UNKNOWN = "Préférence inconnue : %s",
+	OPTIONS_IN_COMBAT = "Les options ne s'ouvrent pas pendant le combat.",
 	INFO_SUBTITLE = "Un suivi d'objectifs autonome, construit sur les API publiques du jeu.",
 	INFO_VERSION = "Version",
 	INFO_AUTHOR = "Auteur",
