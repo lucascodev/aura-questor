@@ -40,6 +40,9 @@ local HEADER_ACCENT_WIDTH = 34
 local EXPANDED_MARK = "-"
 local COLLAPSED_MARK = "+"
 
+--- Recolhido, sobra o cabecalho com a regua embaixo, e mais nada.
+local COLLAPSED_HEIGHT = FRAME_PADDING * 2 + HEADER_HEIGHT + HEADER_RULE_GAP + SECTION_LINE_THICKNESS
+
 local TITLE_SIZE_DELTA = 1
 local SECTION_SIZE_DELTA = -1
 
@@ -54,8 +57,12 @@ local SECTION_SIZE_DELTA = -1
 ---@field private actions EntryActions
 ---@field private header table
 ---@field private collapsedSections table<string, boolean>
+---@field private state table
+---@field private expandedHeight number
+---@field private hasPendingPin boolean
 ---@field private lastSections TrackerSection[]
 ---@field private root table
+---@field private scroll table
 ---@field private content table
 ---@field private pool EntryBlockPool
 ---@field private sectionHeaders table[]
@@ -67,11 +74,15 @@ OwnTrackerFrame.__index = OwnTrackerFrame
 ---@param position table Persisted across sessions; empty on a fresh install.
 ---@param actions EntryActions
 ---@param collapsedSections table<string, boolean> Persisted across sessions.
+---@param state table Persisted across sessions; whether the panel is collapsed.
 ---@return OwnTrackerFrame
-function OwnTrackerFrame.New(addonInfo, position, actions, collapsedSections)
+function OwnTrackerFrame.New(addonInfo, position, actions, collapsedSections, state)
 	local view = setmetatable({
 		actions = actions,
 		collapsedSections = collapsedSections,
+		state = state,
+		expandedHeight = INITIAL_HEIGHT,
+		hasPendingPin = false,
 		sectionHeaders = {},
 		usedHeaders = 0,
 		lastSections = {},
@@ -181,6 +192,7 @@ function OwnTrackerFrame:Build(addonInfo, position)
 		frame:SetVerticalScroll(math.min(math.max(wanted, 0), hidden))
 	end)
 
+	self.scroll = scroll
 	self.content = content
 	self.pool = Addon.EntryBlockPool.New(content, self.actions)
 end
@@ -268,9 +280,16 @@ function OwnTrackerFrame:Render(sections)
 		return
 	end
 
+	self.lastSections = sections
+
+	-- Recolhido, a lista nao esta na tela: montar blocos para ninguem ver e
+	-- desperdicio, e o que ficou de antes segue escondido junto com a rolagem.
+	if self:IsCollapsed() then
+		return
+	end
+
 	self.pool:ReleaseAll()
 	self.usedHeaders = 0
-	self.lastSections = sections
 
 	local width = self.content:GetWidth()
 	local offset = 0
@@ -341,10 +360,65 @@ function OwnTrackerFrame:SetAppearance(appearance)
 		return
 	end
 
-	self.root:SetSize(appearance.width, appearance.height)
+	self.expandedHeight = appearance.height
+	self.root:SetWidth(appearance.width)
 	self.content:SetWidth(appearance.width - FRAME_PADDING * 2)
 
+	if self.hasPendingPin then
+		self.hasPendingPin = false
+		self:PinTop()
+	end
+
+	self:ApplyHeight()
+
 	self.backdrop:Apply(appearance)
+end
+
+---@return boolean
+function OwnTrackerFrame:IsCollapsed()
+	return self.state.isCollapsed == true
+end
+
+---@private
+function OwnTrackerFrame:ApplyHeight()
+	local isCollapsed = self:IsCollapsed()
+
+	self.root:SetHeight(isCollapsed and COLLAPSED_HEIGHT or self.expandedHeight)
+	self.scroll:SetShown(not isCollapsed)
+end
+
+--- Mudar a altura em torno de uma ancora no centro ou embaixo faria o
+--- cabecalho pular; preso pelo canto de cima, ele fica onde estava e so o
+--- corpo cresce ou some.
+---@private
+function OwnTrackerFrame:PinTop()
+	local left, top = self.root:GetLeft(), self.root:GetTop()
+
+	self.root:ClearAllPoints()
+	self.root:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", left, top)
+	self.position:Save()
+end
+
+--- Em combate com botao de item na lista o frame e protegido e nao muda de
+--- tamanho; o estado fica gravado e o refresh que segue o fim do combate
+--- aplica.
+---@return boolean isCollapsed
+function OwnTrackerFrame:ToggleCollapsed()
+	self.state.isCollapsed = not self:IsCollapsed() or nil
+
+	if self:IsLockedByCombat() then
+		self.hasPendingPin = true
+		return self:IsCollapsed()
+	end
+
+	self:PinTop()
+	self:ApplyHeight()
+
+	if not self:IsCollapsed() then
+		self:Render(self.lastSections)
+	end
+
+	return self:IsCollapsed()
 end
 
 ---@param style TrackerFontStyle

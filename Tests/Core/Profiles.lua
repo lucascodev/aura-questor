@@ -23,6 +23,7 @@ return function(Addon, T)
 			for _, name in ipairs({
 				"settings",
 				"ownTrackerPosition",
+				"ownTrackerState",
 				"collapsedSections",
 				"hiddenCategories",
 				"hiddenSections",
@@ -30,6 +31,18 @@ return function(Addon, T)
 			}) do
 				T.Equals(type(profile[name]), "table", name .. " deveria existir")
 			end
+		end)
+
+		T.Test("perfil de versao anterior ganha as tabelas novas ao ser lido", function()
+			local database = {
+				profiles = { [DEFAULT] = { settings = { fontSize = 18 }, collapsedSections = { quests = true } } },
+				characters = {},
+			}
+			local profile = Build(database):Current()
+
+			T.Equals(type(profile.ownTrackerState), "table")
+			T.Equals(profile.settings.fontSize, 18)
+			T.IsTrue(profile.collapsedSections.quests)
 		end)
 
 		T.Test("criar e selecionar troca o perfil em uso", function()

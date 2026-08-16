@@ -81,6 +81,8 @@ Addon.RegisterLocale("frFR", {
 	PREF_SHOW_ACHIEVEMENT_BUTTON_TIP = "Ouvre le panneau des hauts faits depuis l'en-tête.",
 	PREF_SHOW_INTEGRATION_BUTTON = "Bouton d'intégration",
 	PREF_SHOW_INTEGRATION_BUTTON_TIP = "Ouvre les intégrations de l'addon depuis l'en-tête.",
+	TRACKER_COLLAPSE = "Réduire le suivi",
+	TRACKER_EXPAND = "Développer le suivi",
 	INTEGRATION_BUTTON_TIP = "Intégrations avec d'autres addons.",
 	PREF_SHOW_MINIMAP_BUTTON = "Bouton de minicarte",
 	PREF_SHOW_MINIMAP_BUTTON_TIP = "Clic affiche ou masque le suivi ; clic droit ouvre les options.",

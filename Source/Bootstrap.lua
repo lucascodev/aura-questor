@@ -77,6 +77,8 @@ local integrationButton
 local ownTracker
 ---@type MinimapButton
 local minimapButton
+---@type TrackerCollapseButton
+local collapseButton
 ---@type WaypointSync
 local waypointSync
 
@@ -187,7 +189,8 @@ local function Build()
 		addonInfo,
 		profile.ownTrackerPosition,
 		actions,
-		profile.collapsedSections
+		profile.collapsedSections,
+		profile.ownTrackerState
 	)
 
 	-- Filled further down rather than here: the buttons are built after the
@@ -365,6 +368,12 @@ local function Build()
 		toggleEvents = function()
 			optionsPanel:SelectValue(Keys.EVENTS_ENABLED, not preferences:Get(Keys.EVENTS_ENABLED))
 		end,
+		isEditing = function()
+			return preferences:Get(Keys.EDIT_MODE)
+		end,
+		toggleEditing = function()
+			optionsPanel:SelectValue(Keys.EDIT_MODE, not preferences:Get(Keys.EDIT_MODE))
+		end,
 		categories = function()
 			return categories:List()
 		end,
@@ -380,6 +389,10 @@ local function Build()
 	})
 
 	achievementButton = Addon.TrackerAchievementButton.New(Addon.AchievementPanel.Open)
+
+	collapseButton = Addon.TrackerCollapseButton.New(function()
+		return ownTracker:ToggleCollapsed()
+	end)
 
 	integrationButton = Addon.TrackerIntegrationButton.New(function()
 		optionsPanel:OpenIntegrations()
@@ -441,6 +454,7 @@ local function Start()
 	-- still carried its own offset.
 	local headerButtons = Addon.HeaderButtonRow.New(ownTracker:HeaderAnchor())
 
+	collapseButton:Attach(headerButtons, ownTracker:IsCollapsed())
 	filterButton:Attach(headerButtons)
 	achievementButton:Attach(headerButtons)
 	integrationButton:Attach(headerButtons)

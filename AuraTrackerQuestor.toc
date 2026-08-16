@@ -5,7 +5,7 @@
 ## Notes-esES: Un rastreador de objetivos independiente, construido sobre las API públicas del juego.
 ## Notes-esMX: Un rastreador de objetivos independiente, construido sobre las API públicas del juego.
 ## Notes-frFR: Un suivi d'objectifs autonome, construit sur les API publiques du jeu.
-## Version: 0.77.0
+## Version: 0.78.0
 ## Author: Lucascodev
 ## X-License: MIT
 ## X-Curse-Project-ID: 1651416
@@ -141,6 +141,7 @@ Source\UI\Tracker\Position.lua
 Source\UI\Tracker\OwnTrackerFrame.lua
 
 Source\UI\Header\ButtonRow.lua
+Source\UI\Header\CollapseButton.lua
 Source\UI\Header\FilterButton.lua
 Source\UI\Header\AchievementButton.lua
 Source\UI\Header\IntegrationButton.lua
