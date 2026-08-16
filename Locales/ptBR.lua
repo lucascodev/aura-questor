@@ -79,6 +79,8 @@ Addon.RegisterLocale("ptBR", {
 	PREF_SHOW_ACHIEVEMENT_BUTTON_TIP = "Abre o painel de conquistas direto do cabeçalho.",
 	PREF_SHOW_INTEGRATION_BUTTON = "Botão de integração",
 	PREF_SHOW_INTEGRATION_BUTTON_TIP = "Abre as integrações do addon direto do cabeçalho.",
+	TRACKER_COLLAPSE = "Recolher o rastreador",
+	TRACKER_EXPAND = "Expandir o rastreador",
 	INTEGRATION_BUTTON_TIP = "Integrações com outros addons.",
 	PREF_SHOW_MINIMAP_BUTTON = "Botão do minimapa",
 	PREF_SHOW_MINIMAP_BUTTON_TIP = "Clique mostra ou esconde o rastreador; clique direito abre as opções.",

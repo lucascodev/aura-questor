@@ -81,6 +81,8 @@ Addon.RegisterLocale("enUS", {
 	PREF_SHOW_ACHIEVEMENT_BUTTON_TIP = "Opens the achievement panel straight from the header.",
 	PREF_SHOW_INTEGRATION_BUTTON = "Integration button",
 	PREF_SHOW_INTEGRATION_BUTTON_TIP = "Opens the addon integrations straight from the header.",
+	TRACKER_COLLAPSE = "Collapse the tracker",
+	TRACKER_EXPAND = "Expand the tracker",
 	INTEGRATION_BUTTON_TIP = "Integrations with other addons.",
 	PREF_SHOW_MINIMAP_BUTTON = "Minimap button",
 	PREF_SHOW_MINIMAP_BUTTON_TIP = "Click shows or hides the tracker; right click opens the options.",

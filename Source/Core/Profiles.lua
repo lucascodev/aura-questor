@@ -8,6 +8,7 @@ local DEFAULT_NAME = "Default"
 --- creation cannot drift apart.
 local PROFILE_TABLES = {
 	"ownTrackerPosition",
+	"ownTrackerState",
 	"collapsedSections",
 	"hiddenCategories",
 	"hiddenSections",
@@ -117,6 +118,17 @@ end
 
 --- The active profile, created on demand so a character pointed at a deleted
 --- profile still gets somewhere to write instead of erroring.
+--- Um perfil salvo por uma versao anterior pode nao ter uma tabela criada
+--- depois; ela nasce vazia na primeira leitura, sem tocar no que ja existia.
+---@param profile table
+local function Complete(profile)
+	for _, name in ipairs(PROFILE_TABLES) do
+		if type(profile[name]) ~= "table" then
+			profile[name] = {}
+		end
+	end
+end
+
 ---@return table
 function Profiles:Current()
 	local name = self:CurrentName()
@@ -124,6 +136,8 @@ function Profiles:Current()
 	if not self.database.profiles[name] then
 		self.database.profiles[name] = NewProfile()
 	end
+
+	Complete(self.database.profiles[name])
 
 	return self.database.profiles[name]
 end

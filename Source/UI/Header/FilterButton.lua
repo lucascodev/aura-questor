@@ -10,6 +10,8 @@ local SECTIONS_LABEL = Addon.L.MENU_SECTIONS
 local UNTRACK_ALL_LABEL = Addon.L.MENU_UNTRACK_ALL
 local TRACK_EVENTS_LABEL = Addon.L.MENU_TRACK_EVENTS
 local COMPLETED_AT_TOP_LABEL = Addon.L.PREF_COMPLETED_AT_TOP
+local WINDOW_LABEL = Addon.L.SECTION_WINDOW
+local EDIT_MODE_LABEL = Addon.L.PREF_EDIT_MODE
 local SHOW_ALL_LABEL = Addon.L.MENU_CHECK_ALL
 local HIDE_ALL_LABEL = Addon.L.MENU_UNCHECK_ALL
 
@@ -144,6 +146,16 @@ function TrackerFilterButton:BuildMenu(rootDescription)
 
 	rootDescription:CreateDivider()
 	self:AddAchievements(rootDescription)
+
+	-- Por ultimo e separado do conteudo: mexe no painel, nao na lista, e e onde
+	-- o menu do rastreador da Blizzard poe o modo de edicao.
+	rootDescription:CreateDivider()
+	rootDescription:CreateTitle(WINDOW_LABEL)
+	rootDescription:CreateCheckbox(
+		EDIT_MODE_LABEL,
+		self.commands.isEditing,
+		self.commands.toggleEditing
+	)
 end
 
 --- Handed to the header row, which decides where it sits.

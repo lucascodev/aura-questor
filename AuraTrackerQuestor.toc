@@ -141,6 +141,7 @@ Source\UI\Tracker\Position.lua
 Source\UI\Tracker\OwnTrackerFrame.lua
 
 Source\UI\Header\ButtonRow.lua
+Source\UI\Header\CollapseButton.lua
 Source\UI\Header\FilterButton.lua
 Source\UI\Header\AchievementButton.lua
 Source\UI\Header\IntegrationButton.lua

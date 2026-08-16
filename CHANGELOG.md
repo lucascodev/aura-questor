@@ -3,6 +3,16 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Adicionado
+
+- Botão de recolher no canto do cabeçalho, o mesmo do rastreador da Blizzard:
+  o painel encolhe até sobrar só o cabeçalho e volta com outro clique. O
+  estado fica salvo no perfil, e o cabeçalho não sai do lugar ao recolher.
+- **Modo de edição** também no menu de filtro, no grupo Janela ao fim da
+  lista, para liberar o arrasto sem abrir as opções.
+
 ## [0.77.0] - 2026-08-15
 
 ### Alterado
