@@ -31,6 +31,7 @@ local SECTION_HEADER_HEIGHT = 18
 local LOGO_TEXTURE = [[Interface\AddOns\AuraTrackerQuestor\Media\Logo]]
 local LOGO_SIZE = 18
 local LOGO_GAP = 6
+local TITLE_BUTTONS_GAP = 8
 
 --- A regua sob o cabecalho repete a das secoes, com o segmento claro na cabeca,
 --- para o painel inteiro ter um so vocabulario visual.
@@ -56,6 +57,7 @@ local SECTION_SIZE_DELTA = -1
 ---@field private backdrop TrackerBackdrop
 ---@field private actions EntryActions
 ---@field private header table
+---@field private headerButtons HeaderButtonRow
 ---@field private collapsedSections table<string, boolean>
 ---@field private state table
 ---@field private expandedHeight number
@@ -141,8 +143,15 @@ function OwnTrackerFrame:Build(addonInfo, position)
 	logo:SetPoint("LEFT")
 	logo:SetTexture(LOGO_TEXTURE)
 
+	self.headerButtons = Addon.HeaderButtonRow.New(header)
+
+	-- Preso entre o logo e a faixa de botoes: quando o painel estreita, o nome
+	-- corta com reticencias em vez de passar por baixo dos botoes.
 	local title = header:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 	title:SetPoint("LEFT", logo, "RIGHT", LOGO_GAP, 0)
+	title:SetPoint("RIGHT", self.headerButtons:Frame(), "LEFT", -TITLE_BUTTONS_GAP, 0)
+	title:SetJustifyH("LEFT")
+	title:SetWordWrap(false)
 	title:SetText(addonInfo.title)
 	self.titleText = title
 	title:SetTextColor(HEADER_COLOR.red, HEADER_COLOR.green, HEADER_COLOR.blue)
@@ -344,12 +353,12 @@ function OwnTrackerFrame:Render(sections)
 	self.content:SetHeight(math.max(offset, 1))
 end
 
---- The header strip. Exposed so the composition root can hang buttons on it
---- without this frame having to know what they do, and so they all centre on
---- the same line whatever their size.
----@return table
-function OwnTrackerFrame:HeaderAnchor()
-	return self.header
+--- The header's button row. Exposed so the composition root can hang buttons
+--- on it without this frame having to know what they do, and so they all
+--- centre on the same line whatever their size.
+---@return HeaderButtonRow
+function OwnTrackerFrame:HeaderButtons()
+	return self.headerButtons
 end
 
 --- The panel itself, kept apart from Render because it changes on a preference
@@ -426,6 +435,7 @@ function OwnTrackerFrame:SetFont(style)
 	self.fontStyle = style
 
 	Addon.FontStyler.Apply(self.titleText, style, TITLE_SIZE_DELTA)
+	self.titleText:SetWordWrap(false)
 
 	for _, header in ipairs(self.sectionHeaders) do
 		Addon.FontStyler.Apply(header.text, style, SECTION_SIZE_DELTA)

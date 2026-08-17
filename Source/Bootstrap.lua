@@ -452,7 +452,7 @@ end
 local function Start()
 	-- Added right to left in this order, which is where they sat when each one
 	-- still carried its own offset.
-	local headerButtons = Addon.HeaderButtonRow.New(ownTracker:HeaderAnchor())
+	local headerButtons = ownTracker:HeaderButtons()
 
 	collapseButton:Attach(headerButtons, ownTracker:IsCollapsed())
 	filterButton:Attach(headerButtons)
