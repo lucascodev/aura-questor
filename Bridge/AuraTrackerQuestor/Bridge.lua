@@ -1,0 +1,4 @@
+-- No code on purpose. This folder exists only so the client keeps loading and
+-- saving AuraTrackerQuestorDB, the table Aura Questor was called by its old
+-- name; the addon under the new name takes it over on its first load. A file
+-- is listed so the folder is a complete addon in every client's eyes.

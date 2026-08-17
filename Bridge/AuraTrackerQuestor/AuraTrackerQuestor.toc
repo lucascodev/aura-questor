@@ -1,0 +1,17 @@
+## Interface: 120100, 120007
+## Title: Aura Questor: Objective Tracker (bridge)
+## Notes: Keeps the settings saved under the old name, Aura Tracker Questor, so Aura Questor can carry them over. Safe to remove after logging in once with the new version.
+## Notes-ptBR: Mantém as configurações salvas com o nome antigo, Aura Tracker Questor, para o Aura Questor aproveitá-las. Pode ser removido depois de entrar uma vez com a versão nova.
+## Notes-esES: Conserva los ajustes guardados con el nombre anterior, Aura Tracker Questor, para que Aura Questor los recupere. Se puede quitar tras iniciar sesión una vez con la versión nueva.
+## Notes-esMX: Conserva los ajustes guardados con el nombre anterior, Aura Tracker Questor, para que Aura Questor los recupere. Se puede quitar tras iniciar sesión una vez con la versión nueva.
+## Notes-frFR: Conserve les réglages enregistrés sous l'ancien nom, Aura Tracker Questor, pour qu'Aura Questor les reprenne. Peut être retiré après une première connexion avec la nouvelle version.
+## Author: Lucascodev
+## X-License: MIT
+## X-Curse-Project-ID: 1651416
+## X-Wago-ID: qGYZ1vNg
+## IconTexture: Interface\AddOns\AuraQuestor\Media\Logo
+## SavedVariables: AuraTrackerQuestorDB
+## Group: AuraQuestor
+## DefaultState: enabled
+
+Bridge.lua
