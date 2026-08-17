@@ -22,8 +22,11 @@ sequenceDiagram
     Start->>Start: primeiro Refresh
 ```
 
-`Build()` roda em `ADDON_LOADED`, primeiro momento em que `AuraTrackerQuestorDB`
-está disponível. `Start()` aguarda `PLAYER_LOGIN` porque o quadro de chat
+`Build()` roda em `ADDON_LOADED`, primeiro momento em que `AuraQuestorDB` está
+disponível. Antes de qualquer leitura, `LegacyDatabase.Resolve` decide qual
+tabela vale: a nova, se já tem conteúdo; senão `AuraTrackerQuestorDB`, que a
+pasta-ponte com o nome antigo mantém carregada e que o `.toc` declara em
+`OptionalDeps` para carregar antes. `Start()` aguarda `PLAYER_LOGIN` porque o quadro de chat
 restaura seu histórico após a tela de carregamento e descarta mensagens escritas
 antes disso.
 

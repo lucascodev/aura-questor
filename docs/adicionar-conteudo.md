@@ -11,7 +11,7 @@ flowchart TD
     B["2. Core/Tracker/SectionOrder.lua<br/><i>onde a seção entra na lista</i>"]
     C["3. Modules/SeuTipo/EntryActions.lua<br/><i>o que a entrada faz ao ser clicada</i>"]
     D["4. Bootstrap.lua<br/><i>registrar provider e ações</i>"]
-    E["5. AuraTrackerQuestor.toc<br/><i>os dois arquivos novos</i>"]
+    E["5. AuraQuestor.toc<br/><i>os dois arquivos novos</i>"]
 
     A --> B --> C --> D --> E
 ```
