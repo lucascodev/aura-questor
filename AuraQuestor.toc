@@ -1,5 +1,6 @@
 ## Interface: 120100, 120007
-## Title: Aura Tracker Questor
+## Title: Aura Questor: Objective Tracker
+## X-Brand: Aura Questor
 ## Notes: A standalone objective tracker built on the public quest APIs.
 ## Notes-ptBR: Um rastreador de objetivos autônomo, escrito sobre as APIs públicas do jogo.
 ## Notes-esES: Un rastreador de objetivos independiente, construido sobre las API públicas del juego.
@@ -11,9 +12,10 @@
 ## X-Curse-Project-ID: 1651416
 ## X-Wago-ID: qGYZ1vNg
 ## X-Copyright: Copyright (c) 2026 Lucascodev
-## IconTexture: Interface\AddOns\AuraTrackerQuestor\Media\Logo
-## SavedVariables: AuraTrackerQuestorDB
-## OptionalDeps: TomTom
+## IconTexture: Interface\AddOns\AuraQuestor\Media\Logo
+## SavedVariables: AuraQuestorDB
+## OptionalDeps: TomTom, AuraTrackerQuestor
+## Group: AuraQuestor
 ## Category-enUS: Quests
 ## Category-ptBR: Missões
 
@@ -42,6 +44,7 @@ Locales\frFR.lua
 Source\Core\HexColor.lua
 Source\Core\ToggleSet.lua
 Source\Core\Profiles.lua
+Source\Core\LegacyDatabase.lua
 
 # Keys, choice lists and the catalog that reads them at file scope, so the
 # lists load first.

@@ -1,7 +1,8 @@
-# Aura Tracker Questor
+# Aura Questor: Objective Tracker
 
-Um rastreador de objetivos autônomo para World of Warcraft, escrito sobre as
-APIs públicas do jogo. Em inglês e português.
+Um objective tracker autônomo para World of Warcraft: rastreador de missões,
+conquistas, profissões e cenários, escrito sobre as APIs públicas do jogo. Em
+inglês, português, espanhol e francês.
 
 Ele não decora o rastreador da Blizzard: desenha o próprio, lendo os mesmos
 dados que o jogo expõe. É a diferença que faz um addon sobreviver a um patch,
@@ -34,8 +35,12 @@ e tempo restante.
 
 ## Instalação
 
-Extraia a pasta `AuraTrackerQuestor` em
-`World of Warcraft\_retail_\Interface\AddOns\`.
+Extraia o zip em `World of Warcraft\_retail_\Interface\AddOns\`. Ele traz duas
+pastas: `AuraQuestor`, o addon, e `AuraTrackerQuestor`, uma ponte só com o
+manifesto que mantém as configurações salvas com o nome antigo carregadas até
+o addon aproveitá-las. Quem já usava o Aura Tracker Questor deixa a ponte
+habilitada no primeiro login e não perde nada; depois disso ela pode ser
+removida.
 
 Dentro do jogo, `/atq` abre as opções e `/atq ajuda` lista os comandos.
 
@@ -59,7 +64,7 @@ dentro:
 ```sh
 lua Tests/Run.lua     # os testes do Core, sem abrir o jogo
 luacheck .            # análise estática
-.\build.ps1           # gera dist\AuraTrackerQuestor-<versão>.zip
+.\build.ps1           # gera dist\AuraQuestor-<versão>.zip
 ```
 
 `Libs/` não está no repositório: o empacotador busca as bibliotecas na origem

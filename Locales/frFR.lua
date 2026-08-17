@@ -39,7 +39,7 @@ Addon.RegisterLocale("frFR", {
 	INFO_LICENSE = "Licence",
 	INFO_COMMANDS = "Commandes",
 	INFO_BINDINGS = "Raccourcis",
-	INFO_BINDINGS_PATH = "Options  >  Raccourcis clavier  >  Aura Tracker Questor",
+	INFO_BINDINGS_PATH = "Options  >  Raccourcis clavier  >  Aura Questor",
 
 	-- Preferences
 	PREF_OWN_TRACKER = "Suivi personnalisé",
@@ -184,7 +184,7 @@ Addon.RegisterLocale("frFR", {
 	MINIMAP_RIGHT_HINT = "Clic droit : options",
 
 	-- Key bindings
-	BINDING_HEADER = "Aura Tracker Questor",
+	BINDING_HEADER = "Aura Questor",
 	BINDING_TOGGLE = "Afficher / masquer le suivi",
 	BINDING_OPTIONS = "Ouvrir les options",
 
@@ -203,4 +203,5 @@ Addon.RegisterLocale("frFR", {
 	COMMAND_RESET = "remet le suivi à sa place par défaut",
 	STATUS_ACTIVE = "%s v%s actif.",
 	STARTUP_LOADED = "%s v%s chargé. Tapez /atq pour les options.",
+	LEGACY_ADOPTED = "Les réglages enregistrés sous l'ancien nom, Aura Tracker Questor, ont été conservés.",
 })

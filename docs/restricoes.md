@@ -81,6 +81,32 @@ adia a escrita para o fim do combate; só o último pedido vale.
 Abrir o painel de opções (`Settings.OpenToCategory`) também é protegido em
 combate desde o 12.x. `OptionsPanel` avisa no chat e não tenta.
 
+## Nome do addon é identidade
+
+O cliente guarda dados do jogador pelo nome da pasta do addon, e nada disso
+sobrevive a um rename por conta própria:
+
+- **SavedVariables** ficam em `WTF\...\SavedVariables\<Pasta>.lua`. Ao virar
+  `AuraQuestor`, o jogo passou a ler `AuraQuestor.lua`, vazio; nenhuma API lê
+  o arquivo de outro addon. Por isso o zip leva a pasta `AuraTrackerQuestor`
+  como ponte: só o manifesto, com `## SavedVariables: AuraTrackerQuestorDB`,
+  para o jogo continuar carregando a tabela antiga. `LegacyDatabase.Resolve`
+  a adota quando a nova está vazia. Em ordem alfabética `AuraQuestor` carrega
+  antes de `AuraTrackerQuestor`, então o `## OptionalDeps: AuraTrackerQuestor`
+  do manifesto principal é o que garante a ordem certa. Os dois manifestos
+  precisam declarar o mesmo `## Interface` (há teste), senão a ponte fica
+  "desatualizada" e some em silêncio para quem não carrega addons antigos.
+- **Atalhos de teclado** são gravados pelo nome do comando
+  (`AURATRACKERQUESTOR_TOGGLE`, `AURATRACKERQUESTOR_OPTIONS`). Esses nomes
+  ficaram congelados de propósito em `Bindings.xml` e `KeyBindings.lua`;
+  renomeá-los desatribuiria a tecla de todo mundo.
+- **Nome do frame** (`AuraQuestorTracker`) e **objeto LibDataBroker**
+  (`AuraQuestor`) mudaram com a pasta; addons de terceiros que ancoravam por
+  nome ou guardavam o slot do datatext precisam reapontar.
+
+A ponte pode sair do pacote algumas versões depois, quando não houver mais
+quem venha do nome antigo.
+
 ## Medir frames
 
 `GetBottom()` e funções semelhantes devolvem coordenadas de tela que podem estar

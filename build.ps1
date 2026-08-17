@@ -1,17 +1,21 @@
 # Packages the addon for distribution.
 #
-# Two things this has to get right. The zip must contain a single top-level
-# folder whose name matches the .toc file, because that is how WoW finds an
-# addon — extracting a bare pile of files into Interface\AddOns installs
-# nothing. And the development-only files stay out: Ports/ holds type contracts
-# the language server reads at edit time, and nothing in the .toc loads them.
+# Three things this has to get right. The zip must contain a top-level folder
+# whose name matches the .toc file, because that is how WoW finds an addon:
+# extracting a bare pile of files into Interface\AddOns installs nothing. The
+# bridge folder, under the old addon name, ships beside it, so the settings
+# saved under that name keep loading. And the development-only files stay out:
+# Ports/ holds type contracts the language server reads at edit time, and
+# nothing in the .toc loads them.
 
 $ErrorActionPreference = "Stop"
 
-$AddonName = "AuraTrackerQuestor"
+$AddonName = "AuraQuestor"
+$BridgeName = "AuraTrackerQuestor"
 $Root = $PSScriptRoot
 $Output = Join-Path $Root "dist"
 $Staging = Join-Path $Output $AddonName
+$BridgeStaging = Join-Path $Output $BridgeName
 
 # Everything the game actually loads, and nothing else.
 $Runtime = @(
@@ -59,9 +63,13 @@ foreach ($file in Get-ChildItem $Staging -Recurse -File -Filter *.lua) {
     if (-not $listedSet.ContainsKey($relative)) { throw "Packaged but not in .toc: $relative" }
 }
 
+# Same shape .pkgmeta's move-folders gives the release zip: the bridge is a
+# sibling of the addon at the root of the archive.
+Copy-Item (Join-Path $Root "Bridge\$BridgeName") -Destination $BridgeStaging -Recurse
+
 $Archive = Join-Path $Output "$AddonName-$Version.zip"
-Compress-Archive -Path $Staging -DestinationPath $Archive -Force
+Compress-Archive -Path @($Staging, $BridgeStaging) -DestinationPath $Archive -Force
 
 "$AddonName $Version"
-"  $((Get-ChildItem $Staging -Recurse -File).Count) arquivos"
+"  $((Get-ChildItem $Staging -Recurse -File).Count) arquivos + ponte $BridgeName"
 "  $Archive"

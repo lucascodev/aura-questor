@@ -11,6 +11,20 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
   addon. O nome agora termina antes da fila de botões e corta com reticências
   quando não cabe.
 
+## [Não publicado]
+
+### Alterado
+
+- O addon passa a se chamar **Aura Questor: Objective Tracker**; a pasta e o
+  manifesto viram `AuraQuestor`. Ninguém perde configuração: o zip leva junto a
+  pasta `AuraTrackerQuestor` como ponte, só com o manifesto que mantém a tabela
+  antiga carregada, e o addon a adota no primeiro login com o nome novo,
+  avisando no chat. Os atalhos de teclado e o `/atq` continuam os mesmos.
+  Mudaram com a pasta o nome do frame (`AuraQuestorTracker`) e o objeto do
+  LibDataBroker (`AuraQuestor`): addons que ancoravam por nome ou guardavam o
+  slot do datatext precisam reapontar. A ponte pode ser removida depois do
+  primeiro login e sairá do pacote em versões futuras.
+
 ## [0.78.0] - 2026-08-16
 
 ### Adicionado

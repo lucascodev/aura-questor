@@ -1,5 +1,5 @@
 return function(Addon, T, Support)
-	local addonInfo = { title = "Aura Tracker Questor", version = "9.9.9" }
+	local addonInfo = { title = "Aura Questor: Objective Tracker", brand = "Aura Questor", version = "9.9.9" }
 
 	T.Suite("StatusCommand", function()
 		T.Test("escreve titulo e versao no chat", function()
@@ -35,8 +35,9 @@ return function(Addon, T, Support)
 
 	T.Suite("Startup", function()
 		---@param announce boolean
+		---@param hasAdoptedLegacy boolean?
 		---@return table logger
-		local function Run(announce)
+		local function Run(announce, hasAdoptedLegacy)
 			local logger = Support.Logger()
 			local preferences = Addon.Preferences.New(
 				{ { key = "announceOnLoad", default = announce } },
@@ -44,7 +45,7 @@ return function(Addon, T, Support)
 				function() end
 			)
 
-			Addon.Startup.New(logger, addonInfo, preferences):Run()
+			Addon.Startup.New(logger, addonInfo, preferences, hasAdoptedLegacy):Run()
 
 			return logger
 		end
@@ -55,6 +56,13 @@ return function(Addon, T, Support)
 
 		T.Test("cala quando esta desligada", function()
 			T.Equals(#Run(false).infos, 0)
+		end)
+
+		T.Test("avisa da adocao do banco antigo mesmo com o anuncio desligado", function()
+			local logger = Run(false, true)
+
+			T.Equals(#logger.infos, 1)
+			T.Equals(logger.infos[1], Addon.L.LEGACY_ADOPTED)
 		end)
 	end)
 end

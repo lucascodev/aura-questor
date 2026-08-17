@@ -1,8 +1,8 @@
 <Bindings>
-	<Binding name="AURATRACKERQUESTOR_TOGGLE" category="BINDING_HEADER_AURATRACKERQUESTOR">
-		AuraTrackerQuestor_ToggleTracker()
+	<Binding name="AURATRACKERQUESTOR_TOGGLE" category="BINDING_HEADER_AURAQUESTOR">
+		AuraQuestor_ToggleTracker()
 	</Binding>
-	<Binding name="AURATRACKERQUESTOR_OPTIONS" category="BINDING_HEADER_AURATRACKERQUESTOR">
-		AuraTrackerQuestor_OpenOptions()
+	<Binding name="AURATRACKERQUESTOR_OPTIONS" category="BINDING_HEADER_AURAQUESTOR">
+		AuraQuestor_OpenOptions()
 	</Binding>
 </Bindings>

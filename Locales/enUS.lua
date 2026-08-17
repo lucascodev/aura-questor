@@ -39,7 +39,7 @@ Addon.RegisterLocale("enUS", {
 	INFO_LICENSE = "License",
 	INFO_COMMANDS = "Commands",
 	INFO_BINDINGS = "Bindings",
-	INFO_BINDINGS_PATH = "Options  >  Keybindings  >  Aura Tracker Questor",
+	INFO_BINDINGS_PATH = "Options  >  Keybindings  >  Aura Questor",
 
 	-- Preferences
 	PREF_OWN_TRACKER = "Own tracker",
@@ -184,7 +184,7 @@ Addon.RegisterLocale("enUS", {
 	MINIMAP_RIGHT_HINT = "Right click: options",
 
 	-- Key bindings
-	BINDING_HEADER = "Aura Tracker Questor",
+	BINDING_HEADER = "Aura Questor",
 	BINDING_TOGGLE = "Show / hide the tracker",
 	BINDING_OPTIONS = "Open the options",
 
@@ -203,4 +203,5 @@ Addon.RegisterLocale("enUS", {
 	COMMAND_RESET = "puts the tracker back in its default place",
 	STATUS_ACTIVE = "%s v%s active.",
 	STARTUP_LOADED = "%s v%s loaded. Type /atq for the options.",
+	LEGACY_ADOPTED = "Settings saved under the old name, Aura Tracker Questor, were carried over.",
 })

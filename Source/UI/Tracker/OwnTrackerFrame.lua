@@ -28,7 +28,7 @@ local SECTION_LINE_GAP = 4
 local SECTION_HEADER_HEIGHT = 18
 
 --- O mesmo desenho do icone do addon, na altura da linha do titulo.
-local LOGO_TEXTURE = [[Interface\AddOns\AuraTrackerQuestor\Media\Logo]]
+local LOGO_TEXTURE = [[Interface\AddOns\AuraQuestor\Media\Logo]]
 local LOGO_SIZE = 18
 local LOGO_GAP = 6
 local TITLE_BUTTONS_GAP = 8
@@ -99,7 +99,7 @@ end
 ---@param addonInfo AddonInfo
 function OwnTrackerFrame:Build(addonInfo, position)
 	-- BackdropTemplate is what puts SetBackdrop on a frame.
-	local root = CreateFrame("Frame", "AuraTrackerQuestorTracker", UIParent, "BackdropTemplate")
+	local root = CreateFrame("Frame", "AuraQuestorTracker", UIParent, "BackdropTemplate")
 	root:SetSize(INITIAL_WIDTH, INITIAL_HEIGHT)
 	root:SetClampedToScreen(true)
 	root:SetMovable(true)
@@ -152,7 +152,7 @@ function OwnTrackerFrame:Build(addonInfo, position)
 	title:SetPoint("RIGHT", self.headerButtons:Frame(), "LEFT", -TITLE_BUTTONS_GAP, 0)
 	title:SetJustifyH("LEFT")
 	title:SetWordWrap(false)
-	title:SetText(addonInfo.title)
+	title:SetText(addonInfo.brand)
 	self.titleText = title
 	title:SetTextColor(HEADER_COLOR.red, HEADER_COLOR.green, HEADER_COLOR.blue)
 

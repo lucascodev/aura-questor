@@ -1,4 +1,4 @@
---- Aura Tracker Questor
+--- Aura Questor: Objective Tracker
 --- Copyright (c) 2026 Lucascodev. MIT licensed. See LICENSE.
 
 local ADDON_NAME, Addon = ...
@@ -91,10 +91,11 @@ local function Build()
 	-- Before anything reads a media list: our own border is one of the choices.
 	Addon.MediaLibrary.RegisterOwnMedia()
 
-	AuraTrackerQuestorDB = AuraTrackerQuestorDB or {}
+	local hasAdoptedLegacy
+	AuraQuestorDB, hasAdoptedLegacy = Addon.LegacyDatabase.Resolve(AuraQuestorDB, AuraTrackerQuestorDB)
 
 	local profiles = Addon.Profiles.New(
-		AuraTrackerQuestorDB,
+		AuraQuestorDB,
 		("%s - %s"):format(UnitName("player"), GetRealmName())
 	)
 	local profile = profiles:Current()
@@ -132,7 +133,7 @@ local function Build()
 		end
 	)
 
-	local waypointArrow = Addon.TomTomArrow.New(addonInfo.title)
+	local waypointArrow = Addon.TomTomArrow.New(addonInfo.brand)
 	waypointSync = Addon.WaypointSync.New(Addon.WaypointReader.Current, waypointArrow, function()
 		return preferences:Get(Keys.TOMTOM_ENABLED) == true
 	end)
@@ -444,7 +445,7 @@ local function Build()
 		optionsPanel:Open()
 	end)
 
-	startup = Addon.Startup.New(logger, addonInfo, preferences)
+	startup = Addon.Startup.New(logger, addonInfo, preferences, hasAdoptedLegacy)
 end
 
 --- Everything that touches a frame, the quest log or the chat waits for the UI

@@ -1,15 +1,15 @@
 local _, Addon = ...
 
-local INTER = [[Interface\AddOns\AuraTrackerQuestor\Media\Fonts\Inter-Regular.ttf]]
-local INTER_SEMIBOLD = [[Interface\AddOns\AuraTrackerQuestor\Media\Fonts\Inter-SemiBold.ttf]]
-local MONO = [[Interface\AddOns\AuraTrackerQuestor\Media\Fonts\JetBrainsMono-Regular.ttf]]
+local INTER = [[Interface\AddOns\AuraQuestor\Media\Fonts\Inter-Regular.ttf]]
+local INTER_SEMIBOLD = [[Interface\AddOns\AuraQuestor\Media\Fonts\Inter-SemiBold.ttf]]
+local MONO = [[Interface\AddOns\AuraQuestor\Media\Fonts\JetBrainsMono-Regular.ttf]]
 
 ---@param name string
 ---@param path string
 ---@param size number
 ---@return table
 local function Make(name, path, size)
-	local font = CreateFont("AuraTrackerQuestor" .. name)
+	local font = CreateFont("AuraQuestor" .. name)
 	font:SetFont(path, size, "")
 
 	return font

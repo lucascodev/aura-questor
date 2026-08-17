@@ -38,7 +38,7 @@ Addon.RegisterLocale("ptBR", {
 	INFO_LICENSE = "Licença",
 	INFO_COMMANDS = "Comandos",
 	INFO_BINDINGS = "Atalhos",
-	INFO_BINDINGS_PATH = "Opções  >  Atalhos  >  Aura Tracker Questor",
+	INFO_BINDINGS_PATH = "Opções  >  Atalhos  >  Aura Questor",
 
 	PREF_OWN_TRACKER = "Rastreador próprio",
 	PREF_OWN_TRACKER_TIP = "Mostra o rastreador desenhado pelo addon.",
@@ -174,7 +174,7 @@ Addon.RegisterLocale("ptBR", {
 	MINIMAP_LEFT_HINT = "Clique: mostrar ou esconder",
 	MINIMAP_RIGHT_HINT = "Clique direito: opções",
 
-	BINDING_HEADER = "Aura Tracker Questor",
+	BINDING_HEADER = "Aura Questor",
 	BINDING_TOGGLE = "Mostrar / esconder o rastreador",
 	BINDING_OPTIONS = "Abrir as opções",
 
@@ -191,4 +191,5 @@ Addon.RegisterLocale("ptBR", {
 	COMMAND_RESET = "devolve o rastreador ao lugar padrão",
 	STATUS_ACTIVE = "%s v%s ativo.",
 	STARTUP_LOADED = "%s v%s carregado. Digite /atq para as opções.",
+	LEGACY_ADOPTED = "As configurações salvas com o nome antigo, Aura Tracker Questor, foram aproveitadas.",
 })

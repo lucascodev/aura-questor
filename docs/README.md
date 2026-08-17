@@ -1,6 +1,6 @@
 # Documentação
 
-Documentação técnica do Aura Tracker Questor, para quem vai modificar o código.
+Documentação técnica do Aura Questor, para quem vai modificar o código.
 
 | Documento | Assunto |
 |---|---|

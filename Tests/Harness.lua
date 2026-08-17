@@ -3,7 +3,7 @@
 --- Plain Lua on purpose: Core has no dependencies, so its tests should not
 --- either. Any Lua binary runs this, with nothing to install first.
 
-local ADDON_NAME = "AuraTrackerQuestor"
+local ADDON_NAME = "AuraQuestor"
 
 --- Locale.lua asks the client which locale to keep. Outside the game there is
 --- no client, so the harness answers for it and the tests read enUS.
@@ -23,6 +23,7 @@ local CORE_FILES = {
 	"HexColor",
 	"ToggleSet",
 	"Profiles",
+	"LegacyDatabase",
 	"Preferences/Keys",
 	"Preferences/FontFlags",
 	"Preferences/SortModes",
@@ -154,7 +155,7 @@ end
 ---@return string[]
 function Harness.RuntimeFiles()
 	local paths = {}
-	local toc = assert(io.open("AuraTrackerQuestor.toc", "r"))
+	local toc = assert(io.open("AuraQuestor.toc", "r"))
 
 	for line in toc:lines() do
 		local path = line:match("^%s*(%S.-%.lua)%s*$")

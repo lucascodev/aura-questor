@@ -47,7 +47,7 @@ function MainPanel.Register(addonInfo, catalog, preferences, entries)
 		{ title = Addon.L.SECTION_ABOUT, rows = FactRows(entries) },
 	}, { catalog = catalog, preferences = preferences })
 
-	return page:RegisterAsRoot(addonInfo.title)
+	return page:RegisterAsRoot(addonInfo.brand)
 end
 
 Addon.MainPanel = MainPanel

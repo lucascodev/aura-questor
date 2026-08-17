@@ -1,6 +1,11 @@
-package-as: AuraTrackerQuestor
+package-as: AuraQuestor
 
 enable-nolib-creation: no
+
+# The old folder name ships beside the addon, holding only the .toc that keeps
+# the settings saved under that name loaded until the addon takes them over.
+move-folders:
+  AuraQuestor/Bridge/AuraTrackerQuestor: AuraTrackerQuestor
 
 externals:
   Libs/LibStub: https://repos.wowace.com/wow/ace3/trunk/LibStub

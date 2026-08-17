@@ -4,7 +4,7 @@
 
 ```sh
 git clone <repo>
-cd aura-tracker-questor
+cd aura-questor
 ```
 
 `Libs/` **não está no repositório**. As sete bibliotecas são buscadas na origem
@@ -19,8 +19,12 @@ release.sh -d -z
 Ou baixe as sete manualmente para `Libs/`, uma vez. Depois disso elas ficam em
 disco e são ignoradas pelo git.
 
-Para desenvolver com o jogo aberto, crie um link simbólico da pasta do projeto
-para `World of Warcraft\_retail_\Interface\AddOns\AuraTrackerQuestor`.
+Para desenvolver com o jogo aberto, crie duas junções (não precisam de
+administrador) em `World of Warcraft\_retail_\Interface\AddOns\`:
+`AuraQuestor` apontando para a pasta do projeto e `AuraTrackerQuestor`
+apontando para `Bridge\AuraTrackerQuestor` dentro dela. O jogo só carrega
+`<Pasta>\<Pasta>.toc`, então o nome de cada junção precisa bater com o
+manifesto que ela contém.
 
 ## Testar
 
@@ -63,9 +67,10 @@ no CI a cada push.
 .\build.ps1
 ```
 
-Gera `dist\AuraTrackerQuestor-<versão>.zip` com uma única pasta raiz, formato
-que o jogo exige para reconhecer um addon. O script valida o `.toc` **nos dois
-sentidos**:
+Gera `dist\AuraQuestor-<versão>.zip` com duas pastas na raiz: `AuraQuestor`,
+o addon, e `AuraTrackerQuestor`, a ponte com o nome antigo (o mesmo desenho
+que o `move-folders` do `.pkgmeta` dá ao zip do release). O script valida o
+`.toc` **nos dois sentidos**:
 
 - arquivo listado que não foi empacotado, o que falharia no cliente do jogador
   sem indicar a causa

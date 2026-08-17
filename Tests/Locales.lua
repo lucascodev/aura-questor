@@ -5,7 +5,7 @@ return function(Addon, T, Support, Harness)
 		local captured
 		local chunk = assert(loadfile(path))
 
-		chunk("AuraTrackerQuestor", {
+		chunk("AuraQuestor", {
 			RegisterLocale = function(_, entries)
 				captured = entries
 			end,

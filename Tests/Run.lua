@@ -13,6 +13,7 @@ local SUITES = {
 	"Core/HexColor",
 	"Core/ToggleSet",
 	"Core/Profiles",
+	"Core/LegacyDatabase",
 	"Core/Preferences/Catalog",
 	"Core/Preferences/Choices",
 	"Core/Preferences/Store",
@@ -29,6 +30,7 @@ local SUITES = {
 	"Options/Schematic",
 	"Options/Pages",
 	"Locales",
+	"Package",
 }
 
 local filter = ...

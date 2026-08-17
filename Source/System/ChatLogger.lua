@@ -1,6 +1,6 @@
 local _, Addon = ...
 
-local CHAT_PREFIX = "|cffff7d0a[ATQ]|r "
+local CHAT_PREFIX = "|cffff7d0a[AQ]|r "
 local WARN_COLOR = "|cffff2020"
 local COLOR_END = "|r"
 
