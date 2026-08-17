@@ -8,7 +8,7 @@
 
 $ErrorActionPreference = "Stop"
 
-$AddonName = "AuraTrackerQuestor"
+$AddonName = "AuraQuestor"
 $Root = $PSScriptRoot
 $Output = Join-Path $Root "dist"
 $Staging = Join-Path $Output $AddonName

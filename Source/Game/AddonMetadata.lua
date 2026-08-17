@@ -17,8 +17,11 @@ end
 
 ---@return AddonInfo
 function AddonMetadata.Read()
+	local title = ReadField("Title", ADDON_NAME)
+
 	return {
-		title = ReadField("Title", ADDON_NAME),
+		title = title,
+		brand = ReadField("X-Brand", title),
 		version = ReadField("Version", "0.0.0"),
 	}
 end

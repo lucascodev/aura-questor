@@ -5,9 +5,10 @@
   "diagnostics.globals": [
     "ACCEPT",
     "ACHIEVEMENT_BUTTON",
-    "AuraTrackerQuestor_OpenOptions",
-    "AuraTrackerQuestor_ToggleTracker",
-    "BINDING_HEADER_AURATRACKERQUESTOR",
+    "AuraQuestor_OpenOptions",
+    "AuraQuestor_ToggleTracker",
+    "AuraQuestorDB",
+    "BINDING_HEADER_AURAQUESTOR",
     "BINDING_NAME_AURATRACKERQUESTOR_OPTIONS",
     "BINDING_NAME_AURATRACKERQUESTOR_TOGGLE",
     "AchievementFrame",

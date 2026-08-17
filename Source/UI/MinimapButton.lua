@@ -1,6 +1,6 @@
 local ADDON_NAME, Addon = ...
 
-local ICON = "Interface\\AddOns\\AuraTrackerQuestor\\Media\\Logo"
+local ICON = "Interface\\AddOns\\AuraQuestor\\Media\\Logo"
 
 local LEFT_HINT = Addon.L.MINIMAP_LEFT_HINT
 local RIGHT_HINT = Addon.L.MINIMAP_RIGHT_HINT

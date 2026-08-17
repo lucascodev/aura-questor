@@ -15,21 +15,23 @@ ignore = {
 }
 
 -- Written by the addon: the saved variables table, the binding strings the
--- client reads, and the two handlers Bindings.xml calls.
+-- client reads, and the two handlers Bindings.xml calls. The binding command
+-- names keep the old addon name: they key the player's saved keys.
 globals = {
-	"AuraTrackerQuestorDB",
-	"AuraTrackerQuestor_OpenOptions",
-	"AuraTrackerQuestor_ToggleTracker",
-	"BINDING_HEADER_AURATRACKERQUESTOR",
+	"AuraQuestorDB",
+	"AuraQuestor_OpenOptions",
+	"AuraQuestor_ToggleTracker",
+	"BINDING_HEADER_AURAQUESTOR",
 	"BINDING_NAME_AURATRACKERQUESTOR_OPTIONS",
 	"BINDING_NAME_AURATRACKERQUESTOR_TOGGLE",
-	"SLASH_AURATRACKERQUESTOR1",
 	"SlashCmdList",
 	"StaticPopupDialogs",
 }
 
 -- Read from the game.
 read_globals = {
+	-- Saved under the old addon name, kept alive by the bridge folder.
+	"AuraTrackerQuestorDB",
 	"ACCEPT",
 	"ACHIEVEMENT_BUTTON",
 	"ADVENTURE_TRACKING_MODULE_HEADER_TEXT",

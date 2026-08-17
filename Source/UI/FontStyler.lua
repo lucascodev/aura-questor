@@ -5,7 +5,7 @@ local SHADOW_OFFSET_Y = -1
 local NO_SHADOW_OFFSET = 0
 local SHADOW_COLOR = { red = 0, green = 0, blue = 0, alpha = 1 }
 
-local MONO_PATH = [[Interface\AddOns\AuraTrackerQuestor\Media\Fonts\JetBrainsMono-Regular.ttf]]
+local MONO_PATH = [[Interface\AddOns\AuraQuestor\Media\Fonts\JetBrainsMono-Regular.ttf]]
 
 ---@class FontStyler
 local FontStyler = {}

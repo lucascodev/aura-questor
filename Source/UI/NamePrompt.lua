@@ -1,6 +1,6 @@
 local _, Addon = ...
 
-local DIALOG_KEY = "AURATRACKERQUESTOR_NAME_PROMPT"
+local DIALOG_KEY = "AURAQUESTOR_NAME_PROMPT"
 
 --- Asks the player to type a name.
 ---

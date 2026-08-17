@@ -41,7 +41,7 @@ local entries = {
 	INFO_LICENSE = "Licencia",
 	INFO_COMMANDS = "Comandos",
 	INFO_BINDINGS = "Atajos",
-	INFO_BINDINGS_PATH = "Opciones  >  Atajos de teclado  >  Aura Tracker Questor",
+	INFO_BINDINGS_PATH = "Opciones  >  Atajos de teclado  >  Aura Questor",
 
 	-- Preferences
 	PREF_OWN_TRACKER = "Rastreador propio",
@@ -186,7 +186,7 @@ local entries = {
 	MINIMAP_RIGHT_HINT = "Clic derecho: opciones",
 
 	-- Key bindings
-	BINDING_HEADER = "Aura Tracker Questor",
+	BINDING_HEADER = "Aura Questor",
 	BINDING_TOGGLE = "Mostrar / ocultar el rastreador",
 	BINDING_OPTIONS = "Abrir las opciones",
 
@@ -205,6 +205,7 @@ local entries = {
 	COMMAND_RESET = "devuelve el rastreador a su lugar por defecto",
 	STATUS_ACTIVE = "%s v%s activo.",
 	STARTUP_LOADED = "%s v%s cargado. Escribe /atq para las opciones.",
+	LEGACY_ADOPTED = "Se conservaron los ajustes guardados con el nombre anterior, Aura Tracker Questor.",
 }
 
 Addon.RegisterLocale("esES", entries)
