@@ -3,6 +3,16 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Corrigido
+
+- O card de Imersão aparecia em dobro, com um tier em cada um. O jogo publica
+  um cabeçalho por estado no mesmo conjunto de widgets e conta com eles se
+  sobrepondo, como no contêiner do estágio da Blizzard; o nosso empilhava. O
+  contêiner adota as mesmas âncoras, e de quebra se refaz ao reaparecer e os
+  blocos em uso deixam de ser escondidos e reexibidos a cada redesenho.
+
 ## [0.79.2] - 2026-08-17
 
 ### Corrigido
