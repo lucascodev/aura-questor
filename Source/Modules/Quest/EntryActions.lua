@@ -7,7 +7,6 @@ local REWARD_ICON_SIZE = 14
 local CHOICE_LOOT_CURRENCY = 1
 local CHOICE_HEADING = Addon.L.REWARD_CHOICE_HEADING
 
-local COMPLETE_POPUP = "COMPLETE"
 local OFFER_POPUP = "OFFER"
 local QUEST_KIND = "quest"
 local WORLD_QUEST_KIND = "worldQuest"
@@ -25,17 +24,17 @@ function QuestEntryActions.New(waypoints)
 	return setmetatable({ waypoints = waypoints }, QuestEntryActions)
 end
 
---- Com aviso pendente o clique responde como o banner da Blizzard: abre a
---- entrega ou a oferta, em vez do diário. Os avisos podem sobrar na fila depois
---- de resolvidos, daí conferir o estado da missão antes de obedecê-los.
+--- A quest that turns in from here opens its reward window, and an offer
+--- pending in the queue opens the offer, the way Blizzard's blocks answer the
+--- click; only the rest goes to the quest log.
 ---@param entry TrackerEntry
 function QuestEntryActions:OpenDetails(entry)
-	local popUpType = Addon.QuestPopupSource.Find(entry.id)
-
-	if popUpType == COMPLETE_POPUP and C_QuestLog.IsComplete(entry.id) then
-		ShowQuestComplete(entry.id)
+	if Addon.QuestPopupSource.CanComplete(entry.id) then
+		Addon.QuestPopupSource.Complete(entry.id)
 		return
 	end
+
+	local popUpType = Addon.QuestPopupSource.Find(entry.id)
 
 	if popUpType == OFFER_POPUP and not C_QuestLog.GetLogIndexForQuestID(entry.id) then
 		ShowQuestOffer(entry.id)

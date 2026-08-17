@@ -47,6 +47,14 @@ redesenho até `PLAYER_REGEN_ENABLED`.
 Atributos de botão seguro também não podem ser alterados em combate. É a mesma
 limitação do rastreador da Blizzard.
 
+O que **não** é protegido: o texto de um FontString e o valor de uma StatusBar.
+Por isso, em combate, `EntryBlockPool:RewriteInPlace` reescreve as linhas e as
+barras dos blocos que já estão na tela, sem mover, criar, mostrar ou esconder
+frame nenhum. Uma missão mundial de "matar criaturas" só progride dentro do
+combate; sem isso a barra ficava parada até a luta acabar. Bloco cuja forma
+mudaria (linha a mais, entrada nova, texto que passa a quebrar) espera o
+refresh que segue o `PLAYER_REGEN_ENABLED`.
+
 ## Taint no mapa: um erro conhecido e sem correção
 
 Abrir os detalhes de uma missão a partir de um addon, via

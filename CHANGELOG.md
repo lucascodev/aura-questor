@@ -3,6 +3,23 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Corrigido
+
+- Missão que se completa à distância mas cuja notificação já tinha passado
+  (completada antes do login, ou o aviso descartado) aparecia como entrega
+  normal e o clique abria o diário. A leitura passou a seguir a marca do
+  próprio diário (`isAutoComplete`), como o rastreador da Blizzard, e a
+  entrada mostra "Missão cumprida" e "(clique para concluir)"; o clique abre
+  a janela de conclusão.
+- Em combate, com botão de item na lista, o rastreador não atualizava nada até
+  a luta acabar, e uma missão mundial de "matar criaturas" ficava com a barra
+  parada em 0% enquanto o mapa já dizia 30%. Agora o texto das linhas e o
+  valor das barras dos blocos na tela são reescritos em lugar durante o
+  combate; só o que mudaria de forma (linha a mais, entrada nova) espera o
+  fim da luta.
+
 ## [0.79.1] - 2026-08-17
 
 ### Adicionado

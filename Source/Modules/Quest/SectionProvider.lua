@@ -18,10 +18,19 @@ function QuestSectionProvider.New()
 end
 
 --- What a finished quest shows instead of its objectives: the game's own "go
---- turn it in" wording, which is the only thing left to act on.
+--- turn it in" wording, which is the only thing left to act on. A quest that
+--- turns in from here says so, in the two lines Blizzard's tracker uses.
+---@param questID number
 ---@param questLogIndex number
 ---@return TrackerObjective[]
-local function ReadCompletion(questLogIndex)
+local function ReadCompletion(questID, questLogIndex)
+	if Addon.QuestPopupSource.CanComplete(questID) then
+		return {
+			{ text = QUEST_WATCH_QUEST_COMPLETE, isComplete = true },
+			{ text = QUEST_WATCH_CLICK_TO_COMPLETE, isComplete = true },
+		}
+	end
+
 	local completionText = GetQuestLogCompletionText(questLogIndex) or QUEST_WATCH_QUEST_READY
 
 	return { { text = completionText, isComplete = true } }
@@ -92,7 +101,7 @@ local function ReadEntry(questID, groupNames)
 	-- Finished objectives step aside entirely, the way Blizzard's tracker does
 	-- it. A quest that says "100/100" is telling the player nothing they can act
 	-- on; where to hand it in is.
-	local objectives = isComplete and ReadCompletion(questLogIndex)
+	local objectives = isComplete and ReadCompletion(questID, questLogIndex)
 		or Addon.QuestObjectiveReader.Read(questID)
 
 	local classification = ReadClassification(info, questID)
@@ -152,7 +161,6 @@ local function AddPopupEntries(campaign, quests, groupNames)
 			local entry, isCampaign = ReadEntry(popup.questID, groupNames)
 
 			if entry and entry.isComplete then
-				entry.objectives = { { text = QUEST_WATCH_POPUP_CLICK_TO_COMPLETE, isComplete = true } }
 				handled[popup.questID] = true
 				table.insert(isCampaign and campaign.entries or quests.entries, entry)
 			end
