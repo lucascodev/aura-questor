@@ -91,6 +91,32 @@ function EntryBlockPool:IsProtected()
 	return self.hasSecureChildren
 end
 
+--- Which slot a row takes: the pool keeps one list per kind, and a block's
+--- shape is the sequence of kinds its rows filled.
+---@param row table
+---@return string
+local function RowKind(row)
+	if row.widgetSetID then
+		return "widget"
+	end
+
+	if row.card then
+		return "card"
+	end
+
+	if row.percent then
+		return "bar"
+	end
+
+	return "line"
+end
+
+---@param entry TrackerEntry
+---@return string
+local function EntryKey(entry)
+	return entry.kind .. ":" .. tostring(entry.id)
+end
+
 ---@param parent table
 ---@param actions EntryActions
 ---@return table
@@ -547,6 +573,98 @@ function EntryBlockPool:ApplyLineFont(line)
 	Addon.FontStyler.Apply(line, self.fontStyle, LINE_SIZE_DELTA)
 end
 
+---@param block table
+---@param rows table[]
+---@return boolean
+local function MatchesShape(block, rows)
+	if not block.shape or #block.shape ~= #rows then
+		return false
+	end
+
+	for index, row in ipairs(rows) do
+		if block.shape[index].kind ~= RowKind(row) then
+			return false
+		end
+	end
+
+	return true
+end
+
+--- New text that wraps to a different height would need the rows below it
+--- moved, which combat forbids; the old text stays until then.
+---@param line table
+---@param row table
+---@param height number
+local function RewriteLine(line, row, height)
+	local previous = line:GetText()
+
+	line:SetText(row.text)
+
+	if line:GetStringHeight() ~= height then
+		line:SetText(previous)
+		return
+	end
+
+	line:SetTextColor(row.color.red, row.color.green, row.color.blue)
+end
+
+---@private
+---@param block table
+---@param entry TrackerEntry
+function EntryBlockPool:RewriteBlock(block, entry)
+	local rows = Addon.EntryText.Rows(entry)
+
+	if not MatchesShape(block, rows) then
+		return
+	end
+
+	block.entry = entry
+
+	local titleColor = Addon.EntryText.TitleColor(entry, entry.isSuperTracked == true)
+	block.title:SetTextColor(titleColor.red, titleColor.green, titleColor.blue)
+
+	local usedLines = 0
+	local usedBars = 0
+
+	for index, row in ipairs(rows) do
+		local slot = block.shape[index]
+
+		if slot.kind == "bar" then
+			usedBars = usedBars + 1
+			self:ApplyBar(block.bars[usedBars], row.percent)
+		elseif slot.kind == "line" then
+			usedLines = usedLines + 1
+			RewriteLine(block.lines[usedLines], row, slot.height)
+		end
+	end
+end
+
+--- In combat the blocks around a quest item are protected: nothing may move,
+--- grow, appear or hide. Their words may still change, since font strings and
+--- status bars are not guarded, and a fight is exactly when a "slay creatures"
+--- bar moves. So the blocks on screen are rewritten in place, entry by entry,
+--- and anything whose shape changed waits for the refresh that follows the
+--- combat.
+---@param sections TrackerSection[]
+function EntryBlockPool:RewriteInPlace(sections)
+	local entriesByKey = {}
+
+	for _, section in ipairs(sections) do
+		for _, entry in ipairs(section.entries) do
+			entriesByKey[EntryKey(entry)] = entry
+		end
+	end
+
+	for index = 1, self.used do
+		local block = self.blocks[index]
+		local entry = block.entry and entriesByKey[EntryKey(block.entry)]
+
+		if entry then
+			self:RewriteBlock(block, entry)
+		end
+	end
+end
+
 function EntryBlockPool:ReleaseAll()
 	for _, block in ipairs(self.blocks) do
 		block.frame:Hide()
@@ -671,8 +789,11 @@ function EntryBlockPool:Build(entry, width, index)
 	local usedBars = 0
 	local usedCards = 0
 	local usedWidgets = 0
+	local shape = {}
 
 	for _, row in ipairs(rows) do
+		table.insert(shape, { kind = RowKind(row) })
+
 		if row.widgetSetID then
 			usedWidgets = usedWidgets + 1
 
@@ -721,9 +842,14 @@ function EntryBlockPool:Build(entry, width, index)
 			line:SetPoint("TOPLEFT", block.frame, "TOPLEFT", objectiveLeft, -(height + LINE_SPACING))
 			line:Show()
 
-			height = height + LINE_SPACING + line:GetStringHeight()
+			local lineHeight = line:GetStringHeight()
+			shape[#shape].height = lineHeight
+
+			height = height + LINE_SPACING + lineHeight
 		end
 	end
+
+	block.shape = shape
 
 	for lineIndex = usedLines + 1, #block.lines do
 		block.lines[lineIndex]:Hide()

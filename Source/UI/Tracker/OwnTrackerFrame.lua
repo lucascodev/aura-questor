@@ -286,6 +286,7 @@ end
 ---@param sections TrackerSection[]
 function OwnTrackerFrame:Render(sections)
 	if self:IsLockedByCombat() then
+		self.pool:RewriteInPlace(sections)
 		return
 	end
 

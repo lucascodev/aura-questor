@@ -38,6 +38,34 @@ function QuestPopupSource.ReadAll()
 	return popups
 end
 
+--- Whether the quest can be turned in from here, without walking to anyone.
+--- The flag lives on the quest log entry and stays there whether or not the
+--- banner ever showed, so the popup queue alone misses a quest completed
+--- before login or one whose announcement was already dismissed.
+---@param questID number
+---@return boolean
+function QuestPopupSource.CanComplete(questID)
+	if not C_QuestLog.IsComplete(questID) then
+		return false
+	end
+
+	if QuestPopupSource.Find(questID) == COMPLETE_POPUP then
+		return true
+	end
+
+	local questLogIndex = C_QuestLog.GetLogIndexForQuestID(questID)
+	local info = questLogIndex and C_QuestLog.GetInfo(questLogIndex)
+
+	return info ~= nil and info.isAutoComplete == true
+end
+
+--- Turns the quest in from the tracker and drops its banner from the queue.
+---@param questID number
+function QuestPopupSource.Complete(questID)
+	RemoveAutoQuestPopUp(questID)
+	ShowQuestComplete(questID)
+end
+
 ---@param questID number
 ---@return string?
 function QuestPopupSource.Find(questID)
