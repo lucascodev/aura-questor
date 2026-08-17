@@ -3,6 +3,23 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Adicionado
+
+- **Rastrear missões mundiais**, no menu de filtro e na página Conteúdo, o
+  mesmo interruptor que os eventos já tinham: desligado, a seção some por
+  inteiro, sem depender de estar dentro da área de alguma.
+
+### Corrigido
+
+- Missões mundiais rastreadas pelo mapa não apareciam: a seção lia só as da
+  área em que o jogador está. Agora lista as duas fontes, na ordem do
+  rastreador da Blizzard: primeiro as da área, depois as rastreadas, onde
+  quer que estejam. **Parar de rastrear** numa missão mundial usava a chamada
+  do diário e não fazia nada; passou a usar a lista certa e, se a missão era
+  a supervisionada, solta a seta junto.
+
 ## [0.79.0] - 2026-08-17
 
 ### Alterado

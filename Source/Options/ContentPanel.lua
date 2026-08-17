@@ -28,6 +28,7 @@ function ContentPanel.Register(category, catalog, preferences)
 					{ key = Keys.EVENTS_ENABLED },
 				},
 				{
+					{ key = Keys.WORLD_QUESTS_ENABLED },
 					{ key = Keys.BONUS_ZONE_WIDE },
 				},
 			},

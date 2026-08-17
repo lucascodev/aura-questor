@@ -203,7 +203,7 @@ local function Build()
 		Addon.TrackerContent.New({
 			Addon.ScenarioSectionProvider.New(),
 			Addon.QuestSectionProvider.New(),
-			Addon.WorldQuestSectionProvider.New(),
+			Addon.WorldQuestSectionProvider.New(preferences),
 			Addon.EventSectionProvider.New(preferences),
 			Addon.BonusObjectiveSectionProvider.New(preferences),
 			Addon.AchievementSectionProvider.New(hiddenCategories),
@@ -368,6 +368,12 @@ local function Build()
 		end,
 		toggleEvents = function()
 			optionsPanel:SelectValue(Keys.EVENTS_ENABLED, not preferences:Get(Keys.EVENTS_ENABLED))
+		end,
+		isWorldQuestsEnabled = function()
+			return preferences:Get(Keys.WORLD_QUESTS_ENABLED)
+		end,
+		toggleWorldQuests = function()
+			optionsPanel:SelectValue(Keys.WORLD_QUESTS_ENABLED, not preferences:Get(Keys.WORLD_QUESTS_ENABLED))
 		end,
 		isEditing = function()
 			return preferences:Get(Keys.EDIT_MODE)
