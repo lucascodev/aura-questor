@@ -3,15 +3,7 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
-## [Não publicado]
-
-### Corrigido
-
-- Com o painel estreito, os botões do cabeçalho passavam por cima do nome do
-  addon. O nome agora termina antes da fila de botões e corta com reticências
-  quando não cabe.
-
-## [Não publicado]
+## [0.79.0] - 2026-08-17
 
 ### Alterado
 
@@ -24,6 +16,12 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
   LibDataBroker (`AuraQuestor`): addons que ancoravam por nome ou guardavam o
   slot do datatext precisam reapontar. A ponte pode ser removida depois do
   primeiro login e sairá do pacote em versões futuras.
+
+### Corrigido
+
+- Com o painel estreito, os botões do cabeçalho passavam por cima do nome do
+  addon. O nome agora termina antes da fila de botões e corta com reticências
+  quando não cabe.
 
 ## [0.78.0] - 2026-08-16
 
