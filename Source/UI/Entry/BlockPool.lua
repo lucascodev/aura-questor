@@ -263,8 +263,39 @@ end
 
 ---@param block table
 ---@return table
+--- A hidden container stops receiving widget updates, and it does not catch
+--- up by itself when it is shown again: whatever the set dropped in the
+--- meantime stays drawn beside what it added, which is how a delve came back
+--- with last visit's tier card next to the current one. Registering again on
+--- show rebuilds it from the set as it is now.
+---@param container table
+local function ResyncWidgetSet(container)
+	local widgetSetID = container.widgetSetID
+
+	if not widgetSetID then
+		return
+	end
+
+	container:UnregisterForWidgetSet()
+	container:RegisterForWidgetSet(widgetSetID, DefaultWidgetLayout)
+end
+
+--- The same two layout keys Blizzard's stage container declares. The step set
+--- carries one header widget per state (tier known, tier unknown, hidden) and
+--- relies on them overlapping, the current one drawn on top; the default
+--- layout stacks them, and a delve showed last visit's tier under this one.
+local WIDGET_ANCHOR_POINT = "TOPRIGHT"
+local WIDGET_RELATIVE_POINT = "TOPRIGHT"
+
+---@param block table
+---@return table
 local function CreateWidgetContainer(block)
-	return CreateFrame("Frame", nil, block.frame, "UIWidgetContainerTemplate")
+	local container = CreateFrame("Frame", nil, block.frame, "UIWidgetContainerTemplate")
+	container.verticalAnchorPoint = WIDGET_ANCHOR_POINT
+	container.verticalRelativePoint = WIDGET_RELATIVE_POINT
+	container:HookScript("OnShow", ResyncWidgetSet)
+
+	return container
 end
 
 ---@param block table
@@ -665,12 +696,18 @@ function EntryBlockPool:RewriteInPlace(sections)
 	end
 end
 
+--- Blocks are handed out again in order, so the ones still in use keep their
+--- frames shown from one render to the next: hiding and reshowing them would
+--- fire every OnHide and OnShow underneath for nothing.
 function EntryBlockPool:ReleaseAll()
-	for _, block in ipairs(self.blocks) do
-		block.frame:Hide()
-	end
-
 	self.used = 0
+end
+
+--- Called once the render has taken what it needs.
+function EntryBlockPool:HideUnused()
+	for index = self.used + 1, #self.blocks do
+		self.blocks[index].frame:Hide()
+	end
 end
 
 ---@private

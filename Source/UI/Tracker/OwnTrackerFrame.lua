@@ -351,6 +351,7 @@ function OwnTrackerFrame:Render(sections)
 		self.sectionHeaders[index].accent:Hide()
 	end
 
+	self.pool:HideUnused()
 	self.content:SetHeight(math.max(offset, 1))
 end
 
