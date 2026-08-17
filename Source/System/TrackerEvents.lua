@@ -13,6 +13,9 @@ local EVENTS = {
 	-- A missão que se completa à distância chega por aqui, e o aviso dela
 	-- precisa entrar na lista assim que surge.
 	"QUEST_AUTOCOMPLETE",
+	-- Text of a world quest tracked from another zone arrives here, after we
+	-- ask for it.
+	"QUEST_DATA_LOAD_RESULT",
 	"ZONE_CHANGED_NEW_AREA",
 	"QUEST_WATCH_UPDATE",
 	-- Task quest progress arrives here, not through the quest log.

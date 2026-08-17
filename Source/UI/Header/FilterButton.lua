@@ -9,6 +9,7 @@ local CATEGORIES_LABEL = Addon.L.MENU_CATEGORIES
 local SECTIONS_LABEL = Addon.L.MENU_SECTIONS
 local UNTRACK_ALL_LABEL = Addon.L.MENU_UNTRACK_ALL
 local TRACK_EVENTS_LABEL = Addon.L.MENU_TRACK_EVENTS
+local TRACK_WORLD_QUESTS_LABEL = Addon.L.MENU_TRACK_WORLD_QUESTS
 local COMPLETED_AT_TOP_LABEL = Addon.L.PREF_COMPLETED_AT_TOP
 local WINDOW_LABEL = Addon.L.SECTION_WINDOW
 local EDIT_MODE_LABEL = Addon.L.PREF_EDIT_MODE
@@ -135,6 +136,14 @@ function TrackerFilterButton:BuildMenu(rootDescription)
 
 	rootDescription:CreateDivider()
 	self:AddSorting(rootDescription)
+
+	rootDescription:CreateDivider()
+	rootDescription:CreateTitle(TRACKER_HEADER_WORLD_QUESTS)
+	rootDescription:CreateCheckbox(
+		TRACK_WORLD_QUESTS_LABEL,
+		self.commands.isWorldQuestsEnabled,
+		self.commands.toggleWorldQuests
+	)
 
 	rootDescription:CreateDivider()
 	rootDescription:CreateTitle(EVENTS_LABEL)

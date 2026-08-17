@@ -9,6 +9,8 @@ local CHOICE_HEADING = Addon.L.REWARD_CHOICE_HEADING
 
 local COMPLETE_POPUP = "COMPLETE"
 local OFFER_POPUP = "OFFER"
+local QUEST_KIND = "quest"
+local WORLD_QUEST_KIND = "worldQuest"
 
 --- EntryActions for quests, including world quests, both live in the quest log
 --- and answer to the same calls.
@@ -70,8 +72,21 @@ function QuestEntryActions:FindGroup(entry)
 	LFGListUtil_FindQuestGroup(entry.id)
 end
 
+--- World quests keep their own watch list, so the quest log call would do
+--- nothing to them. Letting go of the one being followed also releases the
+--- arrow: with Blizzard's tracker hidden there was nowhere else to do that.
 ---@param entry TrackerEntry
 function QuestEntryActions:Untrack(entry)
+	if entry.kind == WORLD_QUEST_KIND then
+		C_QuestLog.RemoveWorldQuestWatch(entry.id)
+
+		if entry.isSuperTracked then
+			Addon.SuperTracking.Clear()
+		end
+
+		return
+	end
+
 	if not QuestUtil.CanRemoveQuestWatch() then
 		return
 	end
@@ -217,7 +232,7 @@ function QuestEntryActions:MenuItems(entry)
 		})
 	end
 
-	if entry.kind == "quest" and C_QuestLog.CanAbandonQuest(entry.id) then
+	if entry.kind == QUEST_KIND and C_QuestLog.CanAbandonQuest(entry.id) then
 		table.insert(items, {
 			label = ABANDON_QUEST,
 			run = function()

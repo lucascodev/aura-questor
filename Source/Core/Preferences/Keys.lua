@@ -12,6 +12,7 @@ local PreferenceKeys = {
 	KEEP_BLIZZARD_TRACKER = "keepBlizzardTracker",
 	BONUS_ZONE_WIDE = "bonusZoneWide",
 	EVENTS_ENABLED = "eventsEnabled",
+	WORLD_QUESTS_ENABLED = "worldQuestsEnabled",
 	SORT_MODE = "sortMode",
 	COMPLETED_AT_TOP = "completedAtTop",
 	TOMTOM_ENABLED = "tomTomEnabled",

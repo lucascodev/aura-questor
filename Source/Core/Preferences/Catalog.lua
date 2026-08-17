@@ -262,6 +262,14 @@ local PreferenceCatalog = {
 		tooltip = L.PREF_EVENTS_ENABLED_TIP,
 	},
 	{
+		key = Keys.WORLD_QUESTS_ENABLED,
+		panel = CONTENT_PANEL,
+		kind = "boolean",
+		default = true,
+		label = L.PREF_WORLD_QUESTS_ENABLED,
+		tooltip = L.PREF_WORLD_QUESTS_ENABLED_TIP,
+	},
+	{
 		key = Keys.BONUS_ZONE_WIDE,
 		panel = CONTENT_PANEL,
 		kind = "boolean",
