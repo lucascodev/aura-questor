@@ -94,6 +94,8 @@ Addon.RegisterLocale("ptBR", {
 	PREF_EVENTS_ENABLED_TIP = "Mostra a seção de eventos do mundo.",
 	PREF_WORLD_QUESTS_ENABLED = "Rastrear missões mundiais",
 	PREF_WORLD_QUESTS_ENABLED_TIP = "Mostra a seção de missões mundiais: as da sua área e as rastreadas pelo mapa.",
+	PREF_INSTANCE_FOCUS = "Só a masmorra na Mítica+",
+	PREF_INSTANCE_FOCUS_TIP = "Durante uma pedra-chave ativa, as outras seções saem de cena, como no rastreador do jogo.",
 	PREF_BONUS_ZONE_WIDE = "Objetivos bônus da zona inteira",
 	PREF_BONUS_ZONE_WIDE_TIP = "Ligado, lista todos os objetivos bônus da zona. Desligado, só os da área onde você está, como o rastreador da Blizzard faz.",
 	PREF_SOUND_ENABLED = "Avisar ao concluir",

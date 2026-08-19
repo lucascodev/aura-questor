@@ -219,6 +219,10 @@ local function CreateBlock(parent, actions)
 			return
 		end
 
+		if actions:InsertChatLink(block.entry) then
+			return
+		end
+
 		actions:OpenDetails(block.entry)
 	end)
 

@@ -28,6 +28,12 @@ function BonusEntryActions:OpenDetails(entry)
 end
 
 ---@param entry TrackerEntry
+---@return boolean
+function BonusEntryActions:InsertChatLink(entry)
+	return ChatFrameUtil.TryInsertQuestLinkForQuestID(entry.id) == true
+end
+
+---@param entry TrackerEntry
 function BonusEntryActions:SuperTrack(entry)
 	Addon.SuperTracking.SetQuest(entry.id)
 end

@@ -146,6 +146,15 @@ end
 --- AppearanceSources que devolve o nome recebido, para o teste ver o que
 --- chegou sem precisar de acervo de mídia.
 ---@return AppearanceSources
+---@return GameState
+function Support.GameState(isChallengeActive)
+	return {
+		IsChallengeActive = function()
+			return isChallengeActive == true
+		end,
+	}
+end
+
 function Support.AppearanceSources()
 	local function echo(name)
 		return name

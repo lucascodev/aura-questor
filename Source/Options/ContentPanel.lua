@@ -31,6 +31,9 @@ function ContentPanel.Register(category, catalog, preferences)
 					{ key = Keys.WORLD_QUESTS_ENABLED },
 					{ key = Keys.BONUS_ZONE_WIDE },
 				},
+				{
+					{ key = Keys.INSTANCE_FOCUS },
+				},
 			},
 		},
 		{

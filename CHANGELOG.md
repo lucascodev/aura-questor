@@ -3,6 +3,17 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Adicionado
+
+- Clique com o modificador de link de chat (shift por padrão) numa missão,
+  objetivo bônus ou conquista põe o link na caixa de texto para
+  compartilhar, como no rastreador do jogo.
+- **Só a masmorra na Mítica+**, ligado de fábrica como no rastreador do jogo:
+  durante uma pedra-chave ativa as outras seções saem de cena e volta tudo ao
+  sair. Desligável na página Conteúdo.
+
 ## [0.79.3] - 2026-08-17
 
 ### Corrigido

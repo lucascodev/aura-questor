@@ -270,6 +270,14 @@ local PreferenceCatalog = {
 		tooltip = L.PREF_WORLD_QUESTS_ENABLED_TIP,
 	},
 	{
+		key = Keys.INSTANCE_FOCUS,
+		panel = CONTENT_PANEL,
+		kind = "boolean",
+		default = true,
+		label = L.PREF_INSTANCE_FOCUS,
+		tooltip = L.PREF_INSTANCE_FOCUS_TIP,
+	},
+	{
 		key = Keys.BONUS_ZONE_WIDE,
 		panel = CONTENT_PANEL,
 		kind = "boolean",

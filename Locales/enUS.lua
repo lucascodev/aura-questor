@@ -96,6 +96,8 @@ Addon.RegisterLocale("enUS", {
 	PREF_EVENTS_ENABLED_TIP = "Shows the world events section.",
 	PREF_WORLD_QUESTS_ENABLED = "Track world quests",
 	PREF_WORLD_QUESTS_ENABLED_TIP = "Shows the world quests section: the ones in your area and the ones tracked from the map.",
+	PREF_INSTANCE_FOCUS = "Only the dungeon in Mythic+",
+	PREF_INSTANCE_FOCUS_TIP = "During an active keystone run, every other section steps aside, the way the game's tracker does.",
 	PREF_BONUS_ZONE_WIDE = "Bonus objectives across the zone",
 	PREF_BONUS_ZONE_WIDE_TIP = "On, lists every bonus objective in the zone. Off, only the ones in the area you are standing in, the way Blizzard's tracker does.",
 	PREF_SOUND_ENABLED = "Announce on completion",

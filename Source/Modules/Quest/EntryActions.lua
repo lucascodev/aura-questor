@@ -44,6 +44,15 @@ function QuestEntryActions:OpenDetails(entry)
 	QuestMapFrame_OpenToQuestDetails(entry.id)
 end
 
+--- O clique de link de chat (shift por padrão) põe a missão na caixa de
+--- texto, como no rastreador da Blizzard; a função dela já confere o
+--- modificador e se há chat aberto.
+---@param entry TrackerEntry
+---@return boolean
+function QuestEntryActions:InsertChatLink(entry)
+	return ChatFrameUtil.TryInsertQuestLinkForQuestID(entry.id) == true
+end
+
 --- Waypoints would send the map to the next hop rather than to the objective,
 --- so they are ignored when asking where this quest lives.
 local IGNORE_WAYPOINTS = true

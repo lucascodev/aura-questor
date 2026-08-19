@@ -65,4 +65,17 @@ function EntryActionRouter:Rewards(entry)
 	return actions:Rewards(entry)
 end
 
+--- Optional like Describe: only what exists as a link in chat implements it.
+---@param entry TrackerEntry
+---@return boolean handled
+function EntryActionRouter:InsertChatLink(entry)
+	local actions = self.byKind[entry.kind]
+
+	if not actions.InsertChatLink then
+		return false
+	end
+
+	return actions:InsertChatLink(entry) == true
+end
+
 Addon.EntryActionRouter = EntryActionRouter

@@ -223,7 +223,12 @@ local function Build()
 			ProgressBar = Addon.MediaLibrary.ProgressBarPath,
 			ClassColor = Addon.ClassColor.Current,
 		},
-		widgets
+		widgets,
+		{
+			IsChallengeActive = function()
+				return C_ChallengeMode.IsChallengeModeActive()
+			end,
+		}
 	)
 
 	local completion = Addon.CompletionWatcher.New()
