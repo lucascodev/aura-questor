@@ -55,9 +55,31 @@ local function TexturePathFor(mediaType, name)
 	return path
 end
 
+MediaLibrary.GAME_FONT_NAME = "Game Default"
+
+local BUNDLED_LATIN_FONTS = {
+	["Inter"] = true,
+	["Inter SemiBold"] = true,
+	["JetBrains Mono"] = true,
+}
+
+--- As fontes que acompanham o addon não têm glifo CJK; nesses clientes elas
+--- ficam fora do acervo, para o seletor não oferecer fonte que vira quadrado.
+---@param name string
+---@return boolean
+function MediaLibrary.IsBundledLatinFont(name)
+	return BUNDLED_LATIN_FONTS[name] == true
+end
+
 --- Called once at startup, before anything reads a list.
 function MediaLibrary.RegisterOwnMedia()
 	Media():Register(BORDER_MEDIA, SOLID_NAME, SOLID_TEXTURE)
+	Media():Register(FONT_MEDIA, MediaLibrary.GAME_FONT_NAME, Addon.ClientFont.GamePath())
+
+	if Addon.ClientFont.PrefersGameFont() then
+		return
+	end
+
 	Media():Register(FONT_MEDIA, "Inter", [[Interface\AddOns\AuraQuestor\Media\Fonts\Inter-Regular.ttf]])
 	Media():Register(FONT_MEDIA, "Inter SemiBold", [[Interface\AddOns\AuraQuestor\Media\Fonts\Inter-SemiBold.ttf]])
 	Media():Register(FONT_MEDIA, "JetBrains Mono", [[Interface\AddOns\AuraQuestor\Media\Fonts\JetBrainsMono-Regular.ttf]])

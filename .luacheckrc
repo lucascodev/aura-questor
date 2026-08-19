@@ -153,6 +153,7 @@ read_globals = {
 	"SCENARIO_STAGE",
 	"SCENARIO_STAGE_FINAL",
 	"SOUNDKIT",
+	"STANDARD_TEXT_FONT",
 	"Settings",
 	"ShowQuestComplete",
 	"ShowQuestOffer",

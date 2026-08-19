@@ -76,6 +76,7 @@ Source\Core\Integration\WaypointSync.lua
 Source\Game\AddonMetadata.lua
 Source\Game\BlizzardTracker.lua
 Source\Game\ClassColor.lua
+Source\Game\ClientFont.lua
 Source\Game\SuperTracking.lua
 Source\Game\MapNavigator.lua
 Source\Game\WaypointReader.lua
