@@ -13,6 +13,7 @@ local PreferenceKeys = {
 	BONUS_ZONE_WIDE = "bonusZoneWide",
 	EVENTS_ENABLED = "eventsEnabled",
 	WORLD_QUESTS_ENABLED = "worldQuestsEnabled",
+	INSTANCE_FOCUS = "instanceFocus",
 	SORT_MODE = "sortMode",
 	COMPLETED_AT_TOP = "completedAtTop",
 	TOMTOM_ENABLED = "tomTomEnabled",

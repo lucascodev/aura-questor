@@ -11,6 +11,24 @@ function AchievementEntryActions.New()
 end
 
 ---@param entry TrackerEntry
+---@param entry TrackerEntry
+---@return boolean
+function AchievementEntryActions:InsertChatLink(entry)
+	if not IsModifiedClick("CHATLINK") or not ChatFrameUtil.GetActiveWindow() then
+		return false
+	end
+
+	local link = GetAchievementLink(entry.id)
+
+	if not link then
+		return false
+	end
+
+	ChatFrameUtil.InsertLink(link)
+
+	return true
+end
+
 function AchievementEntryActions:OpenDetails(entry)
 	Addon.AchievementPanel.OpenTo(entry.id)
 end

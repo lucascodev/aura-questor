@@ -45,7 +45,8 @@ return function(Addon, T, Support)
 			preferences,
 			hiddenSections,
 			Support.AppearanceSources(),
-			widgets
+			widgets,
+			Support.GameState(options.isChallengeActive)
 		)
 
 		return {
@@ -201,6 +202,45 @@ return function(Addon, T, Support)
 
 			T.IsTrue(built.renderer.font ~= nil)
 			T.IsTrue(built.renderer.appearance ~= nil)
+		end)
+
+		T.Test("pedra-chave ativa deixa so a secao da instancia", function()
+			local sections = {
+				{ id = "scenario", title = "Masmorra", order = 1, entries = {} },
+				{ id = "quests", title = "Missoes", order = 2, entries = {} },
+				{ id = "worldQuests", title = "Mundiais", order = 3, entries = {} },
+			}
+			local built = Build({ sections = sections, isChallengeActive = true })
+			built.display:Refresh()
+
+			T.Equals(#built.renderer.rendered, 1)
+			T.Equals(built.renderer.rendered[1].id, "scenario")
+		end)
+
+		T.Test("com o foco desligado a pedra-chave nao esconde nada", function()
+			local sections = {
+				{ id = "scenario", title = "Masmorra", order = 1, entries = {} },
+				{ id = "quests", title = "Missoes", order = 2, entries = {} },
+			}
+			local built = Build({
+				sections = sections,
+				isChallengeActive = true,
+				values = { [Keys.INSTANCE_FOCUS] = false },
+			})
+			built.display:Refresh()
+
+			T.Equals(#built.renderer.rendered, 2)
+		end)
+
+		T.Test("fora da pedra-chave o foco nao muda nada", function()
+			local sections = {
+				{ id = "scenario", title = "Masmorra", order = 1, entries = {} },
+				{ id = "quests", title = "Missoes", order = 2, entries = {} },
+			}
+			local built = Build({ sections = sections })
+			built.display:Refresh()
+
+			T.Equals(#built.renderer.rendered, 2)
 		end)
 	end)
 end

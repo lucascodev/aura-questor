@@ -96,6 +96,8 @@ Addon.RegisterLocale("frFR", {
 	PREF_EVENTS_ENABLED_TIP = "Affiche la section des événements du monde.",
 	PREF_WORLD_QUESTS_ENABLED = "Suivre les expéditions",
 	PREF_WORLD_QUESTS_ENABLED_TIP = "Affiche la section des expéditions : celles de votre zone et celles suivies depuis la carte.",
+	PREF_INSTANCE_FOCUS = "Seul le donjon en Mythique+",
+	PREF_INSTANCE_FOCUS_TIP = "Pendant une clé mythique active, les autres sections s'effacent, comme dans le suivi du jeu.",
 	PREF_BONUS_ZONE_WIDE = "Objectifs bonus de toute la zone",
 	PREF_BONUS_ZONE_WIDE_TIP = "Activé, liste tous les objectifs bonus de la zone. Désactivé, seulement ceux de l'endroit où vous êtes, comme le suivi de Blizzard.",
 	PREF_SOUND_ENABLED = "Annoncer à l'achèvement",

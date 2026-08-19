@@ -17,6 +17,7 @@ local PERCENTAGE_MAXIMUM = 100
 ---@field private hiddenSections table<string, boolean>
 ---@field private lastSections TrackerSection[]
 ---@field private widgets table<string, TrackerWidget>
+---@field private gameState GameState
 local TrackerDisplay = {}
 TrackerDisplay.__index = TrackerDisplay
 
@@ -27,6 +28,7 @@ TrackerDisplay.__index = TrackerDisplay
 ---@param hiddenSections table<string, boolean>
 ---@param sources AppearanceSources What the look is resolved against.
 ---@param widgets table<string, TrackerWidget> Keyed by the preference that shows it.
+---@param gameState GameState
 ---@return TrackerDisplay
 function TrackerDisplay.New(
 	content,
@@ -35,7 +37,8 @@ function TrackerDisplay.New(
 	preferences,
 	hiddenSections,
 	sources,
-	widgets
+	widgets,
+	gameState
 )
 	return setmetatable({
 		content = content,
@@ -45,6 +48,7 @@ function TrackerDisplay.New(
 		hiddenSections = hiddenSections,
 		sources = sources,
 		widgets = widgets,
+		gameState = gameState,
 		lastSections = {},
 	}, TrackerDisplay)
 end
@@ -68,14 +72,31 @@ function TrackerDisplay:ToggleSection(sectionID)
 	self:Refresh()
 end
 
+--- Numa pedra-chave ativa o jogo inteiro vira a masmorra, e o rastreador da
+--- Blizzard tira as missões de cena; com o foco ligado, o nosso faz o mesmo.
+local INSTANCE_SECTION_ID = "scenario"
+
+---@private
+---@return boolean
+function TrackerDisplay:IsInstanceFocused()
+	return self.preferences:Get(Keys.INSTANCE_FOCUS) and self.gameState.IsChallengeActive()
+end
+
 ---@private
 ---@param sections TrackerSection[]
 ---@return TrackerSection[]
 function TrackerDisplay:Visible(sections)
 	local visible = {}
+	local isFocused = self:IsInstanceFocused()
 
 	for _, section in ipairs(sections) do
-		if self:IsSectionShown(section.id) then
+		local isShown = self:IsSectionShown(section.id)
+
+		if isFocused then
+			isShown = isShown and section.id == INSTANCE_SECTION_ID
+		end
+
+		if isShown then
 			table.insert(visible, section)
 		end
 	end
