@@ -22,10 +22,11 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Install Lua
-        # O espelho Azure dos runners cai com frequencia e o apt fica pendurado
-        # nele sem limite; espelho oficial, retries e timeout curto no job.
+        # O espelho Azure dos runners cai com frequencia e o apt gasta minutos
+        # de retry nele. Nos runners o espelho vem de /etc/apt/apt-mirrors.txt
+        # (esquema mirror+file), nao do sources.list; e la que se troca.
         run: |
-          sudo sed -i 's|azure.archive.ubuntu.com|archive.ubuntu.com|g' /etc/apt/sources.list /etc/apt/sources.list.d/*.sources 2>/dev/null || true
+          sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' /etc/apt/apt-mirrors.txt 2>/dev/null || true
           sudo apt-get update -o Acquire::Retries=3
           sudo apt-get install -y --no-install-recommends lua5.4
       - name: Core tests
