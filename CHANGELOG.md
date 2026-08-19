@@ -3,6 +3,17 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Corrigido
+
+- Em clientes chineses e coreanos o texto nascia ilegível: a Inter e a
+  JetBrains Mono que acompanham o addon não têm esses glifos. Nesses
+  clientes o rastreador e o painel de opções passam a usar a fonte do
+  próprio jogo, o seletor deixa de oferecer as fontes sem os glifos, e uma
+  escolha delas já gravada é migrada. A fonte **Game Default** entra no
+  acervo compartilhado em qualquer idioma, para quem preferir a do jogo.
+
 ## [0.80.0] - 2026-08-18
 
 ### Adicionado

@@ -1,8 +1,14 @@
 local _, Addon = ...
 
-local INTER = [[Interface\AddOns\AuraQuestor\Media\Fonts\Inter-Regular.ttf]]
-local INTER_SEMIBOLD = [[Interface\AddOns\AuraQuestor\Media\Fonts\Inter-SemiBold.ttf]]
-local MONO = [[Interface\AddOns\AuraQuestor\Media\Fonts\JetBrainsMono-Regular.ttf]]
+--- Num cliente CJK as três viram a fonte do jogo: o painel inteiro é texto
+--- localizado, e fonte sem os glifos renderiza quadrados.
+local hasGameFont = Addon.ClientFont.PrefersGameFont()
+local INTER = hasGameFont and Addon.ClientFont.GamePath()
+	or [[Interface\AddOns\AuraQuestor\Media\Fonts\Inter-Regular.ttf]]
+local INTER_SEMIBOLD = hasGameFont and Addon.ClientFont.GamePath()
+	or [[Interface\AddOns\AuraQuestor\Media\Fonts\Inter-SemiBold.ttf]]
+local MONO = hasGameFont and Addon.ClientFont.GamePath()
+	or [[Interface\AddOns\AuraQuestor\Media\Fonts\JetBrainsMono-Regular.ttf]]
 
 ---@param name string
 ---@param path string

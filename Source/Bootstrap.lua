@@ -100,6 +100,19 @@ local function Build()
 	)
 	local profile = profiles:Current()
 
+	-- As fontes empacotadas não têm glifo CJK. Nesses clientes o padrão de
+	-- fábrica vira a fonte do jogo, e uma escolha delas já gravada é migrada:
+	-- gravada, era ilegível de qualquer forma.
+	if Addon.ClientFont.PrefersGameFont() then
+		local gameFont = Addon.MediaLibrary.GAME_FONT_NAME
+
+		Addon.PreferenceLookup.Find(Addon.PreferenceCatalog, Keys.FONT_NAME).default = gameFont
+
+		if Addon.MediaLibrary.IsBundledLatinFont(profile.settings[Keys.FONT_NAME]) then
+			profile.settings[Keys.FONT_NAME] = gameFont
+		end
+	end
+
 	local sounds = Addon.SoundPlayer.New()
 
 	---@type Preferences
