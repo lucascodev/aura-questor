@@ -2,11 +2,13 @@ name: CI
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 jobs:
   lint:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
       - name: Luacheck
@@ -16,9 +18,16 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
       - name: Install Lua
-        run: sudo apt-get update && sudo apt-get install -y lua5.4
+        # O espelho Azure dos runners cai com frequencia e o apt gasta minutos
+        # de retry nele. Nos runners o espelho vem de /etc/apt/apt-mirrors.txt
+        # (esquema mirror+file), nao do sources.list; e la que se troca.
+        run: |
+          sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' /etc/apt/apt-mirrors.txt 2>/dev/null || true
+          sudo apt-get update -o Acquire::Retries=3
+          sudo apt-get install -y --no-install-recommends lua5.4
       - name: Core tests
         run: lua5.4 Tests/Run.lua
