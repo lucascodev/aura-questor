@@ -17,6 +17,19 @@ local MENU_SCREEN_FRACTION = 0.4
 ---@class OptionsControls
 local OptionsControls = {}
 
+--- Um teto pode chegar medido do cliente, e medida tirada cedo demais nasce
+--- errada: no ADDON_LOADED a escala da interface ainda não vale, e a tela
+--- responde outro tamanho. Por isso ele é resolvido de novo a cada Refresh.
+---@param bound number|fun(): number
+---@return number
+local function Resolve(bound)
+	if type(bound) == "function" then
+		return bound()
+	end
+
+	return bound
+end
+
 ---@param parent table
 ---@param options { get: fun(): boolean, set: fun(value: boolean), isEnabled: (fun(): boolean)? }
 ---@return table
@@ -46,7 +59,7 @@ function OptionsControls.Switch(parent, options)
 end
 
 ---@param parent table
----@param options { label: string, minimum: number, maximum: number, step: number, get: fun(): number, set: fun(value: number), suffix: string? }
+---@param options { label: string, minimum: number, maximum: number|fun(): number, step: number, get: fun(): number, set: fun(value: number), suffix: string? }
 ---@return table
 function OptionsControls.Slider(parent, options)
 	local frame = CreateFrame("Frame", nil, parent)
@@ -72,8 +85,18 @@ function OptionsControls.Slider(parent, options)
 	slider:SetPoint("TOPRIGHT", 0, -SLIDER_TOP)
 	slider:SetHeight(SLIDER_BLOCK_HEIGHT - SLIDER_TOP)
 
-	local steps = (options.maximum - options.minimum) / options.step
-	slider:Init(options.get(), options.minimum, options.maximum, steps, {})
+	local maximum
+
+	---@param ceiling number
+	local function Fit(ceiling)
+		maximum = ceiling
+
+		local steps = (ceiling - options.minimum) / options.step
+
+		slider:Init(options.get(), options.minimum, ceiling, steps, {})
+	end
+
+	Fit(Resolve(options.maximum))
 
 	local function Paint(current)
 		value:SetText(("%d%s"):format(current, options.suffix or ""))
@@ -85,6 +108,12 @@ function OptionsControls.Slider(parent, options)
 	end)
 
 	function frame:Refresh()
+		local ceiling = Resolve(options.maximum)
+
+		if ceiling ~= maximum then
+			Fit(ceiling)
+		end
+
 		slider:SetValue(options.get())
 		Paint(options.get())
 	end
