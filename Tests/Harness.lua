@@ -31,6 +31,7 @@ local CORE_FILES = {
 	"Preferences/Catalog",
 	"Preferences/Store",
 	"Preferences/Lookup",
+	"Preferences/Bounds",
 	"Filtering/FilterIds",
 	"Filtering/Filters",
 	"Filtering/Filtering",

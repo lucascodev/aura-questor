@@ -167,7 +167,7 @@ local function FromPreference(cell, preference, preferences)
 			return preference.choices
 		end,
 		minimum = preference.minimum,
-		maximum = preference.maximum,
+		maximum = cell.maximum or preference.maximum,
 		step = preference.step,
 		isEnabled = cell.isEnabled,
 	}

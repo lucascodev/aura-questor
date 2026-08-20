@@ -12,6 +12,7 @@
 ---@field label? string
 ---@field hint? string
 ---@field suffix? string
+---@field maximum? number Teto do controle quando o do catálogo não serve.
 ---@field value? string
 ---@field choices? fun(): PreferenceChoice[]
 ---@field get? fun(): any

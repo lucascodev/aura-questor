@@ -55,6 +55,7 @@ Source\Core\Preferences\SoundChannels.lua
 Source\Core\Preferences\Catalog.lua
 Source\Core\Preferences\Store.lua
 Source\Core\Preferences\Lookup.lua
+Source\Core\Preferences\Bounds.lua
 
 Source\Core\Filtering\FilterIds.lua
 Source\Core\Filtering\Filters.lua

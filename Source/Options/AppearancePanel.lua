@@ -15,13 +15,16 @@ function AppearancePanel.Register(category, catalog, preferences)
 		subtitle = Addon.L.PAGE_APPEARANCE_HINT,
 	})
 
+	local height = Addon.PreferenceLookup.Find(catalog, Keys.TRACKER_HEIGHT)
+	local heightCeiling = Addon.PreferenceBounds.Maximum(height, GetScreenHeight())
+
 	page:Mount({
 		{
 			title = Addon.L.SECTION_WINDOW,
 			rows = {
 				{
 					{ key = Keys.TRACKER_WIDTH },
-					{ key = Keys.TRACKER_HEIGHT },
+					{ key = Keys.TRACKER_HEIGHT, maximum = heightCeiling },
 				},
 				{
 					{ key = Keys.TRACKER_SCALE, suffix = "%" },
