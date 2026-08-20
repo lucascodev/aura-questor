@@ -52,6 +52,24 @@ function Preferences:Set(key, value)
 	self.onChanged(key)
 end
 
+--- Devolve ao padrão de fábrica só as chaves pedidas. Cada uma é anunciada
+--- como qualquer outra mudança, para quem escuta não precisar saber que a mão
+--- que mexeu foi a de um botão de restaurar.
+---@param keys string[]
+function Preferences:Reset(keys)
+	local wanted = {}
+
+	for _, key in ipairs(keys) do
+		wanted[key] = true
+	end
+
+	for _, preference in ipairs(self.catalog) do
+		if wanted[preference.key] then
+			self:Set(preference.key, preference.default)
+		end
+	end
+end
+
 --- Announces a change the Settings API already wrote into the values table on
 --- its own, so a native control and a hand-built one reach the same place.
 ---@param key string

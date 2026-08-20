@@ -4,6 +4,8 @@ local _, Addon = ...
 --- cliente; o mesmo texto serve os dois.
 local entries = {
 	-- Options pages
+	PAGE_DEFAULTS = "Predeterminados",
+	PAGE_DEFAULTS_QUESTION = "¿Restaurar %s a los ajustes de fábrica?",
 	PAGE_APPEARANCE = "Apariencia",
 	PAGE_APPEARANCE_HINT = "El tamaño de la ventana y el texto de la lista.",
 	PAGE_FRAME = "Marco",

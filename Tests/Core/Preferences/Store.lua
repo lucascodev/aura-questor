@@ -60,6 +60,53 @@ return function(Addon, T)
 			T.Equals(values.fontSize, nil)
 		end)
 
+		T.Test("Reset devolve so as chaves pedidas ao padrao", function()
+			local catalog = {
+				{ key = "fontSize", default = 12 },
+				{ key = "fontName", default = "Inter" },
+			}
+			local values = { fontSize = 20, fontName = "Arial" }
+			local preferences = Addon.Preferences.New(catalog, values, function() end)
+
+			preferences:Reset({ "fontSize" })
+
+			T.Equals(values.fontSize, 12)
+			T.Equals(values.fontName, "Arial", "o que nao foi pedido fica como esta")
+		end)
+
+		T.Test("Reset avisa cada chave que mudou de verdade", function()
+			local catalog = {
+				{ key = "fontSize", default = 12 },
+				{ key = "fontName", default = "Inter" },
+			}
+			local changed = {}
+			local preferences = Addon.Preferences.New(
+				catalog,
+				{ fontSize = 20, fontName = "Inter" },
+				function(key)
+					table.insert(changed, key)
+				end
+			)
+
+			preferences:Reset({ "fontSize", "fontName" })
+
+			T.Equals(#changed, 1, "fontName ja estava no padrao")
+			T.Equals(changed[1], "fontSize")
+		end)
+
+		T.Test("Reset ignora chave que nao esta no catalogo", function()
+			local values = { fontSize = 20 }
+			local preferences = Addon.Preferences.New(
+				{ { key = "fontSize", default = 12 } },
+				values,
+				function() end
+			)
+
+			preferences:Reset({ "chaveQueNaoExiste" })
+
+			T.Equals(values.fontSize, 20)
+		end)
+
 		T.Test("Values devolve a tabela viva, nao uma copia", function()
 			local values = {}
 			local preferences = Addon.Preferences.New({}, values, function() end)

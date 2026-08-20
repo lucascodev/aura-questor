@@ -134,6 +134,7 @@ Source\Modules\EntryActionRouter.lua
 Source\UI\FontStyler.lua
 Source\UI\ColorPicker.lua
 Source\UI\NamePrompt.lua
+Source\UI\ConfirmPrompt.lua
 Source\UI\MinimapButton.lua
 
 Source\UI\Entry\PinStyles.lua

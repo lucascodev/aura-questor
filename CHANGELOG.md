@@ -3,6 +3,14 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Adicionado
+
+- Botão **Padrões** no cabeçalho de cada página de preferências, no mesmo canto
+  em que o jogo põe o dele. Restaura só o que aquela página mostra, e pergunta
+  antes, já que não há como desfazer.
+
 ## [0.81.0] - 2026-08-20
 
 ### Alterado

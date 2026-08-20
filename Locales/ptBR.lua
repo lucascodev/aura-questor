@@ -1,6 +1,8 @@
 local _, Addon = ...
 
 Addon.RegisterLocale("ptBR", {
+	PAGE_DEFAULTS = "Padrões",
+	PAGE_DEFAULTS_QUESTION = "Restaurar %s para o padrão de fábrica?",
 	PAGE_APPEARANCE = "Aparência",
 	PAGE_APPEARANCE_HINT = "Tamanho da janela e o texto da lista.",
 	PAGE_FRAME = "Moldura",
