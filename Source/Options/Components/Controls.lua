@@ -12,6 +12,7 @@ local SWATCH_HEX_GAP = 10
 local BUTTON_HEIGHT = 24
 local BUTTON_TEXT_PAD = 36
 local DISABLED_ALPHA = 0.5
+local MENU_SCREEN_FRACTION = 0.4
 
 ---@class OptionsControls
 local OptionsControls = {}
@@ -101,6 +102,11 @@ function OptionsControls.Dropdown(parent, options)
 	dropdown:SetSize(options.width or Theme.COLUMN_WIDTH, Theme.INPUT_HEIGHT)
 
 	dropdown:SetupMenu(function(_, rootDescription)
+		-- Cada addon de mídia instalado soma entradas ao acervo, e a lista inteira
+		-- passava da borda da tela: o que caía embaixo ficava impossível de
+		-- escolher. Com a rolagem o menu para de crescer na altura.
+		rootDescription:SetScrollMode(UIParent:GetHeight() * MENU_SCREEN_FRACTION)
+
 		for _, choice in ipairs(options.choices()) do
 			rootDescription:CreateRadio(choice.label, function(id)
 				return id == options.get()

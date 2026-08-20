@@ -3,6 +3,14 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Corrigido
+
+- Com muitos addons de mídia instalados, a lista de um seletor passava da borda
+  da tela e o que caía embaixo ficava impossível de escolher. Os seletores do
+  painel agora rolam em vez de crescer sem fim.
+
 ## [0.80.1] - 2026-08-19
 
 ### Corrigido
