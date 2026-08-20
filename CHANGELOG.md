@@ -3,6 +3,23 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Corrigido
+
+- Com muitos addons de mídia instalados, a lista de um seletor passava da borda
+  da tela e o que caía embaixo ficava impossível de escolher. Os seletores do
+  painel agora rolam em vez de crescer sem fim.
+- O rastreador do jogo reaparecia por baixo do nosso no meio da sessão e só
+  saía de cena de novo com um `/reload`. Toda vez que a interface volta,
+  saindo de uma cinemática ou de um veículo, o jogo reacende os quadros
+  daquele canto da tela, e o addon confiava na própria memória de já ter
+  escondido: nunca reescrevia. A opacidade passa a ser lida do próprio
+  quadro, então a atualização seguinte esconde de novo.
+- Com os dois rastreadores na tela, o do jogo deixa de reaparecer nos
+  momentos em que o próprio jogo o apaga, como sob a barra de ação de um
+  veículo.
+
 ## [0.80.1] - 2026-08-19
 
 ### Corrigido

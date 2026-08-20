@@ -27,6 +27,7 @@ local SUITES = {
 	"Core/Tracker/AchievementCategories",
 	"Core/Commands",
 	"Core/Integration/WaypointSync",
+	"Game/BlizzardTracker",
 	"Options/Schematic",
 	"Options/Pages",
 	"Locales",
