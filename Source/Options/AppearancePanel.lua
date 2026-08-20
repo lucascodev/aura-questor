@@ -16,7 +16,12 @@ function AppearancePanel.Register(category, catalog, preferences)
 	})
 
 	local height = Addon.PreferenceLookup.Find(catalog, Keys.TRACKER_HEIGHT)
-	local heightCeiling = Addon.PreferenceBounds.Maximum(height, GetScreenHeight())
+
+	--- Medido quando a página aparece, e não no carregamento: a escala da
+	--- interface só vale depois, e antes dela a tela responde outro tamanho.
+	local function HeightCeiling()
+		return Addon.PreferenceBounds.Maximum(height, GetScreenHeight())
+	end
 
 	page:Mount({
 		{
@@ -24,7 +29,7 @@ function AppearancePanel.Register(category, catalog, preferences)
 			rows = {
 				{
 					{ key = Keys.TRACKER_WIDTH },
-					{ key = Keys.TRACKER_HEIGHT, maximum = heightCeiling },
+					{ key = Keys.TRACKER_HEIGHT, maximum = HeightCeiling },
 				},
 				{
 					{ key = Keys.TRACKER_SCALE, suffix = "%" },

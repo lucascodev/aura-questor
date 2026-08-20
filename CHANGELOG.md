@@ -11,6 +11,14 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
   em que o jogo põe o dele. Restaura só o que aquela página mostra, e pergunta
   antes, já que não há como desfazer.
 
+### Corrigido
+
+- O teto da altura que a 0.81.0 prometia não subia de verdade: a altura da tela
+  era medida no carregamento, antes de a escala da interface valer, e o controle
+  acabava parando no mesmo 900 de antes. A medida passa a ser feita quando a
+  página é aberta, e de quebra trocar de resolução ou de escala no meio da
+  sessão passa a valer sem `/reload`.
+
 ## [0.81.0] - 2026-08-20
 
 ### Alterado
