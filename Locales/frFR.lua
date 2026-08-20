@@ -2,6 +2,8 @@ local _, Addon = ...
 
 Addon.RegisterLocale("frFR", {
 	-- Options pages
+	PAGE_DEFAULTS = "Par défaut",
+	PAGE_DEFAULTS_QUESTION = "Rétablir les réglages par défaut de %s ?",
 	PAGE_APPEARANCE = "Apparence",
 	PAGE_APPEARANCE_HINT = "La taille de la fenêtre et le texte de la liste.",
 	PAGE_FRAME = "Cadre",

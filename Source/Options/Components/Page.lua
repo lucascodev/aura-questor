@@ -14,6 +14,7 @@ local WHEEL_STEP = 40
 ---@class OptionsPage
 ---@field frame table
 ---@field private refreshables table[]
+---@field private keys string[] As preferências que a página mostra, na ordem em que entraram.
 local OptionsPage = {}
 OptionsPage.__index = OptionsPage
 
@@ -89,12 +90,13 @@ function OptionsPage.New(options)
 		owner:SetVerticalScroll(math.min(math.max(wanted, 0), hidden))
 	end)
 
-	local page = setmetatable({ frame = frame, content = content, refreshables = {} }, OptionsPage)
+	local page = setmetatable(
+		{ frame = frame, content = content, refreshables = {}, keys = {} },
+		OptionsPage
+	)
 
 	frame:SetScript("OnShow", function()
-		for _, refreshable in ipairs(page.refreshables) do
-			refreshable:Refresh()
-		end
+		page:Refresh()
 	end)
 
 	return page
@@ -108,6 +110,14 @@ end
 ---@param refreshable table Qualquer coisa com Refresh().
 function OptionsPage:AddRefresh(refreshable)
 	table.insert(self.refreshables, refreshable)
+end
+
+--- Relê todo controle desenhado. Roda quando a página aparece e depois de um
+--- restaurar, que muda os valores por baixo dos controles já montados.
+function OptionsPage:Refresh()
+	for _, refreshable in ipairs(self.refreshables) do
+		refreshable:Refresh()
+	end
 end
 
 ---@param options { title: string?, top: number }
@@ -342,6 +352,8 @@ function OptionsPage:Mount(schematic, context)
 
 				for column, cell in ipairs(row) do
 					if cell.key then
+						table.insert(self.keys, cell.key)
+
 						cell = FromPreference(
 							cell,
 							Addon.PreferenceLookup.Find(context.catalog, cell.key),
@@ -383,6 +395,29 @@ function OptionsPage:Mount(schematic, context)
 	end
 
 	self:GrowContent(top)
+
+	if context.preferences and #self.keys > 0 then
+		self:AddDefaultsButton(context.preferences)
+	end
+end
+
+--- No canto do cabeçalho, onde o próprio jogo põe o dele, e restaurando só o
+--- que esta página mostra: quem quer refazer a moldura não perde o resto junto.
+---@private
+---@param preferences Preferences
+function OptionsPage:AddDefaultsButton(preferences)
+	local page = self
+	local button = Addon.OptionsControls.Button(self.frame, {
+		label = Addon.L.PAGE_DEFAULTS,
+		run = function()
+			Addon.ConfirmPrompt.Ask(Addon.L.PAGE_DEFAULTS_QUESTION:format(page.frame.name), function()
+				preferences:Reset(page.keys)
+				page:Refresh()
+			end)
+		end,
+	})
+
+	button:SetPoint("TOPRIGHT", -Theme.PADDING, -Theme.HEADER_TOP)
 end
 
 ---@param name string
