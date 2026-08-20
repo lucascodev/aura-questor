@@ -18,6 +18,7 @@ local SUITES = {
 	"Core/Preferences/Choices",
 	"Core/Preferences/Store",
 	"Core/Preferences/Lookup",
+	"Core/Preferences/Bounds",
 	"Core/Filtering/Filters",
 	"Core/Filtering/Filtering",
 	"Core/Tracker/SectionOrder",

@@ -3,6 +3,15 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Alterado
+
+- O teto da altura do rastreador passa a acompanhar a tela em vez de parar em
+  900: num monitor alto dá para descer até perto da borda de baixo. Numa tela
+  mais baixa o teto antigo continua valendo, então nenhuma altura já gravada
+  encolhe.
+
 ## [0.80.2] - 2026-08-20
 
 ### Corrigido
