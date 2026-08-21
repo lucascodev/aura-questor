@@ -29,8 +29,15 @@ local BAR_PARTS = 5
 local BAR_DIVIDER_WIDTH = 1
 local BAR_DIVIDER_COLOR = { red = 0, green = 0, blue = 0, alpha = 0.75 }
 
---- Ours: a thin outline instead of the metal one.
+--- Ours: a thin outline instead of the metal one, drawn on the bar's own edges,
+--- so nothing hangs over it.
 local BAR_OWN_MARGIN = 2
+
+--- A bar is a figure among lines of text, and it reads better with room around
+--- it than filling the block edge to edge: pulled in from both sides and given
+--- more space above and below than two lines have between them.
+local BAR_SIDE_PADDING = 12
+local BAR_LINE_SPACING = 4
 local BAR_OWN_OUTLINE_COLOR = { red = 0.35, green = 0.38, blue = 0.46, alpha = 1 }
 
 --- Content the game itself draws with the split frame: bonus objective, world
@@ -79,7 +86,11 @@ local TAG_SIZE = 18
 local TAG_GAP = 3
 local GROUP_SIZE = 20
 local GROUP_GAP = 4
-local LINE_SPACING = 2
+--- Between the lines of a block: the title, the zone and each objective. An
+--- objective that wraps carries its own lines close together, so this has to be
+--- clearly wider than that, otherwise a wrapped line and the next objective
+--- read the same.
+local LINE_SPACING = 5
 
 --- Used when a quest reports an item but no icon comes with it. An empty
 --- button would read as broken.
@@ -1095,19 +1106,19 @@ function EntryBlockPool:Build(entry, width, index)
 			local isSplit = IsSplitBar(entry)
 			local overhang = self:BarOverhang()
 
-			bar:SetWidth(rowWidth - overhang * 2)
+			bar:SetWidth(rowWidth - (overhang + BAR_SIDE_PADDING) * 2)
 			bar:ClearAllPoints()
 			bar:SetPoint(
 				"TOPLEFT",
 				block.frame,
 				"TOPLEFT",
-				objectiveLeft + overhang,
-				-(height + LINE_SPACING + self:BarMargin() / 2)
+				objectiveLeft + overhang + BAR_SIDE_PADDING,
+				-(height + BAR_LINE_SPACING + self:BarMargin() / 2)
 			)
 			self:ApplyBar(bar, row.percent, isSplit)
 			bar:Show()
 
-			height = height + LINE_SPACING + self:BarHeight() + self:BarMargin()
+			height = height + BAR_LINE_SPACING + self:BarHeight() + self:BarMargin()
 		else
 			usedLines = usedLines + 1
 

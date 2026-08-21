@@ -7,6 +7,12 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
 ### Corrigido
 
+- Objetivos de uma missão ficavam tão próximos uns dos outros quanto as linhas
+  de um objetivo que quebra em duas, e não dava para ver onde um terminava.
+  Agora existe um degrau claro entre eles.
+- As barras de progresso ocupavam a largura inteira do bloco, coladas no texto
+  em cima e embaixo. Agora ficam recuadas dos dois lados e com mais respiro
+  acima e abaixo, para lerem como figura no meio das linhas.
 - Em combate, clicar numa missão para segui-la não fazia nada. A escrita
   esperava o fim da luta por causa de um problema com os pinos do mapa, que só
   acontece com o mapa aberto. Agora só espera nesse caso, e com o mapa fechado
