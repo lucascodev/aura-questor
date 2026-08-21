@@ -290,6 +290,15 @@ local PreferenceCatalog = {
 		tooltip = L.PREF_WORLD_QUESTS_ENABLED_TIP,
 	},
 	{
+		key = Keys.WORLD_QUEST_SCOPE,
+		panel = CONTENT_PANEL,
+		kind = "string",
+		default = Addon.WorldQuestScopes.ALL,
+		label = L.PREF_WORLD_QUEST_SCOPE,
+		tooltip = L.PREF_WORLD_QUEST_SCOPE_TIP,
+		choices = Addon.WorldQuestScopes.Choices,
+	},
+	{
 		key = Keys.INSTANCE_FOCUS,
 		panel = CONTENT_PANEL,
 		kind = "boolean",

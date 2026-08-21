@@ -36,6 +36,11 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
   objetivo bônus saem divididas em cinco partes, como no rastreador do jogo. A
   altura também virou preferência.
 
+- As missões mundiais ganharam alcance à escolha, no painel e no menu do funil:
+  **de qualquer lugar**, como era antes, **desta zona** ou **de onde estou**.
+  Uma missão rastreada pelo mapa segue rastreada onde quer que você vá, e era
+  assim que a missão de outro continente aparecia na lista.
+
 ### Corrigido
 
 - Evento em andamento não mostrava quanto tempo ainda tinha. O prazo desses não

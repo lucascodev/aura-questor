@@ -29,6 +29,7 @@ local CORE_FILES = {
 	"Preferences/SortModes",
 	"Preferences/SoundChannels",
 	"Preferences/ProgressBarStyles",
+	"Preferences/WorldQuestScopes",
 	"Preferences/Catalog",
 	"Preferences/Store",
 	"Preferences/Lookup",

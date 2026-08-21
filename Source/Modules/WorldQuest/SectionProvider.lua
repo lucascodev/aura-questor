@@ -83,6 +83,27 @@ end
 --- area the player is standing in come first, then the ones tracked from the
 --- map, wherever they are. Reading only the first was why a quest tracked from
 --- another zone never showed up.
+--- The game answers, per quest, whether the player stands in its own area and
+--- whether it belongs to the map on screen. A quest tracked from the map keeps
+--- being tracked wherever the player goes, which is why the list can otherwise
+--- carry another continent's quests.
+---@param questID number
+---@param scope string
+---@return boolean
+local function IsInScope(questID, scope)
+	if scope == Addon.WorldQuestScopes.ALL then
+		return true
+	end
+
+	local isInArea, isOnMap = GetTaskInfo(questID)
+
+	if scope == Addon.WorldQuestScopes.AREA then
+		return isInArea == true
+	end
+
+	return isInArea == true or isOnMap == true
+end
+
 ---@return number[]
 local function CollectQuestIDs()
 	local questIDs = {}
@@ -119,12 +140,15 @@ function WorldQuestSectionProvider:Collect()
 	end
 
 	local entries = {}
+	local scope = self.preferences:Get(Keys.WORLD_QUEST_SCOPE)
 
 	for _, questID in ipairs(CollectQuestIDs()) do
-		local entry = ReadEntry(questID)
+		if IsInScope(questID, scope) then
+			local entry = ReadEntry(questID)
 
-		if entry then
-			table.insert(entries, entry)
+			if entry then
+				table.insert(entries, entry)
+			end
 		end
 	end
 

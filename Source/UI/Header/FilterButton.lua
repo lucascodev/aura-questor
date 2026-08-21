@@ -145,6 +145,14 @@ function TrackerFilterButton:BuildMenu(rootDescription)
 		self.commands.toggleWorldQuests
 	)
 
+	for _, scope in ipairs(self.commands.worldQuestScopes) do
+		rootDescription:CreateRadio(scope.label, function(scopeID)
+			return scopeID == self.commands.selectedWorldQuestScope()
+		end, function(scopeID)
+			self.commands.selectWorldQuestScope(scopeID)
+		end, scope.id)
+	end
+
 	rootDescription:CreateDivider()
 	rootDescription:CreateTitle(EVENTS_LABEL)
 	rootDescription:CreateCheckbox(

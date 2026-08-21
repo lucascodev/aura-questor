@@ -387,6 +387,13 @@ local function Build()
 		toggleEvents = function()
 			optionsPanel:SelectValue(Keys.EVENTS_ENABLED, not preferences:Get(Keys.EVENTS_ENABLED))
 		end,
+		worldQuestScopes = Addon.WorldQuestScopes.Choices,
+		selectedWorldQuestScope = function()
+			return preferences:Get(Keys.WORLD_QUEST_SCOPE)
+		end,
+		selectWorldQuestScope = function(scopeID)
+			optionsPanel:SelectValue(Keys.WORLD_QUEST_SCOPE, scopeID)
+		end,
 		isWorldQuestsEnabled = function()
 			return preferences:Get(Keys.WORLD_QUESTS_ENABLED)
 		end,
