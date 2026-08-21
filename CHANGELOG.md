@@ -18,6 +18,13 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 - O evento que está sendo seguido ganha o mesmo brilho que o jogo põe atrás do
   ponto no mapa. A arte própria dele não tem versão de selecionado, então antes
   não havia como saber qual estava escolhido.
+- Evento vai para o bate-papo com o mesmo clique das missões, usando o link de
+  evento que o próprio jogo criou para os lembretes dele.
+
+### Alterado
+
+- As barras de progresso passam a usar a moldura e as cores da barra do
+  rastreador do jogo, no lugar do retângulo escuro sem contorno.
 
 ### Corrigido
 

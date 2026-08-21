@@ -118,6 +118,8 @@ read_globals = {
 	"Item",
 	"LFGListUtil_FindQuestGroup",
 	"LibStub",
+	"LinkTypes",
+	"LinkUtil",
 	"MenuUtil",
 	"MicroButtonTooltipText",
 	"MinimalSliderWithSteppersMixin",

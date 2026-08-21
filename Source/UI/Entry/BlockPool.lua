@@ -11,11 +11,19 @@ local NUMBER_OFFSET_Y = 1
 local TITLE_SIZE_DELTA = 0
 local LINE_SIZE_DELTA = -1
 
-local BAR_HEIGHT = 14
+--- The bar and its frame, in the same measures the game's own objective bar
+--- uses: the border art is taller than the bar and hangs over it, so the row
+--- reserves the border height and the bar sits centred inside it.
+local BAR_HEIGHT = 15
+local BAR_ROW_HEIGHT = 22
+local BAR_TOP_INSET = (BAR_ROW_HEIGHT - BAR_HEIGHT) / 2
+local BAR_BORDER_FILE = [[Interface\PaperDollInfoFrame\UI-Character-Skills-BarBorder]]
+local BAR_BORDER_WIDTH = 9
+local BAR_BORDER_OVERHANG = 3
 local FULL_PERCENT = 100
-local BAR_BACKGROUND_COLOR = { red = 0, green = 0, blue = 0, alpha = 0.55 }
-local BAR_FILL_COLOR = { red = 0.16, green = 0.55, blue = 0.28 }
-local BAR_COMPLETE_COLOR = { red = 0.35, green = 0.35, blue = 0.35 }
+local BAR_BACKGROUND_COLOR = { red = 0.04, green = 0.07, blue = 0.18, alpha = 1 }
+local BAR_FILL_COLOR = { red = 0.26, green = 0.42, blue = 1 }
+local BAR_COMPLETE_COLOR = { red = 0.16, green = 0.55, blue = 0.28 }
 
 --- A countdown gets a card of its own: the number is the thing being watched,
 --- and as one more dashed line it reads like a footnote.
@@ -254,12 +262,30 @@ end
 
 ---@param block table
 ---@return table
+--- One of the three pieces the game's bar frame is made of. The ends keep their
+--- width and the middle stretches between them, which is why the right end
+--- takes the same coordinates mirrored.
+---@param bar table
+---@param left number
+---@param right number
+---@return table
+local function CreateBarBorder(bar, left, right)
+	local border = bar:CreateTexture(nil, "ARTWORK")
+
+	border:SetTexture(BAR_BORDER_FILE)
+	border:SetTexCoord(left, right, 0.193548, 0.774193)
+
+	return border
+end
+
+---@param block table
+---@return table
 local function CreateBar(block)
 	local bar = CreateFrame("StatusBar", nil, block.frame)
 	bar:SetHeight(BAR_HEIGHT)
 	bar:SetMinMaxValues(0, FULL_PERCENT)
 
-	local background = bar:CreateTexture(nil, "BACKGROUND")
+	local background = bar:CreateTexture(nil, "BACKGROUND", nil, -1)
 	background:SetColorTexture(
 		BAR_BACKGROUND_COLOR.red,
 		BAR_BACKGROUND_COLOR.green,
@@ -268,8 +294,20 @@ local function CreateBar(block)
 	)
 	background:SetAllPoints()
 
+	local borderLeft = CreateBarBorder(bar, 0.007843, 0.043137)
+	borderLeft:SetSize(BAR_BORDER_WIDTH, BAR_ROW_HEIGHT)
+	borderLeft:SetPoint("LEFT", -BAR_BORDER_OVERHANG, 0)
+
+	local borderRight = CreateBarBorder(bar, 0.043137, 0.007843)
+	borderRight:SetSize(BAR_BORDER_WIDTH, BAR_ROW_HEIGHT)
+	borderRight:SetPoint("RIGHT", BAR_BORDER_OVERHANG, 0)
+
+	local borderMiddle = CreateBarBorder(bar, 0.113726, 0.1490196)
+	borderMiddle:SetPoint("TOPLEFT", borderLeft, "TOPRIGHT")
+	borderMiddle:SetPoint("BOTTOMRIGHT", borderRight, "BOTTOMLEFT")
+
 	local label = bar:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-	label:SetPoint("CENTER")
+	label:SetPoint("CENTER", 0, -1)
 
 	bar.label = label
 
@@ -921,10 +959,16 @@ function EntryBlockPool:Build(entry, width, index)
 			self:ApplyBar(bar, row.percent)
 			bar:SetWidth(rowWidth)
 			bar:ClearAllPoints()
-			bar:SetPoint("TOPLEFT", block.frame, "TOPLEFT", objectiveLeft, -(height + LINE_SPACING))
+			bar:SetPoint(
+				"TOPLEFT",
+				block.frame,
+				"TOPLEFT",
+				objectiveLeft,
+				-(height + LINE_SPACING + BAR_TOP_INSET)
+			)
 			bar:Show()
 
-			height = height + LINE_SPACING + BAR_HEIGHT
+			height = height + LINE_SPACING + BAR_ROW_HEIGHT
 		else
 			usedLines = usedLines + 1
 
