@@ -65,6 +65,7 @@ Source\Core\Filtering\Filters.lua
 Source\Core\Filtering\Filtering.lua
 
 Source\Core\Tracker\SectionOrder.lua
+Source\Core\Tracker\SectionArrangement.lua
 Source\Core\Tracker\Content.lua
 Source\Core\Tracker\Display.lua
 Source\Core\Tracker\CompletionWatcher.lua
@@ -164,6 +165,7 @@ Source\Options\Components\Page.lua
 Source\Options\MainPanel.lua
 Source\Options\AppearancePanel.lua
 Source\Options\FramePanel.lua
+Source\Options\SectionOrderCard.lua
 Source\Options\ContentPanel.lua
 Source\Options\ProfilePanel.lua
 Source\Options\IntegrationPanel.lua

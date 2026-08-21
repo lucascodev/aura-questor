@@ -167,6 +167,10 @@ end
 ---@return SchematicCell
 local function FromPreference(cell, preference, preferences)
 	local resolved = {
+		-- Carried over so a cell can draw itself and still be a preference: the
+		-- page's "Defaults" button restores every key it mounted, and a cell
+		-- without one would sit outside that.
+		build = cell.build,
 		label = cell.label or preference.label,
 		hint = cell.hint or preference.tooltip,
 		span = cell.span,
@@ -219,7 +223,7 @@ end
 ---@return number height
 local function BuildCell(card, cell, width)
 	if cell.build then
-		local frame = cell.build(card, width)
+		local frame = cell.build(card, width, cell)
 
 		return frame, frame:GetHeight()
 	end

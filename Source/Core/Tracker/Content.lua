@@ -87,8 +87,29 @@ function TrackerContent:Build()
 		end
 	end
 
+	local ranks = Addon.SectionArrangement.Resolve(
+		Addon.SectionOrder,
+		Addon.SectionArrangement.Parse(self.preferences:Get(Keys.SECTION_ARRANGEMENT))
+	)
+
 	table.sort(sections, function(left, right)
-		return left.order < right.order
+		local leftRank, rightRank = ranks[left.id], ranks[right.id]
+
+		-- A section the arrangement never heard of keeps its own position and
+		-- goes after the arranged ones, instead of landing at a random spot.
+		if leftRank == nil and rightRank == nil then
+			return left.order < right.order
+		end
+
+		if leftRank == nil then
+			return false
+		end
+
+		if rightRank == nil then
+			return true
+		end
+
+		return leftRank < rightRank
 	end)
 
 	self:SortEntries(sections)

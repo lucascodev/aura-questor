@@ -23,6 +23,7 @@ local SUITES = {
 	"Core/Filtering/Filters",
 	"Core/Filtering/Filtering",
 	"Core/Tracker/SectionOrder",
+	"Core/Tracker/SectionArrangement",
 	"Core/Tracker/Content",
 	"Core/Tracker/Display",
 	"Core/Tracker/CompletionWatcher",
@@ -33,6 +34,7 @@ local SUITES = {
 	"UI/Text",
 	"Options/Schematic",
 	"Options/Pages",
+	"Options/SectionOrderCard",
 	"Locales",
 	"Package",
 }

@@ -17,6 +17,18 @@ function ContentPanel.Register(category, catalog, preferences)
 
 	page:Mount({
 		{
+			title = Addon.L.SECTION_ORDER,
+			rows = {
+				{
+					{
+						key = Keys.SECTION_ARRANGEMENT,
+						span = 2,
+						build = Addon.SectionOrderCard.Cell,
+					},
+				},
+			},
+		},
+		{
 			title = Addon.L.SECTION_LIST,
 			rows = {
 				{

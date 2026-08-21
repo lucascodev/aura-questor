@@ -3,6 +3,16 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Alterado
+
+- A ordem das seções passa a ser guardada como preferência, e não como tabela do
+  perfil: assim o botão **Padrões** da página restaura a ordem junto com o
+  resto, e o card ganhou um **Restaurar ordem** próprio. Uma seção que uma
+  versão futura trouxer entra ao lado da vizinha padrão dela, em vez de ir para
+  o fim de uma lista que você arrumou.
+
 ## [0.85.0] - 2026-08-21
 
 ### Corrigido
