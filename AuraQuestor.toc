@@ -65,6 +65,7 @@ Source\Core\Filtering\Filters.lua
 Source\Core\Filtering\Filtering.lua
 
 Source\Core\Tracker\SectionOrder.lua
+Source\Core\Tracker\SectionRanking.lua
 Source\Core\Tracker\Content.lua
 Source\Core\Tracker\Display.lua
 Source\Core\Tracker\CompletionWatcher.lua
@@ -160,6 +161,7 @@ Source\Options\Components\Theme.lua
 Source\Options\Components\Fonts.lua
 Source\Options\Components\Schematic.lua
 Source\Options\Components\Controls.lua
+Source\Options\Components\SectionList.lua
 Source\Options\Components\Page.lua
 Source\Options\MainPanel.lua
 Source\Options\AppearancePanel.lua
