@@ -25,25 +25,30 @@ local BAR_BORDER_OVERHANG = 3
 --- wide as the block and its own width is fixed.
 local BAR_SPLIT_ATLAS = "bonusobjectives-bar-frame-5"
 
---- The art was drawn around a bar of this height, so its own height over this
---- one is how much taller than the bar it has to stay. Stretched to any other
---- proportion its lines land inside the fill instead of around it.
-local BAR_SPLIT_REFERENCE_HEIGHT = 17
-local BAR_SPLIT_FALLBACK_RATIO = 1.3
-local splitFrameRatio
+--- The art was drawn around a bar of this size, and what is left over is its
+--- own frame: half of the difference on each side. Both measures are needed,
+--- since the fill has to sit inside the opening and not over the frame.
+local BAR_SPLIT_INNER_WIDTH = 191
+local BAR_SPLIT_INNER_HEIGHT = 17
+local BAR_SPLIT_FALLBACK_HEIGHT = 22
+local BAR_SPLIT_FALLBACK_WIDTH = 207
+local splitFrameArt
 
----@return number
-local function SplitFrameRatio()
-	if splitFrameRatio then
-		return splitFrameRatio
+---@return number heightRatio How much taller than the bar the frame is.
+---@return number sideWidth Frame on each side, in the art's own pixels.
+local function SplitFrameArt()
+	if not splitFrameArt then
+		local info = C_Texture.GetAtlasInfo(BAR_SPLIT_ATLAS)
+		local height = info and info.height or BAR_SPLIT_FALLBACK_HEIGHT
+		local width = info and info.width or BAR_SPLIT_FALLBACK_WIDTH
+
+		splitFrameArt = {
+			heightRatio = height / BAR_SPLIT_INNER_HEIGHT,
+			sideWidth = (width - BAR_SPLIT_INNER_WIDTH) / 2,
+		}
 	end
 
-	local info = C_Texture.GetAtlasInfo(BAR_SPLIT_ATLAS)
-
-	splitFrameRatio = info and info.height and info.height / BAR_SPLIT_REFERENCE_HEIGHT
-		or BAR_SPLIT_FALLBACK_RATIO
-
-	return splitFrameRatio
+	return splitFrameArt.heightRatio, splitFrameArt.sideWidth
 end
 
 --- Ours: a thin outline instead of metal, and the same five parts marked by
@@ -379,8 +384,6 @@ local function CreateBar(block)
 
 	local splitFrame = bar:CreateTexture(nil, "ARTWORK")
 	splitFrame:SetAtlas(BAR_SPLIT_ATLAS)
-	splitFrame:SetPoint("LEFT", -BAR_BORDER_OVERHANG, 0)
-	splitFrame:SetPoint("RIGHT", BAR_BORDER_OVERHANG, 0)
 
 	bar.gamePieces = { borderLeft, borderRight, borderMiddle }
 	bar.borderEnds = { borderLeft, borderRight }
@@ -650,7 +653,9 @@ function EntryBlockPool:BarMargin(isSplit)
 	end
 
 	if isSplit then
-		return self:BarHeight() * (SplitFrameRatio() - 1)
+		local heightRatio = SplitFrameArt()
+
+		return self:BarHeight() * (heightRatio - 1)
 	end
 
 	return BAR_BORDER_MARGIN
@@ -787,8 +792,13 @@ function EntryBlockPool:DressBar(bar, isSplit)
 		border:SetSize(BAR_BORDER_WIDTH, height + BAR_BORDER_MARGIN)
 	end
 
+	local heightRatio, sideWidth = SplitFrameArt()
+	local scale = height / BAR_SPLIT_INNER_HEIGHT
+
 	bar.splitFrame:SetShown(not isOwnStyle and isSplit)
-	bar.splitFrame:SetHeight(height * SplitFrameRatio())
+	bar.splitFrame:SetHeight(height * heightRatio)
+	bar.splitFrame:SetPoint("LEFT", -sideWidth * scale, 0)
+	bar.splitFrame:SetPoint("RIGHT", sideWidth * scale, 0)
 
 	for _, edge in ipairs(bar.outline) do
 		edge:SetShown(isOwnStyle)
