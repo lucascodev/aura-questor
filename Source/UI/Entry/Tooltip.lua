@@ -33,6 +33,28 @@ function EntryTooltip.ShowMenu(actions, entry, owner)
 	end)
 end
 
+--- Sets whose drawing has already failed once. The game fills a POI's widgets
+--- while its map is up, and away from it some arrive without the fields its own
+--- drawing code reads, which errors inside the game. Nothing here can complete
+--- that data, and an error the player sees on every hover is worse than the
+--- missing details, so a set that fails is dropped for the session.
+local brokenWidgetSets = {}
+
+--- The set the map draws in the point's tooltip, with items and rewards that
+--- have no place inside a block.
+---@param widgetSetID number
+local function AddWidgetSet(widgetSetID)
+	if brokenWidgetSets[widgetSetID] then
+		return
+	end
+
+	local wasDrawn = pcall(GameTooltip_AddWidgetSet, GameTooltip, widgetSetID, WIDGET_PADDING)
+
+	if not wasDrawn then
+		brokenWidgetSets[widgetSetID] = true
+	end
+end
+
 --- The side with room for it. A rewards block carries the whole item tooltip,
 --- so it can be taller and wider than the tracker itself, and the tracker can
 --- be dragged to either edge of any screen.
@@ -97,10 +119,8 @@ function EntryTooltip.Show(actions, entry, owner)
 		end
 	end
 
-	-- Where this content was made to live: it is the set the map draws in the
-	-- point's tooltip, with items and rewards that have no place in a block.
 	if entry.tooltipWidgetSetID then
-		GameTooltip_AddWidgetSet(GameTooltip, entry.tooltipWidgetSetID, WIDGET_PADDING)
+		AddWidgetSet(entry.tooltipWidgetSetID)
 	end
 
 	GameTooltip:Show()
