@@ -3,6 +3,15 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Corrigido
+
+- Passar o mouse num evento podia gerar erro do jogo na tela. Os detalhes que
+  ele publica no ponto do mapa chegam incompletos longe do mapa, e o próprio
+  desenhador da Blizzard quebra com eles. Um conjunto que falha uma vez deixa
+  de ser desenhado até o próximo login, e o resto do tooltip continua igual.
+
 ## [0.83.0] - 2026-08-21
 
 ### Adicionado
