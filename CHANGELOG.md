@@ -3,7 +3,7 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
-## [Não publicado]
+## [0.83.0] - 2026-08-21
 
 ### Adicionado
 
@@ -35,7 +35,6 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
   com a moldura de metal do rastreador do jogo. Nos dois, missão mundial e
   objetivo bônus saem divididas em cinco partes, como no rastreador do jogo. A
   altura também virou preferência.
-
 - Dá para escolher o que a seção de missões mundiais lista, no painel e no menu
   do funil: **rastreadas**, como era antes, ou **todas desta zona** e **todas de
   onde estou**, que trazem as missões mundiais ao seu redor mesmo sem você ter
