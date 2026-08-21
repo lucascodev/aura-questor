@@ -455,7 +455,7 @@ function OwnTrackerFrame:ApplyHeight()
 	-- Held by the top before the height moves: anchored anywhere else, and the
 	-- factory position is anchored to the right edge, a taller or shorter list
 	-- would carry the header with it.
-	self:PinTop()
+	self:AnchorTop()
 
 	self.root:SetHeight(isCollapsed and COLLAPSED_HEIGHT or self:WantedHeight())
 	self.scroll:SetShown(not isCollapsed)
@@ -466,7 +466,7 @@ end
 --- Anchoring by the bottom instead makes the header fall to the foot of the
 --- window every time the list shrinks.
 ---@private
-function OwnTrackerFrame:PinTop()
+function OwnTrackerFrame:AnchorTop()
 	local left, top = self.root:GetLeft(), self.root:GetTop()
 
 	if not left or not top then
@@ -475,6 +475,15 @@ function OwnTrackerFrame:PinTop()
 
 	self.root:ClearAllPoints()
 	self.root:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", left, top)
+end
+
+--- Anchors and writes the place down. Only what the player did is worth
+--- writing: saving on every height change let a login write back a position the
+--- game had just nudged to keep the window on screen, and the window walked a
+--- little further on each reload.
+---@private
+function OwnTrackerFrame:PinTop()
+	self:AnchorTop()
 	self.position:Save()
 end
 

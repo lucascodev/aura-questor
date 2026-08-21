@@ -5,6 +5,13 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
 ## [Não publicado]
 
+### Corrigido
+
+- A janela andava um pouco a cada `/reload`, e com ela mudava a altura. A cada
+  ajuste de tamanho a posição era gravada de novo, e no login isso registrava o
+  lugar para onde o jogo tinha acabado de empurrar a janela para mantê-la na
+  tela. Gravar voltou a ser só o que você faz: arrastar e recolher.
+
 ### Alterado
 
 - A ordem das seções passa a ser guardada como preferência, e não como tabela do
