@@ -14,7 +14,7 @@ local WHEEL_STEP = 40
 ---@class OptionsPage
 ---@field frame table
 ---@field private refreshables table[]
----@field private keys string[] As preferências que a página mostra, na ordem em que entraram.
+---@field private keys string[] The preferences the page shows, in the order they were added.
 local OptionsPage = {}
 OptionsPage.__index = OptionsPage
 
@@ -112,8 +112,8 @@ function OptionsPage:AddRefresh(refreshable)
 	table.insert(self.refreshables, refreshable)
 end
 
---- Relê todo controle desenhado. Roda quando a página aparece e depois de um
---- restaurar, que muda os valores por baixo dos controles já montados.
+--- Reads every drawn control again. Runs when the page shows and after a reset,
+--- which changes the values under controls that are already built.
 function OptionsPage:Refresh()
 	for _, refreshable in ipairs(self.refreshables) do
 		refreshable:Refresh()
@@ -401,8 +401,8 @@ function OptionsPage:Mount(schematic, context)
 	end
 end
 
---- No canto do cabeçalho, onde o próprio jogo põe o dele, e restaurando só o
---- que esta página mostra: quem quer refazer a moldura não perde o resto junto.
+--- In the header corner, where the game puts its own, and restoring only what
+--- this page shows, so redoing the frame does not take the rest with it.
 ---@private
 ---@param preferences Preferences
 function OptionsPage:AddDefaultsButton(preferences)

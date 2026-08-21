@@ -3,7 +3,7 @@ local _, Addon = ...
 local QUEST_KIND = "quest"
 local WORLD_QUEST_KIND = "worldQuest"
 
---- Resolve onde uma missão está no mundo, para a seta de navegação.
+--- Works out where a quest is in the world, for the navigation arrow.
 ---@class WaypointReader
 local WaypointReader = {}
 
@@ -95,9 +95,9 @@ function WaypointReader.ForQuest(questID, kind)
 	return ReadTaskQuest(questID)
 end
 
---- O alvo supervisionado agora, quando é uma missão. Outros tipos de
+--- The target being tracked right now, when it is a quest. Other kinds of
 --- supertrack (pins de evento, conquistas) ficam de fora: devolver nil faz a
---- seta limpar em vez de continuar apontando para a missão anterior.
+--- target make the arrow clear instead of pointing at the previous quest.
 ---@return WaypointTarget?
 function WaypointReader.Current()
 	local questID = C_SuperTrack.GetSuperTrackedQuestID()

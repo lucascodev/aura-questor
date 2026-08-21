@@ -1,15 +1,14 @@
 local _, Addon = ...
 
---- Limites que dependem de algo medido no cliente, e por isso não cabem no
---- catálogo.
+--- Limits that depend on something measured on the client, which is why they
+--- do not fit in the catalog.
 ---@class PreferenceBounds
 local PreferenceBounds = {}
 
---- Deixa a tela ditar o teto: num monitor alto o rastreador vai até a borda de
---- baixo, em vez de parar num número escolhido a dedo. O teto do catálogo vira
---- piso, para uma tela baixa nunca encolher o que já está gravado, e o valor
---- cai num múltiplo do passo, senão o último ponto do controle não é
---- alcançável.
+--- The screen sets the ceiling, so a tall monitor reaches its bottom edge. The
+--- catalog ceiling becomes the floor, so a short screen never shrinks a saved
+--- height, and the value lands on a multiple of the step, otherwise the last
+--- point of the control cannot be reached.
 ---@param preference Preference
 ---@param available number
 ---@return number

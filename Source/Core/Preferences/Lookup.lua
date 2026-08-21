@@ -1,6 +1,6 @@
 local _, Addon = ...
 
---- Consultas sobre o catálogo de preferências.
+--- Questions about the preference catalog.
 ---@class PreferenceLookup
 local PreferenceLookup = {}
 
@@ -17,7 +17,8 @@ function PreferenceLookup.Find(catalog, key)
 	error(Addon.L.PREF_UNKNOWN:format(key))
 end
 
---- As preferências sem página nem painel são as gerais, e moram na raiz.
+--- Preferences with no page and no panel are the general ones, and live at the
+--- root.
 ---@param catalog Preference[]
 ---@return Preference[]
 function PreferenceLookup.Roots(catalog)

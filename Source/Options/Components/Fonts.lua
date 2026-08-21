@@ -1,7 +1,7 @@
 local _, Addon = ...
 
---- Num cliente CJK as três viram a fonte do jogo: o painel inteiro é texto
---- localizado, e fonte sem os glifos renderiza quadrados.
+--- On a CJK client all three become the game font: the panel is translated
+--- text, and a font without those glyphs draws boxes.
 local hasGameFont = Addon.ClientFont.PrefersGameFont()
 local INTER = hasGameFont and Addon.ClientFont.GamePath()
 	or [[Interface\AddOns\AuraQuestor\Media\Fonts\Inter-Regular.ttf]]

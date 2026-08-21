@@ -1,10 +1,10 @@
 local _, Addon = ...
 
---- WaypointArrow sobre o TomTom.
+--- WaypointArrow on top of TomTom.
 ---
---- O TomTom é um global puro que só existe depois do carregamento dele, então a
---- presença é reavaliada a cada chamada em vez de decidida uma vez. Sem ele,
---- todo método vira no-op.
+--- TomTom is a plain global that only exists after it loads, so its presence is
+--- checked on every call instead of decided once. Without it every method here
+--- does nothing.
 ---@class TomTomArrow : WaypointArrow
 ---@field private fromTitle string
 ---@field private uid table?
@@ -21,8 +21,8 @@ function TomTomArrow.Version()
 	return tostring(TomTom and TomTom.version or "?")
 end
 
---- A versão pela ficha do addon, que existe mesmo com ele desativado: separa
---- "instalado mas desligado" de "não existe no disco".
+--- The version from the addon metadata, which is there even when it is
+--- disabled: it tells "installed but off" from "not on disk".
 ---@return string?
 function TomTomArrow.InstalledVersion()
 	return C_AddOns.GetAddOnMetadata("TomTom", "Version")
@@ -34,8 +34,8 @@ function TomTomArrow.New(fromTitle)
 	return setmetatable({ fromTitle = fromTitle }, TomTomArrow)
 end
 
---- O TomTom pode ter removido o waypoint sozinho, pela distância de chegada,
---- então a referência é validada antes de qualquer remoção.
+--- TomTom may have removed the waypoint on its own once the player arrived, so
+--- the reference is checked before removing anything.
 ---@private
 function TomTomArrow:RemoveCurrent()
 	if self.uid and TomTom:IsValidWaypoint(self.uid) then

@@ -6,9 +6,8 @@ local ADDON_NAME, Addon = ...
 local Keys = Addon.PreferenceKeys
 local L = Addon.L
 
---- Cada acao aceita o termo em ingles e o em portugues: quem le a interface
---- traduzida digita o que esta escrito nela, e quem le em ingles digita o que
---- esta escrito na dele.
+--- Each action takes the English term and the translated one, so the player
+--- types what is written on their own interface.
 local STATUS_ARGUMENTS = { status = true }
 local HELP_ARGUMENTS = { help = true, ajuda = true }
 local RESET_ARGUMENTS = { reset = true, posicao = true }
@@ -27,9 +26,8 @@ local DELETE_ACTIVE_WARNING = L.PROFILE_DELETE_ACTIVE
 local EXPORT_MESSAGE = L.PROFILE_EXPORT_MESSAGE
 local IMPORT_QUESTION = L.PROFILE_IMPORT_QUESTION
 
---- Imports land in one known profile rather than in a name the text carries:
---- an import that silently overwrote whatever it was named after would be a
---- trap, and this one is always the same, visible place.
+--- Imports land in one known profile: taking the name from the text would let
+--- an import overwrite a profile without the player noticing.
 local IMPORTED_PROFILE_NAME = L.PROFILE_IMPORTED_NAME
 
 local ADDON_AUTHOR = "Lucascodev"
@@ -100,9 +98,9 @@ local function Build()
 	)
 	local profile = profiles:Current()
 
-	-- As fontes empacotadas não têm glifo CJK. Nesses clientes o padrão de
-	-- fábrica vira a fonte do jogo, e uma escolha delas já gravada é migrada:
-	-- gravada, era ilegível de qualquer forma.
+	-- The bundled fonts have no CJK glyphs, so on those clients the default
+	-- becomes the game font and a saved choice of them is migrated: kept, it
+	-- would be unreadable anyway.
 	if Addon.ClientFont.PrefersGameFont() then
 		local gameFont = Addon.MediaLibrary.GAME_FONT_NAME
 
@@ -139,7 +137,7 @@ local function Build()
 				PlayCompletionSound()
 			end
 
-			-- Desligar a integração recolhe a seta na hora, sem esperar evento.
+			-- Switching the integration off pulls the arrow back right away.
 			if changedKey == Keys.TOMTOM_ENABLED and waypointSync then
 				waypointSync:Sync()
 			end
@@ -180,9 +178,9 @@ local function Build()
 		logger
 	)
 
-	-- A world quest is a real quest and answers to the same actions. A bonus
-	-- objective is not: it has no quest log page and was never tracked on
-	-- purpose, so it gets its own, shorter set.
+	-- A world quest is a real quest and takes the same actions. A bonus
+	-- objective has no quest log page and was never tracked on purpose, so it
+	-- gets a shorter set.
 	local questActions = Addon.QuestEntryActions.New(waypoints)
 	local collectableActions = Addon.CollectableEntryActions.New()
 	local actions = Addon.EntryActionRouter.New({
@@ -207,9 +205,8 @@ local function Build()
 		profile.ownTrackerState
 	)
 
-	-- Filled further down rather than here: the buttons are built after the
-	-- display because what their menus do is written in terms of it. The display
-	-- only reads this table when it refreshes, which is after all of that.
+	-- Filled further down: the buttons are built after the display, and the
+	-- display only reads this table when it refreshes.
 	local widgets = {}
 
 	display = Addon.TrackerDisplay.New(
@@ -259,9 +256,8 @@ local function Build()
 	Addon.ChallengeTimer.New(RefreshFromGame):Start()
 	Addon.QuestPopupSource.Start()
 
-	-- Switching a profile reloads the interface. Re-pointing every table already
-	-- handed to the frame and the providers would work until one was forgotten,
-	-- and a forgotten one fails silently.
+	-- Switching a profile reloads the interface: re-pointing every table handed
+	-- out would work until one was forgotten, and that fails silently.
 	local profileCommands = {
 		profileNames = function()
 			return profiles:Names()
@@ -335,8 +331,8 @@ local function Build()
 	)
 	optionsPanel:Register()
 
-	-- Toggles go through the settings object like every other change, so the
-	-- options panel and the menu can never disagree.
+	-- Toggles go through the settings object, so the panel and the menu cannot
+	-- disagree.
 	filterButton = Addon.TrackerFilterButton.New(Addon.QuestFilters, {
 		filterCounts = function()
 			return filtering:Counts()
@@ -457,8 +453,7 @@ local function Build()
 			return
 		end
 
-		-- A frame dragged off screen cannot be reached to be dragged back, and
-		-- the options panel has no plain button to put this on.
+		-- A frame dragged off screen cannot be reached to be dragged back.
 		if RESET_ARGUMENTS[command] then
 			ownTracker:ResetPosition()
 			return
@@ -482,8 +477,6 @@ end
 --- Everything that touches a frame, the quest log or the chat waits for the UI
 --- to exist.
 local function Start()
-	-- Added right to left in this order, which is where they sat when each one
-	-- still carried its own offset.
 	local headerButtons = ownTracker:HeaderButtons()
 
 	collapseButton:Attach(headerButtons, ownTracker:IsCollapsed())
@@ -492,7 +485,7 @@ local function Start()
 	integrationButton:Attach(headerButtons)
 	minimapButton:Attach()
 	display:Refresh()
-	-- Entrar no jogo já supervisionando uma missão também merece a seta.
+	-- Logging in already following a quest deserves the arrow too.
 	waypointSync:Sync()
 	startup:Run()
 end

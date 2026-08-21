@@ -1,6 +1,6 @@
 local _, Addon = ...
 
---- Geometria das páginas: só matemática, sem frame, para o layout ser testável
+--- Page geometry: plain maths, no frames, so the layout can be tested
 --- fora do jogo. As alturas chegam medidas; aqui vive o empilhamento.
 ---@class OptionsSchematic
 local OptionsSchematic = {}

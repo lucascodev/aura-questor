@@ -4,8 +4,6 @@ local SECONDS_PER_MINUTE = 60
 local SECONDS_PER_HOUR = 3600
 local COLOR_CHANNEL_MAXIMUM = 255
 
---- Gold for the part already done, so "9/16" reads as progress at a glance
---- instead of as one grey number.
 local PROGRESS_HEX = "ffd100"
 
 local OBJECTIVE_COLOR = { red = 0.82, green = 0.82, blue = 0.82 }
@@ -20,8 +18,6 @@ local EntryText = {}
 EntryText.TITLE_COLOR = { red = 1, green = 0.82, blue = 0 }
 EntryText.TITLE_COMPLETE_COLOR = { red = 0.1, green = 1, blue = 0.1 }
 
---- The one the arrow is following reads brighter than the rest. The pin already
---- says so, but only if you are looking at the pin.
 EntryText.TITLE_TRACKED_COLOR = { red = 1, green = 0.97, blue = 0.88 }
 
 --- Public so the countdown can be rewritten once a second without rebuilding
@@ -59,8 +55,8 @@ local function HighlightProgress(text)
 	return ("|cff%s%s|r%s"):format(PROGRESS_HEX, current, remainder)
 end
 
---- The level reads in the game's own difficulty colour, the same one the quest
---- log uses, so green really means trivial.
+--- The level takes the game's own difficulty colour, the one the quest log
+--- uses.
 ---@param entry TrackerEntry
 ---@return string
 function EntryText.Title(entry)
@@ -101,7 +97,8 @@ function EntryText.Rows(entry)
 	end
 
 	for _, objective in ipairs(entry.objectives) do
-		-- Card e widget têm moldura própria, então o traço de objetivo sobraria.
+		-- Cards and widgets have their own frame, so the objective dash would be
+		-- one mark too many.
 		local isFramed = objective.card ~= nil or objective.widgetSetID ~= nil
 
 		local color = objective.isComplete and OBJECTIVE_COMPLETE_COLOR or OBJECTIVE_COLOR
@@ -113,8 +110,8 @@ function EntryText.Rows(entry)
 			widgetSetID = objective.widgetSetID,
 		})
 
-		-- A barra diz a fração, não o que está sendo medido. Sozinha, "0%" não
-		-- informa nada, então ela vem depois da linha em vez de no lugar dela.
+		-- The bar shows the share, not what is being measured. On its own "0%"
+		-- says nothing, so it comes after the line instead of replacing it.
 		if objective.percent and not isFramed then
 			table.insert(rows, { text = objective.text, color = color, percent = objective.percent })
 		end

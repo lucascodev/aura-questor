@@ -89,7 +89,7 @@ function OptionsPanel:SelectValue(key, value)
 end
 
 --- A Blizzard protege a abertura do painel em combate; tentar mesmo assim
---- gera ação bloqueada em nome do addon, então o clique vira um aviso.
+--- raises a blocked action in the addon's name, so the click becomes a warning.
 ---@private
 ---@return boolean
 function OptionsPanel:CanOpenNow()

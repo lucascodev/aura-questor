@@ -63,8 +63,8 @@ local BUNDLED_LATIN_FONTS = {
 	["JetBrains Mono"] = true,
 }
 
---- As fontes que acompanham o addon não têm glifo CJK; nesses clientes elas
---- ficam fora do acervo, para o seletor não oferecer fonte que vira quadrado.
+--- The bundled fonts have no CJK glyphs, so on those clients they stay out of
+--- the shared pool and the picker never offers a font that draws boxes.
 ---@param name string
 ---@return boolean
 function MediaLibrary.IsBundledLatinFont(name)

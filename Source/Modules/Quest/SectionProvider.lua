@@ -126,8 +126,8 @@ local function ReadEntry(questID, groupNames)
 	return entry, info.campaignID ~= nil
 end
 
---- Uma missão oferecida à distância ainda não está no diário, então a entrada
---- se resume ao aviso da própria Blizzard.
+--- A quest offered from a distance is not in the log yet, so the entry is only
+--- the game's own popup.
 ---@param questID number
 ---@return TrackerEntry?
 local function ReadOfferEntry(questID)
@@ -148,8 +148,8 @@ local function ReadOfferEntry(questID)
 	}
 end
 
---- Missões com aviso pendente aparecem mesmo fora da lista de observadas: o
---- jogador precisa vê-las para poder completar dali.
+--- Quests with a pending popup show even when not watched: the player has to
+--- see them to complete from there.
 ---@param campaign TrackerSection
 ---@param quests TrackerSection
 ---@param groupNames table<number, string>

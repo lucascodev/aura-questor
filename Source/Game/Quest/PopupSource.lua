@@ -2,11 +2,11 @@ local _, Addon = ...
 
 local COMPLETE_POPUP = "COMPLETE"
 
---- Missões que se completam à distância entram numa fila de avisos do cliente,
---- fora da lista de observadas. Quem alimenta a fila no QUEST_AUTOCOMPLETE é o
---- rastreador da Blizzard, que este addon esconde; registrar por conta própria
---- garante o aviso sem depender dele. AddAutoQuestPopUp ignora repetidos, então
---- o som toca uma vez só, alimente a fila quem alimentar.
+--- Quests that complete from a distance go into a client popup queue, outside
+--- the watch list. The one filling that queue on QUEST_AUTOCOMPLETE is
+--- Blizzard's tracker, which this addon hides, so registering on our own keeps
+--- the popup coming. AddAutoQuestPopUp ignores repeats, so the sound plays once
+--- no matter who filled the queue.
 ---@class QuestPopupSource
 local QuestPopupSource = {}
 

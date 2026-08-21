@@ -1,8 +1,8 @@
 ---@meta
 
---- Uma célula da grade de uma página de opções. Com key, o que faltar vem do
---- catálogo por inferência; sem key, a célula descreve o próprio controle.
---- build entrega um frame pronto, para conteúdo que só a página sabe desenhar.
+--- A cell in the grid of an options page. With a key, whatever is missing comes
+--- from the catalog; without one, the cell describes its own control. build
+--- hands over a ready frame, for content only the page knows how to draw.
 ---@class SchematicCell
 ---@field key? string
 ---@field style? "switch"|"slider"|"dropdown"|"dropdownRow"|"swatch"|"fact"
@@ -12,7 +12,7 @@
 ---@field label? string
 ---@field hint? string
 ---@field suffix? string
----@field maximum? number|fun(): number Teto do controle quando o do catálogo não serve.
+---@field maximum? number|fun(): number Ceiling for the control when the catalog one does not fit.
 ---@field value? string
 ---@field choices? fun(): PreferenceChoice[]
 ---@field get? fun(): any
@@ -20,8 +20,8 @@
 ---@field isEnabled? fun(): boolean
 ---@field build? fun(parent: table, width: number): table
 
---- Uma seção vira um card. As linhas alternam listas de células e o marcador
---- "divider", que desenha a régua interna.
+--- A section becomes a card. Rows alternate lists of cells and the "divider"
+--- marker, which draws the inner rule.
 ---@class SchematicSection
 ---@field title? string
 ---@field rows (SchematicCell[]|"divider")[]

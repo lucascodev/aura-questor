@@ -17,9 +17,9 @@ local MENU_SCREEN_FRACTION = 0.4
 ---@class OptionsControls
 local OptionsControls = {}
 
---- Um teto pode chegar medido do cliente, e medida tirada cedo demais nasce
---- errada: no ADDON_LOADED a escala da interface ainda não vale, e a tela
---- responde outro tamanho. Por isso ele é resolvido de novo a cada Refresh.
+--- A ceiling can arrive measured from the client, and a measure taken too early
+--- is wrong: on ADDON_LOADED the interface scale does not apply yet. That is why
+--- it is resolved again on every Refresh.
 ---@param bound number|fun(): number
 ---@return number
 local function Resolve(bound)
@@ -131,9 +131,9 @@ function OptionsControls.Dropdown(parent, options)
 	dropdown:SetSize(options.width or Theme.COLUMN_WIDTH, Theme.INPUT_HEIGHT)
 
 	dropdown:SetupMenu(function(_, rootDescription)
-		-- Cada addon de mídia instalado soma entradas ao acervo, e a lista inteira
-		-- passava da borda da tela: o que caía embaixo ficava impossível de
-		-- escolher. Com a rolagem o menu para de crescer na altura.
+		-- Every media addon installed adds entries to the pool, and the whole list
+		-- ran past the edge of the screen, leaving what fell below impossible to
+		-- pick.
 		rootDescription:SetScrollMode(UIParent:GetHeight() * MENU_SCREEN_FRACTION)
 
 		for _, choice in ipairs(options.choices()) do
