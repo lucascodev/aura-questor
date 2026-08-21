@@ -5,7 +5,7 @@ local BADGE_GLOW_SIZE = 38
 local BADGE_GAP = 6
 
 --- A font string centres on its bounding box, descender included, which leaves
---- the digit looking low inside the pin. One pixel up puts it back.
+--- the digit sitting low inside the pin.
 local NUMBER_OFFSET_Y = 1
 
 local TITLE_SIZE_DELTA = 0
@@ -49,8 +49,6 @@ local BAR_BACKGROUND_COLOR = { red = 0.04, green = 0.07, blue = 0.18, alpha = 1 
 local BAR_FILL_COLOR = { red = 0.26, green = 0.42, blue = 1 }
 local BAR_COMPLETE_COLOR = { red = 0.16, green = 0.55, blue = 0.28 }
 
---- A countdown gets a card of its own: the number is the thing being watched,
---- and as one more dashed line it reads like a footnote.
 local CARD_PADDING = 8
 local CARD_GAP = 4
 local CARD_ART_TEXT_INSET_X = 15
@@ -64,16 +62,14 @@ local CARD_BACKDROP = {
 local CARD_BACKGROUND_COLOR = { red = 0.04, green = 0.05, blue = 0.09, alpha = 0.75 }
 local CARD_BORDER_COLOR = { red = 0.32, green = 0.29, blue = 0.24, alpha = 1 }
 
---- Hung off the right edge, on the block's vertical centre: at the head of the
---- title it squeezed the name aside to make room for the icon.
 local ITEM_SIZE = 32
 local ITEM_GAP = 6
 local ITEM_ICON_INSET = 2
---- The standard trim that cuts the baked-in edge off an icon before framing it.
+--- Cuts the edge baked into the icon before it is framed.
 local ITEM_ICON_CROP = 0.08
 local ITEM_BORDER_ATLAS = "UI-HUD-ActionBar-IconFrame"
---- Andar não dispara evento, então o alcance é conferido por tempo, no mesmo
---- ritmo e vermelho do botão de item da Blizzard.
+--- Walking fires no event, so range is checked on a timer, at the same rate and
+--- red as Blizzard's own item button.
 local ITEM_RANGE_INTERVAL = 0.3
 local ITEM_OUT_OF_RANGE_COLOR = { red = 1, green = 0.1, blue = 0.1 }
 local TAG_SIZE = 18
@@ -82,19 +78,16 @@ local GROUP_SIZE = 20
 local GROUP_GAP = 4
 local LINE_SPACING = 2
 
---- Shown when a quest reports an item but no icon comes with it. An empty
---- button would look like the feature is broken; this says "found it, missing
---- the art".
+--- Used when a quest reports an item but no icon comes with it. An empty
+--- button would read as broken.
 local FALLBACK_ICON = "Interface\\Icons\\INV_Misc_QuestionMark"
 
 local BADGE_GLOW_ATLAS = "UI-QuestPoi-OuterGlow"
 local BADGE_COLOR = { red = 0.6, green = 0.75, blue = 1 }
 
---- Recycles the widgets that draw a single entry.
 ---
---- Pooling is not an optimisation here. QUEST_LOG_UPDATE fires constantly, and
---- creating frames per refresh would leak widgets for the whole session, WoW
---- never frees them.
+--- Frames are reused because the game never frees the ones already created,
+--- and QUEST_LOG_UPDATE fires constantly.
 ---@class EntryBlockPool
 ---@field private parent table
 ---@field private actions EntryActions
@@ -118,15 +111,11 @@ function EntryBlockPool.New(parent, actions)
 	}, EntryBlockPool)
 end
 
---- True once any block holds a quest item button, which is what turns the
---- layout into something combat can block.
 ---@return boolean
 function EntryBlockPool:IsProtected()
 	return self.hasSecureChildren
 end
 
---- Which slot a row takes: the pool keeps one list per kind, and a block's
---- shape is the sequence of kinds its rows filled.
 ---@param row table
 ---@return string
 local function RowKind(row)
@@ -163,8 +152,6 @@ local function CreateBlock(parent, actions)
 	highlight:SetColorTexture(1, 1, 1, 0.05)
 	highlight:SetAllPoints()
 
-	-- The pin is Blizzard's own quest POI art, and clicking it does what clicking
-	-- it does on the map: points the arrow at that objective.
 	local badge = CreateFrame("Button", nil, frame)
 	badge:SetSize(BADGE_SIZE, BADGE_SIZE)
 	badge:SetPoint("TOPLEFT")
@@ -193,7 +180,6 @@ local function CreateBlock(parent, actions)
 	title:SetPoint("TOPLEFT", frame, "TOPLEFT", BADGE_SIZE + BADGE_GAP, 0)
 	title:SetJustifyH("LEFT")
 
-	-- The green eye Blizzard puts on group content, same atlas and all.
 	local group = CreateFrame("Button", nil, frame)
 	group:SetSize(GROUP_SIZE, GROUP_SIZE)
 	group:SetPoint("TOPRIGHT")
@@ -216,9 +202,8 @@ local function CreateBlock(parent, actions)
 		widgets = {},
 	}
 
-	-- Clicking the pin of what is already being followed lets go of it, the way
-	-- Blizzard's own quest pin does. Without it there was no way back to no
-	-- selection at all once one had been made.
+	-- Clicking what is already followed drops it, otherwise there is no way
+	-- back to following nothing.
 	badge:SetScript("OnClick", function()
 		if not block.entry then
 			return
@@ -272,8 +257,6 @@ local function CreateBlock(parent, actions)
 	return block
 end
 
---- Hangs a widget from the top of the block, offset so its middle lines up with
---- the middle of the header row.
 ---@param widget table
 ---@param point string TOPLEFT or TOPRIGHT.
 ---@param offsetX number
@@ -393,11 +376,9 @@ end
 
 ---@param block table
 ---@return table
---- A hidden container stops receiving widget updates, and it does not catch
---- up by itself when it is shown again: whatever the set dropped in the
---- meantime stays drawn beside what it added, which is how a delve came back
---- with last visit's tier card next to the current one. Registering again on
---- show rebuilds it from the set as it is now.
+--- While hidden the container stops receiving updates and does not catch up on
+--- its own: a delve came back with last visit's tier beside the current one.
+--- Registering again on show rebuilds it.
 ---@param container table
 local function ResyncWidgetSet(container)
 	local widgetSetID = container.widgetSetID
@@ -410,10 +391,9 @@ local function ResyncWidgetSet(container)
 	container:RegisterForWidgetSet(widgetSetID, DefaultWidgetLayout)
 end
 
---- The same two layout keys Blizzard's stage container declares. The step set
---- carries one header widget per state (tier known, tier unknown, hidden) and
---- relies on them overlapping, the current one drawn on top; the default
---- layout stacks them, and a delve showed last visit's tier under this one.
+--- The two layout keys Blizzard's stage container uses. The set expects its
+--- headers overlapped, one per state; stacked, a delve showed last visit's tier
+--- under the current one.
 local WIDGET_ANCHOR_POINT = "TOPRIGHT"
 local WIDGET_RELATIVE_POINT = "TOPRIGHT"
 
@@ -472,11 +452,9 @@ local function CreateLine(block)
 	return line
 end
 
---- Created only for the rare quest that actually carries an item.
----
---- A SecureActionButton makes every frame above it protected, and moving or
---- hiding a protected frame in combat is blocked. Creating one per block cost
---- that protection on all nineteen blocks while showing zero items.
+--- Created only for the quest that carries an item. A SecureActionButton makes
+--- every frame above it protected, and a protected frame cannot be moved or
+--- hidden in combat.
 ---@param block table
 ---@return table
 local function CreateItemButton(block)
@@ -513,8 +491,6 @@ local function CreateItemButton(block)
 	block.itemCount = item:CreateFontString(nil, "OVERLAY", "NumberFontNormalSmall")
 	block.itemCount:SetPoint("BOTTOMRIGHT", -ITEM_ICON_INSET, ITEM_ICON_INSET)
 
-	-- OnUpdate only runs while the button is shown, so the check costs nothing
-	-- when no entry carries an item.
 	local sinceCheck = 0
 	item:SetScript("OnUpdate", function(_, elapsed)
 		sinceCheck = sinceCheck + elapsed
@@ -570,10 +546,10 @@ local function UpdateItem(pool, block, entry)
 
 	block.item:SetAttribute("item", item.link)
 	block.icon:SetTexture(item.texture or FALLBACK_ICON)
-	-- A recycled button may still be red from the entry it drew before.
+	-- A reused button may still be red from the entry it drew before.
 	block.icon:SetVertexColor(1, 1, 1)
 
-	-- One charge is implied by the button existing; only more is worth a number.
+	-- A single charge is implied by the button being there.
 	block.itemCount:SetShown(item.charges > 1)
 	block.itemCount:SetText(item.charges)
 	block.itemCooldown:SetCooldown(item.cooldownStart, item.cooldownDuration)
@@ -583,15 +559,15 @@ local function UpdateItem(pool, block, entry)
 	return true
 end
 
---- Stored rather than applied here: blocks are pooled, so the font is put on
---- each one as it is built, which also covers blocks created later.
+--- Stored instead of applied: each block takes the font as it is built, which
+--- also covers the ones built later.
 ---@param style TrackerFontStyle
 function EntryBlockPool:SetFont(style)
 	self.fontStyle = style
 end
 
---- Off means the button is never created, and a block with no secure child is a
---- block combat cannot lock.
+--- Off means no button is created, and a block without one is never locked by
+--- combat.
 ---@param isShown boolean
 function EntryBlockPool:SetItemButtonsShown(isShown)
 	self.areItemButtonsShown = isShown
@@ -640,10 +616,8 @@ function EntryBlockPool:BarHeight()
 	return self.progressBarHeight or BAR_DEFAULT_HEIGHT
 end
 
---- Devolve a altura, porque ela sai do tamanho da fonte escolhida e o layout
---- não tem como saber antes de o texto estar posto.
---- Registrar de novo o mesmo conjunto destruiria e recriaria cada widget a
---- cada refresh; o jogo mantém o conteúdo vivo sozinho.
+--- Registering the same set again would destroy and recreate every widget on
+--- each refresh; the game keeps the content alive on its own.
 ---@private
 ---@param container table
 ---@param widgetSetID number
@@ -664,9 +638,9 @@ end
 ---@param width number
 ---@return number
 function EntryBlockPool:ApplyCard(card, content, width)
-	-- Com arte própria a moldura desenhada sobraria por baixo dela, aparecendo
-	-- nas beiradas onde o atlas é transparente. A borda decorada do atlas também
-	-- pede recuos maiores para o texto não sentar sobre o desenho.
+	-- With its own art the drawn frame would show through where the atlas is
+	-- transparent, and its decorated edge needs wider padding so the text does
+	-- not sit on the drawing.
 	local hasArt = content.atlas ~= nil
 	local frameAlpha = hasArt and 0 or 1
 	local paddingLeft = hasArt and CARD_ART_TEXT_INSET_X or CARD_PADDING
@@ -722,8 +696,8 @@ function EntryBlockPool:ApplyCard(card, content, width)
 
 	local height = top + CARD_PADDING
 
-	-- A arte tem altura própria; um card mais baixo cortaria a moldura no meio
-	-- do desenho.
+	-- The art has its own height, and a shorter card would cut the frame in the
+	-- middle of the drawing.
 	if hasArt then
 		local atlasInfo = C_Texture.GetAtlasInfo(content.atlas)
 		height = math.max(height, atlasInfo.height)
@@ -796,8 +770,6 @@ function EntryBlockPool:ApplyFont(block)
 	Addon.FontStyler.Apply(block.title, self.fontStyle, TITLE_SIZE_DELTA)
 end
 
---- Lines are created as the entry needs them, so each one is dressed on its way
---- into the layout rather than in a sweep that would miss the new ones.
 ---@private
 ---@param line table
 function EntryBlockPool:ApplyLineFont(line)
@@ -950,7 +922,6 @@ function EntryBlockPool:ReleaseAll()
 	self.used = 0
 end
 
---- Called once the render has taken what it needs.
 function EntryBlockPool:HideUnused()
 	for index = self.used + 1, #self.blocks do
 		self.blocks[index].frame:Hide()
