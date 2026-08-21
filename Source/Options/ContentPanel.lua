@@ -8,8 +8,9 @@ local ContentPanel = {}
 ---@param category table
 ---@param catalog Preference[]
 ---@param preferences Preferences
+---@param commands table Reading and arranging the tracker's sections.
 ---@return table subcategory
-function ContentPanel.Register(category, catalog, preferences)
+function ContentPanel.Register(category, catalog, preferences, commands)
 	local page = Addon.OptionsPage.New({
 		title = Addon.L.PAGE_CONTENT,
 		subtitle = Addon.L.PAGE_CONTENT_HINT,
@@ -36,6 +37,18 @@ function ContentPanel.Register(category, catalog, preferences)
 				},
 				{
 					{ key = Keys.INSTANCE_FOCUS },
+					{ key = Keys.HIDE_WHEN_EMPTY },
+				},
+				{
+					{ key = Keys.AUTO_EXPAND },
+				},
+			},
+		},
+		{
+			title = Addon.L.PREF_SECTION_ORDER,
+			rows = {
+				{
+					{ build = Addon.OptionsSectionList.Cell(commands), span = 2 },
 				},
 			},
 		},

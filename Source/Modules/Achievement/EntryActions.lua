@@ -1,5 +1,7 @@
 local _, Addon = ...
 
+local WOWHEAD_ACHIEVEMENT = "achievement"
+
 --- EntryActions for tracked achievements.
 ---@class AchievementEntryActions : EntryActions
 local AchievementEntryActions = {}
@@ -63,6 +65,15 @@ function AchievementEntryActions:MenuItems(entry)
 			label = OBJECTIVES_VIEW_ACHIEVEMENT,
 			run = function()
 				self:OpenDetails(entry)
+			end,
+		},
+		{
+			label = Addon.L.MENU_WOWHEAD,
+			run = function()
+				Addon.NamePrompt.Show(
+					Addon.L.MENU_WOWHEAD_MESSAGE,
+					Addon.WowheadLink.For(WOWHEAD_ACHIEVEMENT, entry.id, GetLocale())
+				)
 			end,
 		},
 		{

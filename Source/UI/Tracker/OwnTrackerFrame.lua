@@ -37,6 +37,8 @@ local EXPANDED_MARK = "-"
 local COLLAPSED_MARK = "+"
 
 --- Collapsed, only the header and the rule under it are left.
+--- Breathing room left between the window and the bottom edge of the screen.
+local SCREEN_MARGIN = 8
 local COLLAPSED_HEIGHT = FRAME_PADDING * 2 + HEADER_HEIGHT + HEADER_RULE_GAP + SECTION_LINE_THICKNESS
 
 local TITLE_SIZE_DELTA = 1
@@ -102,7 +104,11 @@ function OwnTrackerFrame:Build(addonInfo, position)
 	root:SetScript("OnDragStart", root.StartMoving)
 	root:SetScript("OnDragStop", function(frame)
 		frame:StopMovingOrSizing()
-		self.position:Save()
+		self:PinTop()
+
+		-- The room under the window changed with it, and dragging redraws
+		-- nothing on its own.
+		self:ApplyHeight()
 	end)
 	root:Hide()
 
@@ -343,6 +349,10 @@ function OwnTrackerFrame:Render(sections)
 
 	self.pool:HideUnused()
 	self.content:SetHeight(math.max(offset, 1))
+
+	-- After the content is measured: with the height following the list, the
+	-- window only knows its size once the list has one.
+	self:ApplyHeight()
 	self:SyncCountdownTicker()
 end
 
@@ -386,6 +396,7 @@ function OwnTrackerFrame:SetAppearance(appearance)
 	end
 
 	self.expandedHeight = appearance.height
+	self.isAutoHeight = appearance.isAutoHeight
 	self.root:SetWidth(appearance.width)
 	self.content:SetWidth(appearance.width - FRAME_PADDING * 2)
 
@@ -404,19 +415,63 @@ function OwnTrackerFrame:IsCollapsed()
 	return self.state.isCollapsed == true
 end
 
+--- How far the window can grow before it reaches the bottom of the screen. Past
+--- that the game pushes the whole frame up to keep it on screen, and the header
+--- travels with it; stopping here leaves the header still and lets the list
+--- scroll instead.
+---@private
+---@return number
+function OwnTrackerFrame:RoomBelow()
+	local top = self.root:GetTop()
+
+	if not top then
+		return math.huge
+	end
+
+	return top - SCREEN_MARGIN
+end
+
+--- What the list needs right now, never past the height the player chose, which
+--- becomes a ceiling instead of a fixed size.
+---@private
+---@return number
+function OwnTrackerFrame:WantedHeight()
+	if not self.isAutoHeight then
+		return math.max(math.min(self.expandedHeight, self:RoomBelow()), COLLAPSED_HEIGHT)
+	end
+
+	-- Everything around the list is what the collapsed window already is, plus
+	-- the padding under it.
+	local needed = self.content:GetHeight() + COLLAPSED_HEIGHT + FRAME_PADDING
+	local room = math.min(self.expandedHeight, self:RoomBelow())
+
+	return math.max(math.min(needed, room), COLLAPSED_HEIGHT)
+end
+
 ---@private
 function OwnTrackerFrame:ApplyHeight()
 	local isCollapsed = self:IsCollapsed()
 
-	self.root:SetHeight(isCollapsed and COLLAPSED_HEIGHT or self.expandedHeight)
+	-- Held by the top before the height moves: anchored anywhere else, and the
+	-- factory position is anchored to the right edge, a taller or shorter list
+	-- would carry the header with it.
+	self:PinTop()
+
+	self.root:SetHeight(isCollapsed and COLLAPSED_HEIGHT or self:WantedHeight())
 	self.scroll:SetShown(not isCollapsed)
 end
 
---- Anchored by the top corner: around a centre or bottom anchor the header
---- would jump every time the height changed.
+--- The top corner is what stays put while the height changes: the header is the
+--- part the player aims at, and collapsing has to leave it where it was.
+--- Anchoring by the bottom instead makes the header fall to the foot of the
+--- window every time the list shrinks.
 ---@private
 function OwnTrackerFrame:PinTop()
 	local left, top = self.root:GetLeft(), self.root:GetTop()
+
+	if not left or not top then
+		return
+	end
 
 	self.root:ClearAllPoints()
 	self.root:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", left, top)
@@ -442,6 +497,16 @@ function OwnTrackerFrame:ToggleCollapsed()
 	end
 
 	return self:IsCollapsed()
+end
+
+--- Opens a collapsed tracker, for when something new was tracked and the list
+--- has no way to say so.
+function OwnTrackerFrame:Expand()
+	if not self:IsCollapsed() or self:IsLockedByCombat() then
+		return
+	end
+
+	self:ToggleCollapsed()
 end
 
 ---@param style TrackerFontStyle

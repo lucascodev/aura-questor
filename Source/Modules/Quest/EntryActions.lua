@@ -1,6 +1,7 @@
 local _, Addon = ...
 
 local OFFER_POPUP = "OFFER"
+local WOWHEAD_QUEST = "quest"
 local QUEST_KIND = "quest"
 local WORLD_QUEST_KIND = "worldQuest"
 
@@ -131,6 +132,16 @@ function QuestEntryActions:MenuItems(entry)
 			end,
 		},
 	}
+
+	table.insert(items, {
+		label = Addon.L.MENU_WOWHEAD,
+		run = function()
+			Addon.NamePrompt.Show(
+				Addon.L.MENU_WOWHEAD_MESSAGE,
+				Addon.WowheadLink.For(WOWHEAD_QUEST, entry.id, GetLocale())
+			)
+		end,
+	})
 
 	if self.waypoints and self.waypoints.isAvailable() then
 		table.insert(items, {

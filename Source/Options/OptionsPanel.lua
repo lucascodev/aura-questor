@@ -29,8 +29,8 @@ local PANELS = {
 	},
 	{
 		name = "content",
-		register = function(category, catalog, preferences)
-			return Addon.ContentPanel.Register(category, catalog, preferences)
+		register = function(category, catalog, preferences, sectionCommands)
+			return Addon.ContentPanel.Register(category, catalog, preferences, sectionCommands)
 		end,
 	},
 	{
@@ -48,8 +48,18 @@ local PANELS = {
 ---@param choiceProviders table<string, fun(): PreferenceChoice[]> Lists resolved on open.
 ---@param profileCommands table Everything the profile page can do.
 ---@param logger ChatLogger
+---@param sectionCommands table Reading and arranging the tracker's sections.
 ---@return OptionsPanel
-function OptionsPanel.New(addonInfo, catalog, preferences, info, choiceProviders, profileCommands, logger)
+function OptionsPanel.New(
+	addonInfo,
+	catalog,
+	preferences,
+	info,
+	choiceProviders,
+	profileCommands,
+	logger,
+	sectionCommands
+)
 	return setmetatable({
 		addonInfo = addonInfo,
 		catalog = catalog,
@@ -59,6 +69,7 @@ function OptionsPanel.New(addonInfo, catalog, preferences, info, choiceProviders
 		choiceProviders = choiceProviders or {},
 		profileCommands = profileCommands,
 		logger = logger,
+		sectionCommands = sectionCommands,
 	}, OptionsPanel)
 end
 
@@ -71,7 +82,12 @@ function OptionsPanel:Register()
 	)
 
 	for _, panel in ipairs(PANELS) do
-		self.panels[panel.name] = panel.register(category, self.catalog, self.preferences)
+		self.panels[panel.name] = panel.register(
+			category,
+			self.catalog,
+			self.preferences,
+			self.sectionCommands
+		)
 	end
 
 	Addon.ProfilePanel.Register(category, self.profileCommands)

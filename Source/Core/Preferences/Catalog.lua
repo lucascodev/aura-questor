@@ -50,6 +50,14 @@ local PreferenceCatalog = {
 		step = 20,
 	},
 	{
+		key = Keys.AUTO_HEIGHT,
+		panel = APPEARANCE_PANEL,
+		kind = "boolean",
+		default = true,
+		label = L.PREF_AUTO_HEIGHT,
+		tooltip = L.PREF_AUTO_HEIGHT_TIP,
+	},
+	{
 		key = Keys.EDIT_MODE,
 		panel = APPEARANCE_PANEL,
 		kind = "boolean",
@@ -297,6 +305,22 @@ local PreferenceCatalog = {
 		label = L.PREF_WORLD_QUEST_SCOPE,
 		tooltip = L.PREF_WORLD_QUEST_SCOPE_TIP,
 		choices = Addon.WorldQuestScopes.Choices,
+	},
+	{
+		key = Keys.HIDE_WHEN_EMPTY,
+		panel = CONTENT_PANEL,
+		kind = "boolean",
+		default = true,
+		label = L.PREF_HIDE_WHEN_EMPTY,
+		tooltip = L.PREF_HIDE_WHEN_EMPTY_TIP,
+	},
+	{
+		key = Keys.AUTO_EXPAND,
+		panel = CONTENT_PANEL,
+		kind = "boolean",
+		default = false,
+		label = L.PREF_AUTO_EXPAND,
+		tooltip = L.PREF_AUTO_EXPAND_TIP,
 	},
 	{
 		key = Keys.INSTANCE_FOCUS,
