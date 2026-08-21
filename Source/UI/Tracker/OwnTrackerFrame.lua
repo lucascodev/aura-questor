@@ -105,6 +105,10 @@ function OwnTrackerFrame:Build(addonInfo, position)
 	root:SetScript("OnDragStop", function(frame)
 		frame:StopMovingOrSizing()
 		self:PinTop()
+
+		-- The room under the window changed with it, and dragging redraws
+		-- nothing on its own.
+		self:ApplyHeight()
 	end)
 	root:Hide()
 
