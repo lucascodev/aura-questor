@@ -7,16 +7,16 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
 ### Adicionado
 
-- Os eventos do mundo passam a mostrar o **progresso** que o jogo publica, o
-  mesmo que aparece no ponto do mapa, desenhado pelo próprio jogo dentro do
-  bloco.
+- A contagem regressiva mostra segundos: `4min 32s` abaixo de uma hora e `45s`
+  no último minuto. Acima de uma hora nada muda. O número anda de segundo em
+  segundo enquanto houver contagem na tela.
 
 ### Corrigido
 
 - Evento em andamento não mostrava quanto tempo ainda tinha. O prazo desses não
   vem do agendador, e sim do ponto no mapa, e agora é de lá que ele é lido.
-- A arte, a contagem e a origem do progresso passam a seguir o que o próprio
-  evento pede, em vez de valerem para todos igual.
+- A arte e a contagem de cada evento passam a seguir o que o próprio evento
+  pede, em vez de valerem para todos igual.
 
 ## [0.82.0] - 2026-08-20
 

@@ -56,27 +56,6 @@ local function ReadPinAtlas(eventInfo, poiInfo)
 	return poiInfo.atlasName
 end
 
---- The event's progress is the widget set the map draws in the point's tooltip.
---- An empty set is left out, otherwise the block opens a hole.
----@param eventInfo table
----@param poiInfo table
----@return number?
-local function ReadWidgetSet(eventInfo, poiInfo)
-	local widgetSetID = DisplayInfo(eventInfo).overrideTooltipWidgetSetID or poiInfo.tooltipWidgetSet
-
-	if not widgetSetID or widgetSetID == 0 then
-		return nil
-	end
-
-	local widgets = C_UIWidgetManager.GetAllWidgetsBySetID(widgetSetID)
-
-	if not widgets or #widgets == 0 then
-		return nil
-	end
-
-	return widgetSetID
-end
-
 --- The event can ask for the time to be hidden: some carry their own clock
 --- inside the widget set, and the countdown would show twice.
 ---@param eventInfo table
@@ -103,11 +82,6 @@ local function ReadEntry(eventInfo, secondsLeft)
 	local zoneName = C_EventScheduler.GetEventZoneName(eventInfo.areaPoiID)
 	if zoneName then
 		table.insert(objectives, { text = zoneName, isComplete = false })
-	end
-
-	local widgetSetID = ReadWidgetSet(eventInfo, poiInfo)
-	if widgetSetID then
-		table.insert(objectives, { text = "", widgetSetID = widgetSetID, isComplete = false })
 	end
 
 	local _, superTrackedPoiID = C_SuperTrack.GetSuperTrackedMapPin(Enum.SuperTrackingMapPinType.AreaPOI)
