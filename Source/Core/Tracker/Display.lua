@@ -139,6 +139,8 @@ function TrackerDisplay:ApplyAppearance()
 	self.renderer:SetProgressBarTexture(
 		self.sources.ProgressBar(self.preferences:Get(Keys.PROGRESS_BAR_TEXTURE))
 	)
+	self.renderer:SetProgressBarHeight(self.preferences:Get(Keys.PROGRESS_BAR_HEIGHT))
+	self.renderer:SetProgressBarStyle(self.preferences:Get(Keys.PROGRESS_BAR_STYLE))
 	self.renderer:SetScale(self.preferences:Get(Keys.TRACKER_SCALE) / PERCENTAGE_MAXIMUM)
 	self.renderer:SetEditing(self.preferences:Get(Keys.EDIT_MODE))
 

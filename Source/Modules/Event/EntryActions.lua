@@ -29,10 +29,35 @@ function EventEntryActions:SuperTrack(entry)
 	Addon.SuperTracking.SetMapPin(Enum.SuperTrackingMapPinType.AreaPOI, entry.id)
 end
 
+--- The game has a link type for an event, and uses it in its own reminders, so
+--- an event reaches chat the way a quest does. The call checks the modifier and
+--- whether a chat box is open.
+---@param entry TrackerEntry
+---@return boolean
+function EventEntryActions:InsertChatLink(entry)
+	local link = LinkUtil.FormatLink(LinkTypes.EventPOI, ("[%s]"):format(entry.title), entry.id)
+
+	return ChatFrameUtil.TryInsertChatLink(link) == true
+end
+
+--- Following an event is already a click on its icon, but nothing on screen
+--- says so, and the same pair of labels is what the map pin offers.
 ---@param entry TrackerEntry
 ---@return EntryMenuItem[]
 function EventEntryActions:MenuItems(entry)
 	return {
+		{
+			label = entry.isSuperTracked and POI_REMOVE_FOCUS or POI_FOCUS,
+			run = function()
+				if entry.isSuperTracked then
+					Addon.SuperTracking.Clear()
+
+					return
+				end
+
+				self:SuperTrack(entry)
+			end,
+		},
 		{
 			label = OBJECTIVES_SHOW_QUEST_MAP,
 			run = function()

@@ -1,6 +1,7 @@
 local _, Addon = ...
 
 local BADGE_SIZE = 30
+local BADGE_GLOW_SIZE = 38
 local BADGE_GAP = 6
 
 --- A font string centres on its bounding box, descender included, which leaves
@@ -10,11 +11,43 @@ local NUMBER_OFFSET_Y = 1
 local TITLE_SIZE_DELTA = 0
 local LINE_SIZE_DELTA = -1
 
-local BAR_HEIGHT = 14
+--- The border art of the game's own objective bar is taller than the bar and
+--- hangs over it, by the same amount above and below. The row reserves that
+--- whole height and the bar sits centred in it.
+local BAR_DEFAULT_HEIGHT = 12
+local BAR_BORDER_MARGIN = 7
+local BAR_BORDER_FILE = [[Interface\PaperDollInfoFrame\UI-Character-Skills-BarBorder]]
+local BAR_BORDER_WIDTH = 9
+local BAR_BORDER_OVERHANG = 3
+
+--- The game splits these bars into five parts. Its own art for that is a
+--- decorative piece of a fixed size, 240 by 51 around a bar of 191 by 17, with
+--- the extra width on the right holding the reward ring, so it cannot frame a
+--- bar as wide as the block. The parts are drawn here instead, over whichever
+--- frame the chosen style puts around the bar.
+local BAR_PARTS = 5
+local BAR_DIVIDER_WIDTH = 1
+local BAR_DIVIDER_COLOR = { red = 0, green = 0, blue = 0, alpha = 0.75 }
+
+--- Ours: a thin outline instead of the metal one.
+local BAR_OWN_MARGIN = 2
+local BAR_OWN_OUTLINE_COLOR = { red = 0.35, green = 0.38, blue = 0.46, alpha = 1 }
+
+--- Content the game itself draws with the split frame.
+local BAR_SPLIT_KINDS = {
+	worldQuest = true,
+	bonus = true,
+}
+
+---@param entry TrackerEntry
+---@return boolean
+local function IsSplitBar(entry)
+	return BAR_SPLIT_KINDS[entry.kind] == true
+end
 local FULL_PERCENT = 100
-local BAR_BACKGROUND_COLOR = { red = 0, green = 0, blue = 0, alpha = 0.55 }
-local BAR_FILL_COLOR = { red = 0.16, green = 0.55, blue = 0.28 }
-local BAR_COMPLETE_COLOR = { red = 0.35, green = 0.35, blue = 0.35 }
+local BAR_BACKGROUND_COLOR = { red = 0.04, green = 0.07, blue = 0.18, alpha = 1 }
+local BAR_FILL_COLOR = { red = 0.26, green = 0.42, blue = 1 }
+local BAR_COMPLETE_COLOR = { red = 0.16, green = 0.55, blue = 0.28 }
 
 --- A countdown gets a card of its own: the number is the thing being watched,
 --- and as one more dashed line it reads like a footnote.
@@ -54,6 +87,7 @@ local LINE_SPACING = 2
 --- the art".
 local FALLBACK_ICON = "Interface\\Icons\\INV_Misc_QuestionMark"
 
+local BADGE_GLOW_ATLAS = "UI-QuestPoi-OuterGlow"
 local BADGE_COLOR = { red = 0.6, green = 0.75, blue = 1 }
 
 --- Recycles the widgets that draw a single entry.
@@ -143,6 +177,14 @@ local function CreateBlock(parent, actions)
 	badgeIcon:SetPoint("CENTER")
 	badgeIcon:Hide()
 
+	-- The same glow the map puts behind a pin it is following, for the art that
+	-- has no followed version of itself.
+	local badgeGlow = badge:CreateTexture(nil, "BACKGROUND")
+	badgeGlow:SetAtlas(BADGE_GLOW_ATLAS)
+	badgeGlow:SetSize(BADGE_GLOW_SIZE, BADGE_GLOW_SIZE)
+	badgeGlow:SetPoint("CENTER")
+	badgeGlow:Hide()
+
 	local tag = frame:CreateTexture(nil, "ARTWORK")
 	tag:SetSize(TAG_SIZE, TAG_SIZE)
 	tag:Hide()
@@ -164,6 +206,7 @@ local function CreateBlock(parent, actions)
 		badge = badge,
 		badgeNumber = badgeNumber,
 		badgeIcon = badgeIcon,
+		badgeGlow = badgeGlow,
 		tag = tag,
 		title = title,
 		group = group,
@@ -243,12 +286,58 @@ end
 
 ---@param block table
 ---@return table
+--- One of the three pieces the game's bar frame is made of. The ends keep their
+--- width and the middle stretches between them, which is why the right end
+--- takes the same coordinates mirrored.
+---@param bar table
+---@param left number
+---@param right number
+---@return table
+local function CreateBarBorder(bar, left, right)
+	local border = bar:CreateTexture(nil, "ARTWORK")
+
+	border:SetTexture(BAR_BORDER_FILE)
+	border:SetTexCoord(left, right, 0.193548, 0.774193)
+
+	return border
+end
+
+--- The thin outline of our own bar, one edge at a time.
+---@param bar table
+---@param point string
+---@param isVertical boolean
+---@return table
+local function CreateBarOutline(bar, point, isVertical)
+	local edge = bar:CreateTexture(nil, "OVERLAY")
+
+	edge:SetColorTexture(
+		BAR_OWN_OUTLINE_COLOR.red,
+		BAR_OWN_OUTLINE_COLOR.green,
+		BAR_OWN_OUTLINE_COLOR.blue,
+		BAR_OWN_OUTLINE_COLOR.alpha
+	)
+	edge:SetPoint(point)
+
+	if isVertical then
+		edge:SetPoint(point == "LEFT" and "TOPLEFT" or "TOPRIGHT")
+		edge:SetPoint(point == "LEFT" and "BOTTOMLEFT" or "BOTTOMRIGHT")
+		edge:SetWidth(BAR_DIVIDER_WIDTH)
+	else
+		edge:SetPoint(point == "TOP" and "TOPLEFT" or "BOTTOMLEFT")
+		edge:SetPoint(point == "TOP" and "TOPRIGHT" or "BOTTOMRIGHT")
+		edge:SetHeight(BAR_DIVIDER_WIDTH)
+	end
+
+	return edge
+end
+
+---@param block table
+---@return table
 local function CreateBar(block)
 	local bar = CreateFrame("StatusBar", nil, block.frame)
-	bar:SetHeight(BAR_HEIGHT)
 	bar:SetMinMaxValues(0, FULL_PERCENT)
 
-	local background = bar:CreateTexture(nil, "BACKGROUND")
+	local background = bar:CreateTexture(nil, "BACKGROUND", nil, -1)
 	background:SetColorTexture(
 		BAR_BACKGROUND_COLOR.red,
 		BAR_BACKGROUND_COLOR.green,
@@ -257,8 +346,45 @@ local function CreateBar(block)
 	)
 	background:SetAllPoints()
 
+	local borderLeft = CreateBarBorder(bar, 0.007843, 0.043137)
+	borderLeft:SetPoint("LEFT", -BAR_BORDER_OVERHANG, 0)
+
+	local borderRight = CreateBarBorder(bar, 0.043137, 0.007843)
+	borderRight:SetPoint("RIGHT", BAR_BORDER_OVERHANG, 0)
+
+	local borderMiddle = CreateBarBorder(bar, 0.113726, 0.1490196)
+	borderMiddle:SetPoint("TOPLEFT", borderLeft, "TOPRIGHT")
+	borderMiddle:SetPoint("BOTTOMRIGHT", borderRight, "BOTTOMLEFT")
+
+	bar.gamePieces = { borderLeft, borderRight, borderMiddle }
+	bar.borderEnds = { borderLeft, borderRight }
+
+	bar.outline = {
+		CreateBarOutline(bar, "TOP", false),
+		CreateBarOutline(bar, "BOTTOM", false),
+		CreateBarOutline(bar, "LEFT", true),
+		CreateBarOutline(bar, "RIGHT", true),
+	}
+
+	bar.dividers = {}
+
+	for index = 1, BAR_PARTS - 1 do
+		local divider = bar:CreateTexture(nil, "OVERLAY")
+
+		divider:SetColorTexture(
+			BAR_DIVIDER_COLOR.red,
+			BAR_DIVIDER_COLOR.green,
+			BAR_DIVIDER_COLOR.blue,
+			BAR_DIVIDER_COLOR.alpha
+		)
+		divider:SetWidth(BAR_DIVIDER_WIDTH)
+		divider:SetPoint("TOP")
+		divider:SetPoint("BOTTOM")
+		bar.dividers[index] = divider
+	end
+
 	local label = bar:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-	label:SetPoint("CENTER")
+	label:SetPoint("CENTER", 0, -1)
 
 	bar.label = label
 
@@ -476,6 +602,44 @@ function EntryBlockPool:SetProgressBarTexture(path)
 	self.progressBarTexture = path
 end
 
+---@param height number
+function EntryBlockPool:SetProgressBarHeight(height)
+	self.progressBarHeight = height
+end
+
+---@param style string
+function EntryBlockPool:SetProgressBarStyle(style)
+	self.progressBarStyle = style
+end
+
+--- How much taller than the bar its frame is, which is what the row has to
+--- reserve so a bar never touches the line above it.
+---@private
+---@return number
+function EntryBlockPool:BarMargin()
+	if self.progressBarStyle == Addon.ProgressBarStyles.OWN then
+		return BAR_OWN_MARGIN
+	end
+
+	return BAR_BORDER_MARGIN
+end
+
+---@private
+---@return number
+function EntryBlockPool:BarOverhang()
+	if self.progressBarStyle == Addon.ProgressBarStyles.OWN then
+		return 0
+	end
+
+	return BAR_BORDER_OVERHANG
+end
+
+---@private
+---@return number
+function EntryBlockPool:BarHeight()
+	return self.progressBarHeight or BAR_DEFAULT_HEIGHT
+end
+
 --- Devolve a altura, porque ela sai do tamanho da fonte escolhida e o layout
 --- não tem como saber antes de o texto estar posto.
 --- Registrar de novo o mesmo conjunto destruiria e recriaria cada widget a
@@ -573,8 +737,44 @@ end
 ---@private
 ---@param bar table
 ---@param percent number
-function EntryBlockPool:ApplyBar(bar, percent)
+--- Which frame goes around the bar: the game splits the ones it draws split,
+--- ours marks the same parts with lines, and both agree on which content is
+--- split at all.
+---@private
+---@param bar table
+---@param isSplit boolean
+function EntryBlockPool:DressBar(bar, isSplit)
+	local isOwnStyle = self.progressBarStyle == Addon.ProgressBarStyles.OWN
+	local height = self:BarHeight()
+
+	for _, piece in ipairs(bar.gamePieces) do
+		piece:SetShown(not isOwnStyle)
+	end
+
+	for _, border in ipairs(bar.borderEnds) do
+		border:SetSize(BAR_BORDER_WIDTH, height + BAR_BORDER_MARGIN)
+	end
+
+	for _, edge in ipairs(bar.outline) do
+		edge:SetShown(isOwnStyle)
+	end
+
+	local partWidth = bar:GetWidth() / BAR_PARTS
+
+	for index, divider in ipairs(bar.dividers) do
+		divider:SetShown(isSplit)
+		divider:SetPoint("LEFT", bar, "LEFT", partWidth * index, 0)
+	end
+end
+
+---@param bar table
+---@param percent number
+---@param isSplit boolean
+function EntryBlockPool:ApplyBar(bar, percent, isSplit)
 	local color = percent >= FULL_PERCENT and BAR_COMPLETE_COLOR or BAR_FILL_COLOR
+
+	bar:SetHeight(self:BarHeight())
+	self:DressBar(bar, isSplit)
 
 	bar:SetStatusBarTexture(self.progressBarTexture)
 	bar:SetStatusBarColor(color.red, color.green, color.blue)
@@ -628,15 +828,24 @@ end
 --- New text that wraps to a different height would need the rows below it
 --- moved, which combat forbids; the old text stays until then.
 ---@param line table
----@param row table
+---@param text string
 ---@param height number
-local function RewriteLine(line, row, height)
+---@return boolean written
+local function RewriteText(line, text, height)
 	local previous = line:GetText()
 
-	line:SetText(row.text)
+	line:SetText(text)
 
 	if line:GetStringHeight() ~= height then
 		line:SetText(previous)
+		return false
+	end
+
+	return true
+end
+
+local function RewriteLine(line, row, height)
+	if not RewriteText(line, row.text, height) then
 		return
 	end
 
@@ -661,17 +870,51 @@ function EntryBlockPool:RewriteBlock(block, entry)
 	local usedLines = 0
 	local usedBars = 0
 
+	block.countdown = nil
+
 	for index, row in ipairs(rows) do
 		local slot = block.shape[index]
 
 		if slot.kind == "bar" then
 			usedBars = usedBars + 1
-			self:ApplyBar(block.bars[usedBars], row.percent)
+			self:ApplyBar(block.bars[usedBars], row.percent, IsSplitBar(entry))
 		elseif slot.kind == "line" then
 			usedLines = usedLines + 1
 			RewriteLine(block.lines[usedLines], row, slot.height)
+
+			if row.expiresAt then
+				block.countdown = {
+					line = block.lines[usedLines],
+					expiresAt = row.expiresAt,
+					height = slot.height,
+				}
+			end
 		end
 	end
+end
+
+--- Rewrites only the countdown lines, from the deadline each block kept, so a
+--- ticking second costs no game call and no layout. A line that would change
+--- height keeps the text it had: growing a block is what combat forbids.
+---@return boolean hasCountdown Whether any block is still counting down.
+function EntryBlockPool:RefreshCountdowns()
+	local now = time()
+	local hasCountdown = false
+
+	for index = 1, self.used do
+		local countdown = self.blocks[index].countdown
+
+		if countdown then
+			local secondsLeft = countdown.expiresAt - now
+
+			if secondsLeft > 0 then
+				hasCountdown = true
+				RewriteText(countdown.line, Addon.EntryText.TimeLeft(secondsLeft), countdown.height)
+			end
+		end
+	end
+
+	return hasCountdown
 end
 
 --- In combat the blocks around a quest item are protected: nothing may move,
@@ -739,6 +982,7 @@ end
 function EntryBlockPool:Build(entry, width, index)
 	local block = self:Acquire()
 	block.entry = entry
+	block.countdown = nil
 	block.frame:SetWidth(width)
 
 	-- Before anything is measured: every height below comes from GetStringHeight,
@@ -760,6 +1004,7 @@ function EntryBlockPool:Build(entry, width, index)
 	block.badge:SetShown(hasPin)
 	block.badgeNumber:SetShown(hasPin and style.showsNumber and not pinIcon)
 	block.badgeIcon:SetShown(pinIcon ~= nil)
+	block.badgeGlow:SetShown(hasPin and isSuperTracked and style.glowsWhenSelected == true)
 
 	if pinIcon then
 		block.badgeIcon:SetAtlas(pinIcon.atlas, pinIcon.width == nil)
@@ -862,13 +1107,25 @@ function EntryBlockPool:Build(entry, width, index)
 			local bar = block.bars[usedBars] or CreateBar(block)
 			block.bars[usedBars] = bar
 
-			self:ApplyBar(bar, row.percent)
-			bar:SetWidth(rowWidth)
+			-- The frame around the bar hangs past it on both sides, so the bar is
+			-- narrowed by that much: what lines up with the text is the frame,
+			-- not the fill inside it.
+			local isSplit = IsSplitBar(entry)
+			local overhang = self:BarOverhang()
+
+			bar:SetWidth(rowWidth - overhang * 2)
 			bar:ClearAllPoints()
-			bar:SetPoint("TOPLEFT", block.frame, "TOPLEFT", objectiveLeft, -(height + LINE_SPACING))
+			bar:SetPoint(
+				"TOPLEFT",
+				block.frame,
+				"TOPLEFT",
+				objectiveLeft + overhang,
+				-(height + LINE_SPACING + self:BarMargin() / 2)
+			)
+			self:ApplyBar(bar, row.percent, isSplit)
 			bar:Show()
 
-			height = height + LINE_SPACING + BAR_HEIGHT
+			height = height + LINE_SPACING + self:BarHeight() + self:BarMargin()
 		else
 			usedLines = usedLines + 1
 
@@ -885,6 +1142,10 @@ function EntryBlockPool:Build(entry, width, index)
 
 			local lineHeight = line:GetStringHeight()
 			shape[#shape].height = lineHeight
+
+			if row.expiresAt then
+				block.countdown = { line = line, expiresAt = row.expiresAt, height = lineHeight }
+			end
 
 			height = height + LINE_SPACING + lineHeight
 		end

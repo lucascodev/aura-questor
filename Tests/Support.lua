@@ -113,6 +113,12 @@ function Support.Renderer()
 		SetProgressBarTexture = function(self, path)
 			self.progressBarTexture = path
 		end,
+		SetProgressBarHeight = function(self, height)
+			self.progressBarHeight = height
+		end,
+		SetProgressBarStyle = function(self, style)
+			self.progressBarStyle = style
+		end,
 		SetScale = function(self, scale)
 			self.scale = scale
 		end,

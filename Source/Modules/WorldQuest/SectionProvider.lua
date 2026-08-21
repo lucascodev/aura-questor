@@ -3,6 +3,7 @@ local _, Addon = ...
 local Keys = Addon.PreferenceKeys
 
 local ENTRY_KIND = "worldQuest"
+local PLAYER_UNIT = "player"
 
 --- SectionProvider for world quests.
 ---
@@ -74,7 +75,8 @@ local function ReadEntry(questID)
 		pinIcon = ReadPinIcon(questID),
 		isSuperTrackable = true,
 		isSuperTracked = C_SuperTrack.GetSuperTrackedQuestID() == questID,
-		timeLeftMinutes = C_TaskQuest.GetQuestTimeLeftMinutes(questID),
+		rewardsQuestID = questID,
+		timeLeftSeconds = C_TaskQuest.GetQuestTimeLeftSeconds(questID),
 	}
 end
 
@@ -82,8 +84,11 @@ end
 --- area the player is standing in come first, then the ones tracked from the
 --- map, wherever they are. Reading only the first was why a quest tracked from
 --- another zone never showed up.
+--- Two lists, the same order Blizzard's tracker uses: the world quests whose
+--- area the player is standing in come first, then the ones tracked from the
+--- map, wherever they are.
 ---@return number[]
-local function CollectQuestIDs()
+local function TrackedQuestIDs()
 	local questIDs = {}
 	local seen = {}
 
@@ -111,6 +116,41 @@ local function CollectQuestIDs()
 	return questIDs
 end
 
+--- Every world quest the map of the zone the player is in has to offer, tracked
+--- or not. With the area scope, only the ones the game says the player is
+--- standing in.
+---@param isAreaOnly boolean
+---@return number[]
+local function QuestIDsOnMap(isAreaOnly)
+	local uiMapID = C_Map.GetBestMapForUnit(PLAYER_UNIT)
+
+	if not uiMapID then
+		return {}
+	end
+
+	local questIDs = {}
+
+	for _, poi in ipairs(C_TaskQuest.GetQuestsOnMap(uiMapID) or {}) do
+		local isInArea = GetTaskInfo(poi.questID)
+
+		if QuestUtils_IsQuestWorldQuest(poi.questID) and (not isAreaOnly or isInArea) then
+			table.insert(questIDs, poi.questID)
+		end
+	end
+
+	return questIDs
+end
+
+---@param scope string
+---@return number[]
+local function CollectQuestIDs(scope)
+	if scope == Addon.WorldQuestScopes.ALL then
+		return TrackedQuestIDs()
+	end
+
+	return QuestIDsOnMap(scope == Addon.WorldQuestScopes.AREA)
+end
+
 ---@return TrackerSection[]
 function WorldQuestSectionProvider:Collect()
 	if not self.preferences:Get(Keys.WORLD_QUESTS_ENABLED) then
@@ -119,7 +159,7 @@ function WorldQuestSectionProvider:Collect()
 
 	local entries = {}
 
-	for _, questID in ipairs(CollectQuestIDs()) do
+	for _, questID in ipairs(CollectQuestIDs(self.preferences:Get(Keys.WORLD_QUEST_SCOPE))) do
 		local entry = ReadEntry(questID)
 
 		if entry then

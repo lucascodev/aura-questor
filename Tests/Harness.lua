@@ -28,6 +28,8 @@ local CORE_FILES = {
 	"Preferences/FontFlags",
 	"Preferences/SortModes",
 	"Preferences/SoundChannels",
+	"Preferences/ProgressBarStyles",
+	"Preferences/WorldQuestScopes",
 	"Preferences/Catalog",
 	"Preferences/Store",
 	"Preferences/Lookup",
@@ -44,6 +46,11 @@ local CORE_FILES = {
 	"Commands/Help",
 	"Commands/Startup",
 	"Integration/WaypointSync",
+}
+
+--- Arquivos de UI/ sem API do jogo no escopo do arquivo.
+local UI_FILES = {
+	"Entry/Text",
 }
 
 --- Arquivos de Options/ sem nenhuma API do jogo, carregáveis por Lua puro.
@@ -76,6 +83,10 @@ function Harness.LoadCore()
 
 	for _, name in ipairs(CORE_FILES) do
 		Load("Source/Core/" .. name .. ".lua")
+	end
+
+	for _, name in ipairs(UI_FILES) do
+		Load("Source/UI/" .. name .. ".lua")
 	end
 
 	for _, name in ipairs(OPTIONS_FILES) do

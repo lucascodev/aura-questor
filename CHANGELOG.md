@@ -3,6 +3,52 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Adicionado
+
+- A contagem regressiva mostra segundos: `4min 32s` abaixo de uma hora e `45s`
+  no último minuto. Acima de uma hora nada muda. O número anda de segundo em
+  segundo enquanto houver contagem na tela.
+- O que o jogo mostra no ponto do mapa de um evento, com recompensas e itens,
+  passa a aparecer no tooltip da entrada, que é onde esse conteúdo cabe.
+- O menu do evento ganhou **seguir** e **parar de seguir**, com os mesmos
+  nomes que o jogo usa no ponto do mapa. Clicar no ícone do evento já fazia
+  isso, mas nada dizia.
+- O evento que está sendo seguido ganha o mesmo brilho que o jogo põe atrás do
+  ponto no mapa. A arte própria dele não tem versão de selecionado, então antes
+  não havia como saber qual estava escolhido.
+- Evento vai para o bate-papo com o mesmo clique das missões, usando o link de
+  evento que o próprio jogo criou para os lembretes dele.
+- O tooltip de uma missão passa a mostrar as recompensas com o mesmo bloco que
+  o jogo desenha no mapa, então moeda, reputação e bônus de Modo de Guerra
+  aparecem. O nosso lia só dinheiro e itens, e uma missão mundial paga fora do
+  diário, o que deixava o tooltip dela sem recompensa nenhuma.
+- O tooltip escolhe o lado que tem espaço e fica preso à tela, já que o bloco de
+  recompensas traz o tooltip do item inteiro e o rastreador pode estar em
+  qualquer canto.
+
+### Alterado
+
+- As barras de progresso ganharam estilo à escolha, na página Moldura:
+  **Aura Questor**, plana e com contorno fino, que é o padrão, ou **Blizzard**,
+  com a moldura de metal do rastreador do jogo. Nos dois, missão mundial e
+  objetivo bônus saem divididas em cinco partes, como no rastreador do jogo. A
+  altura também virou preferência.
+
+- Dá para escolher o que a seção de missões mundiais lista, no painel e no menu
+  do funil: **rastreadas**, como era antes, ou **todas desta zona** e **todas de
+  onde estou**, que trazem as missões mundiais ao seu redor mesmo sem você ter
+  rastreado nenhuma. Com **rastreadas**, uma missão seguida pelo mapa continua
+  na lista onde quer que você vá, que é como o rastreador do jogo se comporta.
+
+### Corrigido
+
+- Evento em andamento não mostrava quanto tempo ainda tinha. O prazo desses não
+  vem do agendador, e sim do ponto no mapa, e agora é de lá que ele é lido.
+- A arte e a contagem de cada evento passam a seguir o que o próprio evento
+  pede, em vez de valerem para todos igual.
+
 ## [0.82.0] - 2026-08-20
 
 ### Adicionado

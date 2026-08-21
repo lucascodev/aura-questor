@@ -3,7 +3,6 @@ local _, Addon = ...
 local Keys = Addon.PreferenceKeys
 
 local ENTRY_KIND = "event"
-local SECONDS_PER_MINUTE = 60
 
 --- SectionProvider for world events, read from the event scheduler.
 ---
@@ -26,9 +25,26 @@ end
 local FALLBACK_ATLAS = "UI-EventPoi-Horn-big"
 local LEGACY_GENERIC_ATLAS = "minimap-genericevent-hornicon"
 
+--- A client that does not publish displayInfo yet lands here, and the event
+--- shows up without the display rules instead of erroring.
+local NO_DISPLAY_INFO = {}
+
+---@param eventInfo table
+---@return table
+local function DisplayInfo(eventInfo)
+	return eventInfo.displayInfo or NO_DISPLAY_INFO
+end
+
+---@param eventInfo table
 ---@param poiInfo table
 ---@return string
-local function ReadPinAtlas(poiInfo)
+local function ReadPinAtlas(eventInfo, poiInfo)
+	local overrideAtlas = DisplayInfo(eventInfo).overrideAtlas
+
+	if overrideAtlas then
+		return overrideAtlas
+	end
+
 	if not poiInfo.isCurrentEvent or not poiInfo.atlasName then
 		return FALLBACK_ATLAS
 	end
@@ -38,6 +54,19 @@ local function ReadPinAtlas(poiInfo)
 	end
 
 	return poiInfo.atlasName
+end
+
+--- The event can ask for the time to be hidden: some carry their own clock
+--- inside the widget set, and the countdown would show twice.
+---@param eventInfo table
+---@param secondsLeft number?
+---@return number?
+local function ReadTimeLeft(eventInfo, secondsLeft)
+	if not secondsLeft or secondsLeft <= 0 or DisplayInfo(eventInfo).hideTimeLeft then
+		return nil
+	end
+
+	return secondsLeft
 end
 
 ---@param eventInfo table
@@ -55,6 +84,7 @@ local function ReadEntry(eventInfo, secondsLeft)
 		table.insert(objectives, { text = zoneName, isComplete = false })
 	end
 
+	local displayInfo = DisplayInfo(eventInfo)
 	local _, superTrackedPoiID = C_SuperTrack.GetSuperTrackedMapPin(Enum.SuperTrackingMapPinType.AreaPOI)
 
 	return {
@@ -64,10 +94,11 @@ local function ReadEntry(eventInfo, secondsLeft)
 		objectives = objectives,
 		isComplete = false,
 		canFindGroup = false,
-		pinAtlas = ReadPinAtlas(poiInfo),
+		pinAtlas = ReadPinAtlas(eventInfo, poiInfo),
 		isSuperTrackable = true,
 		isSuperTracked = superTrackedPoiID == eventInfo.areaPoiID,
-		timeLeftMinutes = secondsLeft and math.floor(secondsLeft / SECONDS_PER_MINUTE) or nil,
+		timeLeftSeconds = ReadTimeLeft(eventInfo, secondsLeft),
+		tooltipWidgetSetID = displayInfo.overrideTooltipWidgetSetID or poiInfo.tooltipWidgetSet,
 	}
 end
 
@@ -105,9 +136,10 @@ local function CollectOngoing(entries)
 		return
 	end
 
+	-- Their deadline does not come from the scheduler, but from the map point.
 	for _, eventInfo in ipairs(ongoingEvents) do
 		if not eventInfo.rewardsClaimed then
-			local entry = ReadEntry(eventInfo, nil)
+			local entry = ReadEntry(eventInfo, C_AreaPoiInfo.GetAreaPOISecondsLeft(eventInfo.areaPoiID))
 			if entry then
 				table.insert(entries, entry)
 			end

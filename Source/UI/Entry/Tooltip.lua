@@ -3,6 +3,7 @@ local _, Addon = ...
 local FULL_ALPHA = 1
 local WRAP = true
 local WHITE = { 1, 1, 1 }
+local WIDGET_PADDING = 10
 
 local GROUP_COLOR = { red = 0.45, green = 0.65, blue = 0.9 }
 local OBJECTIVE_COLOR = { red = 0.82, green = 0.82, blue = 0.82 }
@@ -32,15 +33,34 @@ function EntryTooltip.ShowMenu(actions, entry, owner)
 	end)
 end
 
+--- The side with room for it. A rewards block carries the whole item tooltip,
+--- so it can be taller and wider than the tracker itself, and the tracker can
+--- be dragged to either edge of any screen.
+---@param owner table
+---@return string
+local function AnchorFor(owner)
+	local left = owner:GetLeft()
+
+	if left and left < UIParent:GetWidth() / 2 then
+		return "ANCHOR_RIGHT"
+	end
+
+	return "ANCHOR_LEFT"
+end
+
 --- The tracker shows a line per objective; the tooltip is where the briefing
---- fits. Anchored left so it never covers the tracker it came from.
+--- fits.
 ---@param actions EntryActions
 ---@param entry TrackerEntry
 ---@param owner table
 function EntryTooltip.Show(actions, entry, owner)
 	local title = Addon.EntryText.TITLE_COLOR
 
-	GameTooltip:SetOwner(owner, "ANCHOR_LEFT")
+	GameTooltip:SetOwner(owner, AnchorFor(owner))
+
+	-- What is left over after choosing the side: a tall block still has to stay
+	-- on screen.
+	GameTooltip:SetClampedToScreen(true)
 
 	-- SetText takes an alpha before the wrap flag, unlike AddLine. Passing the
 	-- flag straight after the colour lands it in the alpha slot and errors.
@@ -66,15 +86,21 @@ function EntryTooltip.Show(actions, entry, owner)
 		end
 	end
 
-	local rewards = actions:Rewards(entry)
-
-	if #rewards > 0 then
-		GameTooltip:AddLine(" ")
-		GameTooltip:AddLine(REWARDS, title.red, title.green, title.blue)
-
-		for _, reward in ipairs(rewards) do
-			GameTooltip:AddLine(reward, WHITE[1], WHITE[2], WHITE[3])
+	-- The game's own rewards block, so currencies, reputation and the war mode
+	-- bonus come out as they do on the map. A world quest carries its rewards
+	-- outside the quest log, and they arrive on request.
+	if entry.rewardsQuestID then
+		if HaveQuestRewardData(entry.rewardsQuestID) then
+			GameTooltip_AddQuestRewardsToTooltip(GameTooltip, entry.rewardsQuestID)
+		else
+			C_TaskQuest.RequestPreloadRewardData(entry.rewardsQuestID)
 		end
+	end
+
+	-- Where this content was made to live: it is the set the map draws in the
+	-- point's tooltip, with items and rewards that have no place in a block.
+	if entry.tooltipWidgetSetID then
+		GameTooltip_AddWidgetSet(GameTooltip, entry.tooltipWidgetSetID, WIDGET_PADDING)
 	end
 
 	GameTooltip:Show()

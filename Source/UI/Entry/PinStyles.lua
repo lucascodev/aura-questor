@@ -63,7 +63,8 @@ local EntryPinStyles = {
 EntryPinStyles.areaPoi = EntryPinStyles.bonus
 
 --- A pin drawn with art the entry supplied. There are no pressed or selected
---- variants of these, so all four states share one texture.
+--- variants of these, so all four states share one texture, and being followed
+--- shows as the glow the map puts behind its own pins.
 ---@param atlas string
 ---@return table
 function EntryPinStyles.OwnArt(atlas)
@@ -73,6 +74,7 @@ function EntryPinStyles.OwnArt(atlas)
 		selected = atlas,
 		selectedPressed = atlas,
 		showsNumber = false,
+		glowsWhenSelected = true,
 		size = EVENT_PIN_SIZE,
 	}
 end
