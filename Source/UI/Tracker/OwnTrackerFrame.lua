@@ -58,7 +58,6 @@ local SECTION_SIZE_DELTA = -1
 ---@field private collapsedSections table<string, boolean>
 ---@field private state table
 ---@field private expandedHeight number
----@field private hasPendingPin boolean
 ---@field private lastSections TrackerSection[]
 ---@field private root table
 ---@field private scroll table
@@ -82,7 +81,6 @@ function OwnTrackerFrame.New(addonInfo, position, actions, collapsedSections, st
 		collapsedSections = collapsedSections,
 		state = state,
 		expandedHeight = INITIAL_HEIGHT,
-		hasPendingPin = false,
 		sectionHeaders = {},
 		usedHeaders = 0,
 		lastSections = {},
@@ -400,11 +398,6 @@ function OwnTrackerFrame:SetAppearance(appearance)
 	self.root:SetWidth(appearance.width)
 	self.content:SetWidth(appearance.width - FRAME_PADDING * 2)
 
-	if self.hasPendingPin then
-		self.hasPendingPin = false
-		self:PinTop()
-	end
-
 	self:ApplyHeight()
 
 	self.backdrop:Apply(appearance)
@@ -452,19 +445,15 @@ end
 function OwnTrackerFrame:ApplyHeight()
 	local isCollapsed = self:IsCollapsed()
 
-	-- Held by the top before the height moves: anchored anywhere else, and the
-	-- factory position is anchored to the right edge, a taller or shorter list
-	-- would carry the header with it.
-	self:AnchorTop()
-
+	-- Nothing to re-anchor: the window hangs from its top left corner, so it
+	-- grows and shrinks downwards and the header stays where the player put it.
 	self.root:SetHeight(isCollapsed and COLLAPSED_HEIGHT or self:WantedHeight())
 	self.scroll:SetShown(not isCollapsed)
 end
 
---- The top corner is what stays put while the height changes: the header is the
---- part the player aims at, and collapsing has to leave it where it was.
---- Anchoring by the bottom instead makes the header fall to the foot of the
---- window every time the list shrinks.
+--- Turns wherever the drag left the frame into the top left corner everything
+--- else reads. Measuring is sound here and nowhere else: the frame was on
+--- screen and drawn for every frame of the drag.
 ---@private
 function OwnTrackerFrame:AnchorTop()
 	local left, top = self.root:GetLeft(), self.root:GetTop()
@@ -477,10 +466,7 @@ function OwnTrackerFrame:AnchorTop()
 	self.root:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", left, top)
 end
 
---- Anchors and writes the place down. Only what the player did is worth
---- writing: saving on every height change let a login write back a position the
---- game had just nudged to keep the window on screen, and the window walked a
---- little further on each reload.
+--- Anchors and writes the place down, at the one moment the player chose it.
 ---@private
 function OwnTrackerFrame:PinTop()
 	self:AnchorTop()
@@ -494,11 +480,9 @@ function OwnTrackerFrame:ToggleCollapsed()
 	self.state.isCollapsed = not self:IsCollapsed() or nil
 
 	if self:IsLockedByCombat() then
-		self.hasPendingPin = true
 		return self:IsCollapsed()
 	end
 
-	self:PinTop()
 	self:ApplyHeight()
 
 	if not self:IsCollapsed() then
@@ -569,13 +553,19 @@ end
 
 --- Scale is separate from size: it multiplies everything, text included, while
 --- width and height only change how much room the list has.
+---
+--- The saved place is written in the units of the frame own scale, so changing
+--- the scale reinterprets it and the window slides. Anchoring again reads the
+--- saved numbers in the scale they are about to be drawn in.
 ---@param scale number
 function OwnTrackerFrame:SetScale(scale)
-	if self:IsLockedByCombat() then
+	if self:IsLockedByCombat() or scale == self.scale then
 		return
 	end
 
+	self.scale = scale
 	self.root:SetScale(scale)
+	self.position:Restore()
 end
 
 function OwnTrackerFrame:ResetPosition()
