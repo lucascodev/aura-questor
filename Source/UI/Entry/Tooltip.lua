@@ -33,15 +33,34 @@ function EntryTooltip.ShowMenu(actions, entry, owner)
 	end)
 end
 
+--- The side with room for it. A rewards block carries the whole item tooltip,
+--- so it can be taller and wider than the tracker itself, and the tracker can
+--- be dragged to either edge of any screen.
+---@param owner table
+---@return string
+local function AnchorFor(owner)
+	local left = owner:GetLeft()
+
+	if left and left < UIParent:GetWidth() / 2 then
+		return "ANCHOR_RIGHT"
+	end
+
+	return "ANCHOR_LEFT"
+end
+
 --- The tracker shows a line per objective; the tooltip is where the briefing
---- fits. Anchored left so it never covers the tracker it came from.
+--- fits.
 ---@param actions EntryActions
 ---@param entry TrackerEntry
 ---@param owner table
 function EntryTooltip.Show(actions, entry, owner)
 	local title = Addon.EntryText.TITLE_COLOR
 
-	GameTooltip:SetOwner(owner, "ANCHOR_LEFT")
+	GameTooltip:SetOwner(owner, AnchorFor(owner))
+
+	-- What is left over after choosing the side: a tall block still has to stay
+	-- on screen.
+	GameTooltip:SetClampedToScreen(true)
 
 	-- SetText takes an alpha before the wrap flag, unlike AddLine. Passing the
 	-- flag straight after the colour lands it in the alpha slot and errors.

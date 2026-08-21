@@ -24,6 +24,9 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
   o jogo desenha no mapa, então moeda, reputação e bônus de Modo de Guerra
   aparecem. O nosso lia só dinheiro e itens, e uma missão mundial paga fora do
   diário, o que deixava o tooltip dela sem recompensa nenhuma.
+- O tooltip escolhe o lado que tem espaço e fica preso à tela, já que o bloco de
+  recompensas traz o tooltip do item inteiro e o rastreador pode estar em
+  qualquer canto.
 
 ### Alterado
 
