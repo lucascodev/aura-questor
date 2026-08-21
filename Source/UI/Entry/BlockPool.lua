@@ -615,9 +615,8 @@ end
 --- How much taller than the bar its frame is, which is what the row has to
 --- reserve so a bar never touches the line above it.
 ---@private
----@param isSplit boolean
 ---@return number
-function EntryBlockPool:BarMargin(isSplit)
+function EntryBlockPool:BarMargin()
 	if self.progressBarStyle == Addon.ProgressBarStyles.OWN then
 		return BAR_OWN_MARGIN
 	end
@@ -1121,12 +1120,12 @@ function EntryBlockPool:Build(entry, width, index)
 				block.frame,
 				"TOPLEFT",
 				objectiveLeft + overhang,
-				-(height + LINE_SPACING + self:BarMargin(isSplit) / 2)
+				-(height + LINE_SPACING + self:BarMargin() / 2)
 			)
 			self:ApplyBar(bar, row.percent, isSplit)
 			bar:Show()
 
-			height = height + LINE_SPACING + self:BarHeight() + self:BarMargin(isSplit)
+			height = height + LINE_SPACING + self:BarHeight() + self:BarMargin()
 		else
 			usedLines = usedLines + 1
 
