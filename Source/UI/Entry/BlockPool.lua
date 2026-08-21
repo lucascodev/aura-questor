@@ -630,6 +630,14 @@ function EntryBlockPool:ApplyWidgetSet(container, widgetSetID)
 		container:RegisterForWidgetSet(widgetSetID, DefaultWidgetLayout)
 	end
 
+	-- A set can hold widgets that are all hidden right now, and the container is
+	-- the one that knows: shown anyway, it opens a gap the size of nothing.
+	if container.HasAnyWidgetsShowing and not container:HasAnyWidgetsShowing() then
+		container:Hide()
+
+		return 0
+	end
+
 	container:Show()
 
 	return math.max(container:GetHeight(), 1)
