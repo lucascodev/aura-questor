@@ -25,6 +25,27 @@ local BAR_BORDER_OVERHANG = 3
 --- wide as the block and its own width is fixed.
 local BAR_SPLIT_ATLAS = "bonusobjectives-bar-frame-5"
 
+--- The art was drawn around a bar of this height, so its own height over this
+--- one is how much taller than the bar it has to stay. Stretched to any other
+--- proportion its lines land inside the fill instead of around it.
+local BAR_SPLIT_REFERENCE_HEIGHT = 17
+local BAR_SPLIT_FALLBACK_RATIO = 1.3
+local splitFrameRatio
+
+---@return number
+local function SplitFrameRatio()
+	if splitFrameRatio then
+		return splitFrameRatio
+	end
+
+	local info = C_Texture.GetAtlasInfo(BAR_SPLIT_ATLAS)
+
+	splitFrameRatio = info and info.height and info.height / BAR_SPLIT_REFERENCE_HEIGHT
+		or BAR_SPLIT_FALLBACK_RATIO
+
+	return splitFrameRatio
+end
+
 --- Ours: a thin outline instead of metal, and the same five parts marked by
 --- lines drawn over the bar.
 local BAR_OWN_MARGIN = 2
@@ -358,8 +379,8 @@ local function CreateBar(block)
 
 	local splitFrame = bar:CreateTexture(nil, "ARTWORK")
 	splitFrame:SetAtlas(BAR_SPLIT_ATLAS)
-	splitFrame:SetPoint("TOPLEFT", -BAR_BORDER_OVERHANG, BAR_BORDER_MARGIN / 2)
-	splitFrame:SetPoint("BOTTOMRIGHT", BAR_BORDER_OVERHANG, -BAR_BORDER_MARGIN / 2)
+	splitFrame:SetPoint("LEFT", -BAR_BORDER_OVERHANG, 0)
+	splitFrame:SetPoint("RIGHT", BAR_BORDER_OVERHANG, 0)
 
 	bar.gamePieces = { borderLeft, borderRight, borderMiddle }
 	bar.borderEnds = { borderLeft, borderRight }
@@ -618,11 +639,18 @@ function EntryBlockPool:SetProgressBarStyle(style)
 	self.progressBarStyle = style
 end
 
+--- How much taller than the bar its frame is, which is what the row has to
+--- reserve so a bar never touches the line above it.
 ---@private
+---@param isSplit boolean
 ---@return number
-function EntryBlockPool:BarMargin()
+function EntryBlockPool:BarMargin(isSplit)
 	if self.progressBarStyle == Addon.ProgressBarStyles.OWN then
 		return BAR_OWN_MARGIN
+	end
+
+	if isSplit then
+		return self:BarHeight() * (SplitFrameRatio() - 1)
 	end
 
 	return BAR_BORDER_MARGIN
@@ -760,6 +788,7 @@ function EntryBlockPool:DressBar(bar, isSplit)
 	end
 
 	bar.splitFrame:SetShown(not isOwnStyle and isSplit)
+	bar.splitFrame:SetHeight(height * SplitFrameRatio())
 
 	for _, edge in ipairs(bar.outline) do
 		edge:SetShown(isOwnStyle)
@@ -1116,6 +1145,7 @@ function EntryBlockPool:Build(entry, width, index)
 			-- The frame around the bar hangs past it on both sides, so the bar is
 			-- narrowed by that much: what lines up with the text is the frame,
 			-- not the fill inside it.
+			local isSplit = IsSplitBar(entry)
 			local overhang = self:BarOverhang()
 
 			bar:SetWidth(rowWidth - overhang * 2)
@@ -1125,12 +1155,12 @@ function EntryBlockPool:Build(entry, width, index)
 				block.frame,
 				"TOPLEFT",
 				objectiveLeft + overhang,
-				-(height + LINE_SPACING + self:BarMargin() / 2)
+				-(height + LINE_SPACING + self:BarMargin(isSplit) / 2)
 			)
-			self:ApplyBar(bar, row.percent, IsSplitBar(entry))
+			self:ApplyBar(bar, row.percent, isSplit)
 			bar:Show()
 
-			height = height + LINE_SPACING + self:BarHeight() + self:BarMargin()
+			height = height + LINE_SPACING + self:BarHeight() + self:BarMargin(isSplit)
 		else
 			usedLines = usedLines + 1
 
