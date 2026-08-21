@@ -99,6 +99,18 @@ seuTipo = 45,
 
 Há um teste que falha se duas seções receberem o mesmo número.
 
+A seção passa a aparecer sozinha na lista de reordenar do painel de opções, mas
+o rótulo dela vem de um mapa em
+[`Options/SectionOrderCard.lua`](../Source/Options/SectionOrderCard.lua), que
+associa o `id` à global da Blizzard já traduzida:
+
+```lua
+seuTipo = "SEU_GLOBAL_DA_BLIZZARD",
+```
+
+Também há teste: esquecer essa linha faz a suíte falhar em vez de mostrar o id
+cru para o jogador.
+
 ## 3. As ações
 
 Necessário apenas se a entrada responder ao clique. A porta é

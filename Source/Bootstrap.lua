@@ -221,7 +221,7 @@ local function Build()
 			Addon.TrackedListSectionProvider.New(MONTHLY_ACTIVITIES),
 			Addon.CollectableSectionProvider.New(),
 			Addon.TrackedListSectionProvider.New(INITIATIVE_TASKS),
-		}, Addon.SortModes, preferences, profile.sectionOrder),
+		}, Addon.SortModes, preferences),
 		ownTracker,
 		Addon.BlizzardTracker.New(),
 		preferences,
@@ -309,27 +309,6 @@ local function Build()
 		end,
 	}
 
-	--- The arrangement starts as the order the sections declare for themselves,
-	--- so there is something to move around on a fresh install.
-	if #profile.sectionOrder == 0 then
-		profile.sectionOrder = Addon.SectionRanking.FromDefaults(Addon.SectionOrder)
-	end
-
-	local sectionCommands = {
-		sectionOrder = function()
-			return profile.sectionOrder
-		end,
-		moveSection = function(sectionID, step)
-			local moved = Addon.SectionRanking.Move(profile.sectionOrder, sectionID, step)
-
-			if moved then
-				display:Refresh()
-			end
-
-			return moved
-		end,
-	}
-
 	local optionsPanel = Addon.OptionsPanel.New(
 		addonInfo,
 		Addon.PreferenceCatalog,
@@ -348,8 +327,7 @@ local function Build()
 			sounds = Addon.SoundLibrary.Choices,
 		},
 		profileCommands,
-		logger,
-		sectionCommands
+		logger
 	)
 	optionsPanel:Register()
 

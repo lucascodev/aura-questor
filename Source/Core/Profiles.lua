@@ -12,7 +12,6 @@ local PROFILE_TABLES = {
 	"collapsedSections",
 	"hiddenCategories",
 	"hiddenSections",
-	"sectionOrder",
 	"minimapButton",
 }
 

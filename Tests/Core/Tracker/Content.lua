@@ -37,6 +37,44 @@ return function(Addon, T, Support)
 			T.Equals(sections[2].id, "events")
 		end)
 
+		T.Test("a ordem escolhida pelo jogador manda na declarada", function()
+			local sections = Content({
+				Support.Provider("quests", 20, { Support.Entry({}) }),
+				Support.Provider("events", 35, { Support.Entry({}) }),
+				Support.Provider("achievements", 50, { Support.Entry({}) }),
+			}, nil, { sectionArrangement = "achievements,events,quests" }):Build()
+
+			T.Equals(sections[1].id, "achievements")
+			T.Equals(sections[2].id, "events")
+			T.Equals(sections[3].id, "quests")
+		end)
+
+		--- Sem nada guardado, e com uma string invalida, a ordem tem que ser a
+		--- mesma de sempre: e o caminho de toda instalacao nova.
+		T.Test("sem arrumacao guardada vale o SectionOrder", function()
+			for _, stored in ipairs({ "", "naoExiste", "  ,  " }) do
+				local sections = Content({
+					Support.Provider("events", 35, { Support.Entry({}) }),
+					Support.Provider("quests", 20, { Support.Entry({}) }),
+				}, nil, { sectionArrangement = stored }):Build()
+
+				T.Equals(sections[1].id, "quests", ("guardado %q"):format(stored))
+				T.Equals(sections[2].id, "events", ("guardado %q"):format(stored))
+			end
+		end)
+
+		T.Test("secao fora da arrumacao vai para o fim, sem embaralhar", function()
+			local sections = Content({
+				Support.Provider("quests", 20, { Support.Entry({}) }),
+				Support.Provider("naoCatalogada", 99, { Support.Entry({}) }),
+				Support.Provider("events", 35, { Support.Entry({}) }),
+			}, nil, { sectionArrangement = "events,quests" }):Build()
+
+			T.Equals(sections[1].id, "events")
+			T.Equals(sections[2].id, "quests")
+			T.Equals(sections[3].id, "naoCatalogada")
+		end)
+
 		T.Test("um provider pode alimentar mais de uma secao", function()
 			local two = {
 				Collect = function()

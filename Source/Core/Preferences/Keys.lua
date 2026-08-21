@@ -16,6 +16,7 @@ local PreferenceKeys = {
 	WORLD_QUEST_SCOPE = "worldQuestScope",
 	INSTANCE_FOCUS = "instanceFocus",
 	SORT_MODE = "sortMode",
+	SECTION_ARRANGEMENT = "sectionArrangement",
 	COMPLETED_AT_TOP = "completedAtTop",
 	TOMTOM_ENABLED = "tomTomEnabled",
 	TRACKER_WIDTH = "trackerWidth",

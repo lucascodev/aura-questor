@@ -274,6 +274,16 @@ local PreferenceCatalog = {
 		choices = Addon.SortModes,
 	},
 	{
+		-- Drawn by the reorder card in ContentPanel, not by a generic control:
+		-- the value is the section order itself, serialised.
+		key = Keys.SECTION_ARRANGEMENT,
+		panel = CONTENT_PANEL,
+		kind = "string",
+		default = "",
+		label = L.PREF_SECTION_ARRANGEMENT,
+		tooltip = L.PREF_SECTION_ARRANGEMENT_TIP,
+	},
+	{
 		key = Keys.COMPLETED_AT_TOP,
 		panel = CONTENT_PANEL,
 		kind = "boolean",

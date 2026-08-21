@@ -39,7 +39,7 @@ local CORE_FILES = {
 	"Filtering/Filters",
 	"Filtering/Filtering",
 	"Tracker/SectionOrder",
-	"Tracker/SectionRanking",
+	"Tracker/SectionArrangement",
 	"Tracker/Content",
 	"Tracker/Display",
 	"Tracker/CompletionWatcher",
@@ -60,6 +60,7 @@ local UI_FILES = {
 local OPTIONS_FILES = {
 	"Components/Theme",
 	"Components/Schematic",
+	"SectionOrderCard",
 }
 
 local Harness = {}
