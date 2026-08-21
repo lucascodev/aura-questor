@@ -33,6 +33,19 @@ function EntryTooltip.ShowMenu(actions, entry, owner)
 	end)
 end
 
+--- The game's own rewards block, without the item tooltip it can embed: that
+--- one measures itself with values the client keeps secret from an addon, and
+--- doing the arithmetic on them errors inside the game. Without it the rewards
+--- still come out named, coloured and with their icons.
+local REWARDS_STYLE = {
+	headerText = QUEST_REWARDS,
+	headerColor = NORMAL_FONT_COLOR,
+	prefixBlankLineCount = 1,
+	postHeaderBlankLineCount = 0,
+	wrapHeaderText = true,
+	fullItemDescription = false,
+}
+
 --- Sets whose drawing has already failed once. The game fills a POI's widgets
 --- while its map is up, and away from it some arrive without the fields its own
 --- drawing code reads, which errors inside the game. Nothing here can complete
@@ -113,7 +126,7 @@ function EntryTooltip.Show(actions, entry, owner)
 	-- outside the quest log, and they arrive on request.
 	if entry.rewardsQuestID then
 		if HaveQuestRewardData(entry.rewardsQuestID) then
-			GameTooltip_AddQuestRewardsToTooltip(GameTooltip, entry.rewardsQuestID)
+			GameTooltip_AddQuestRewardsToTooltip(GameTooltip, entry.rewardsQuestID, REWARDS_STYLE)
 		else
 			C_TaskQuest.RequestPreloadRewardData(entry.rewardsQuestID)
 		end

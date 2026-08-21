@@ -3,6 +3,16 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Corrigido
+
+- Passar o mouse numa missão com item de recompensa gerava erro do jogo na
+  tela. O bloco de recompensas embute o tooltip do item, e ele se mede com
+  valores que o cliente esconde de addon, o que quebra a conta dentro do
+  próprio jogo. As recompensas continuam aparecendo, com nome, cor e ícone,
+  sem o tooltip do item embutido.
+
 ## [0.84.0] - 2026-08-21
 
 ### Corrigido
