@@ -17,14 +17,12 @@ TrackerContent.__index = TrackerContent
 ---@param providers SectionProvider[]
 ---@param sortModes SortMode[]
 ---@param preferences Preferences
----@param sectionOrder string[] How the player arranged the sections; empty means as born.
 ---@return TrackerContent
-function TrackerContent.New(providers, sortModes, preferences, sectionOrder)
+function TrackerContent.New(providers, sortModes, preferences)
 	return setmetatable({
 		providers = providers,
 		sortModes = sortModes,
 		preferences = preferences,
-		sectionOrder = sectionOrder or {},
 	}, TrackerContent)
 end
 
@@ -90,8 +88,7 @@ function TrackerContent:Build()
 	end
 
 	table.sort(sections, function(left, right)
-		return Addon.SectionRanking.Rank(self.sectionOrder, left.id, left.order)
-			< Addon.SectionRanking.Rank(self.sectionOrder, right.id, right.order)
+		return left.order < right.order
 	end)
 
 	self:SortEntries(sections)
