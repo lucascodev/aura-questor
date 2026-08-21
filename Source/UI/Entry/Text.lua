@@ -1,6 +1,7 @@
 local _, Addon = ...
 
-local MINUTES_PER_HOUR = 60
+local SECONDS_PER_MINUTE = 60
+local SECONDS_PER_HOUR = 3600
 local COLOR_CHANNEL_MAXIMUM = 255
 
 --- Gold for the part already done, so "9/16" reads as progress at a glance
@@ -23,14 +24,24 @@ EntryText.TITLE_COMPLETE_COLOR = { red = 0.1, green = 1, blue = 0.1 }
 --- says so, but only if you are looking at the pin.
 EntryText.TITLE_TRACKED_COLOR = { red = 1, green = 0.97, blue = 0.88 }
 
----@param minutes number
+--- Public so the countdown can be rewritten once a second without rebuilding
+--- the entry it belongs to.
+---@param seconds number
 ---@return string
-local function FormatTimeLeft(minutes)
-	if minutes < MINUTES_PER_HOUR then
-		return ("%d min"):format(minutes)
+function EntryText.TimeLeft(seconds)
+	seconds = math.floor(seconds)
+
+	if seconds >= SECONDS_PER_HOUR then
+		local hours = math.floor(seconds / SECONDS_PER_HOUR)
+
+		return ("%dh %dmin"):format(hours, math.floor(seconds % SECONDS_PER_HOUR / SECONDS_PER_MINUTE))
 	end
 
-	return ("%dh %dmin"):format(math.floor(minutes / MINUTES_PER_HOUR), minutes % MINUTES_PER_HOUR)
+	if seconds >= SECONDS_PER_MINUTE then
+		return ("%dmin %ds"):format(math.floor(seconds / SECONDS_PER_MINUTE), seconds % SECONDS_PER_MINUTE)
+	end
+
+	return ("%ds"):format(seconds)
 end
 
 --- Highlights the achieved half of an "x/y" count. Objectives that have not
@@ -109,8 +120,14 @@ function EntryText.Rows(entry)
 		end
 	end
 
-	if entry.timeLeftMinutes and entry.timeLeftMinutes > 0 then
-		table.insert(rows, { text = FormatTimeLeft(entry.timeLeftMinutes), color = TIME_COLOR })
+	if entry.timeLeftSeconds and entry.timeLeftSeconds > 0 then
+		-- The deadline travels with the row so the ticker can redraw the text
+		-- from it, without asking the game anything.
+		table.insert(rows, {
+			text = EntryText.TimeLeft(entry.timeLeftSeconds),
+			color = TIME_COLOR,
+			expiresAt = time() + entry.timeLeftSeconds,
+		})
 	end
 
 	return rows

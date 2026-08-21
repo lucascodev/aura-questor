@@ -29,6 +29,7 @@ local SUITES = {
 	"Core/Commands",
 	"Core/Integration/WaypointSync",
 	"Game/BlizzardTracker",
+	"UI/Text",
 	"Options/Schematic",
 	"Options/Pages",
 	"Locales",

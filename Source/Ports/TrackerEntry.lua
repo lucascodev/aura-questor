@@ -44,7 +44,7 @@
 ---@field pinIcon? TrackerPinIcon Drawn inside the pin, instead of a number.
 ---@field isSuperTrackable? boolean Whether the pin can drive the on-screen arrow.
 ---@field isSuperTracked? boolean Whether it currently does.
----@field timeLeftMinutes? number
+---@field timeLeftSeconds? number
 
 --- A titled group of entries, drawn in one block.
 ---@class TrackerSection

@@ -46,6 +46,11 @@ local CORE_FILES = {
 	"Integration/WaypointSync",
 }
 
+--- Arquivos de UI/ sem API do jogo no escopo do arquivo.
+local UI_FILES = {
+	"Entry/Text",
+}
+
 --- Arquivos de Options/ sem nenhuma API do jogo, carregáveis por Lua puro.
 --- Um global do cliente tocado aqui estoura como nil no interpretador.
 local OPTIONS_FILES = {
@@ -76,6 +81,10 @@ function Harness.LoadCore()
 
 	for _, name in ipairs(CORE_FILES) do
 		Load("Source/Core/" .. name .. ".lua")
+	end
+
+	for _, name in ipairs(UI_FILES) do
+		Load("Source/UI/" .. name .. ".lua")
 	end
 
 	for _, name in ipairs(OPTIONS_FILES) do

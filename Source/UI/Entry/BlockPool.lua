@@ -628,15 +628,24 @@ end
 --- New text that wraps to a different height would need the rows below it
 --- moved, which combat forbids; the old text stays until then.
 ---@param line table
----@param row table
+---@param text string
 ---@param height number
-local function RewriteLine(line, row, height)
+---@return boolean written
+local function RewriteText(line, text, height)
 	local previous = line:GetText()
 
-	line:SetText(row.text)
+	line:SetText(text)
 
 	if line:GetStringHeight() ~= height then
 		line:SetText(previous)
+		return false
+	end
+
+	return true
+end
+
+local function RewriteLine(line, row, height)
+	if not RewriteText(line, row.text, height) then
 		return
 	end
 
@@ -661,6 +670,8 @@ function EntryBlockPool:RewriteBlock(block, entry)
 	local usedLines = 0
 	local usedBars = 0
 
+	block.countdown = nil
+
 	for index, row in ipairs(rows) do
 		local slot = block.shape[index]
 
@@ -670,8 +681,40 @@ function EntryBlockPool:RewriteBlock(block, entry)
 		elseif slot.kind == "line" then
 			usedLines = usedLines + 1
 			RewriteLine(block.lines[usedLines], row, slot.height)
+
+			if row.expiresAt then
+				block.countdown = {
+					line = block.lines[usedLines],
+					expiresAt = row.expiresAt,
+					height = slot.height,
+				}
+			end
 		end
 	end
+end
+
+--- Rewrites only the countdown lines, from the deadline each block kept, so a
+--- ticking second costs no game call and no layout. A line that would change
+--- height keeps the text it had: growing a block is what combat forbids.
+---@return boolean hasCountdown Whether any block is still counting down.
+function EntryBlockPool:RefreshCountdowns()
+	local now = time()
+	local hasCountdown = false
+
+	for index = 1, self.used do
+		local countdown = self.blocks[index].countdown
+
+		if countdown then
+			local secondsLeft = countdown.expiresAt - now
+
+			if secondsLeft > 0 then
+				hasCountdown = true
+				RewriteText(countdown.line, Addon.EntryText.TimeLeft(secondsLeft), countdown.height)
+			end
+		end
+	end
+
+	return hasCountdown
 end
 
 --- In combat the blocks around a quest item are protected: nothing may move,
@@ -739,6 +782,7 @@ end
 function EntryBlockPool:Build(entry, width, index)
 	local block = self:Acquire()
 	block.entry = entry
+	block.countdown = nil
 	block.frame:SetWidth(width)
 
 	-- Before anything is measured: every height below comes from GetStringHeight,
@@ -885,6 +929,10 @@ function EntryBlockPool:Build(entry, width, index)
 
 			local lineHeight = line:GetStringHeight()
 			shape[#shape].height = lineHeight
+
+			if row.expiresAt then
+				block.countdown = { line = line, expiresAt = row.expiresAt, height = lineHeight }
+			end
 
 			height = height + LINE_SPACING + lineHeight
 		end

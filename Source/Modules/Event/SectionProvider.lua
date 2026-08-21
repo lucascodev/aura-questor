@@ -3,7 +3,6 @@ local _, Addon = ...
 local Keys = Addon.PreferenceKeys
 
 local ENTRY_KIND = "event"
-local SECONDS_PER_MINUTE = 60
 
 --- SectionProvider for world events, read from the event scheduler.
 ---
@@ -83,12 +82,12 @@ end
 ---@param eventInfo table
 ---@param secondsLeft number?
 ---@return number?
-local function ReadTimeLeftMinutes(eventInfo, secondsLeft)
+local function ReadTimeLeft(eventInfo, secondsLeft)
 	if not secondsLeft or secondsLeft <= 0 or DisplayInfo(eventInfo).hideTimeLeft then
 		return nil
 	end
 
-	return math.floor(secondsLeft / SECONDS_PER_MINUTE)
+	return secondsLeft
 end
 
 ---@param eventInfo table
@@ -123,7 +122,7 @@ local function ReadEntry(eventInfo, secondsLeft)
 		pinAtlas = ReadPinAtlas(eventInfo, poiInfo),
 		isSuperTrackable = true,
 		isSuperTracked = superTrackedPoiID == eventInfo.areaPoiID,
-		timeLeftMinutes = ReadTimeLeftMinutes(eventInfo, secondsLeft),
+		timeLeftSeconds = ReadTimeLeft(eventInfo, secondsLeft),
 	}
 end
 

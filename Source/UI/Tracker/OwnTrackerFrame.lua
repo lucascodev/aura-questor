@@ -10,6 +10,7 @@ local HEADER_HEIGHT = 24
 local WHEEL_STEP = 40
 
 local TITLE_GAP = 7
+local COUNTDOWN_TICK_SECONDS = 1
 local BLOCK_GAP = 10
 local SECTION_GAP = 18
 
@@ -67,6 +68,7 @@ local SECTION_SIZE_DELTA = -1
 ---@field private scroll table
 ---@field private content table
 ---@field private pool EntryBlockPool
+---@field private countdownTicker table?
 ---@field private sectionHeaders table[]
 ---@field private usedHeaders number
 local OwnTrackerFrame = {}
@@ -292,9 +294,9 @@ function OwnTrackerFrame:Render(sections)
 
 	self.lastSections = sections
 
-	-- Recolhido, a lista nao esta na tela: montar blocos para ninguem ver e
-	-- desperdicio, e o que ficou de antes segue escondido junto com a rolagem.
+	-- Collapsed, the list is off screen, so no blocks are built for it.
 	if self:IsCollapsed() then
+		self:SyncCountdownTicker()
 		return
 	end
 
@@ -353,6 +355,32 @@ function OwnTrackerFrame:Render(sections)
 
 	self.pool:HideUnused()
 	self.content:SetHeight(math.max(offset, 1))
+	self:SyncCountdownTicker()
+end
+
+--- The ticker only exists while something on screen is counting down, and it
+--- rewrites those lines from the deadline each block kept: no game call, no
+--- layout, no rebuild. A permanent one would cost the frame budget all day.
+---@private
+function OwnTrackerFrame:SyncCountdownTicker()
+	local wantsTicker = self.pool:RefreshCountdowns() and not self:IsCollapsed()
+
+	if wantsTicker == (self.countdownTicker ~= nil) then
+		return
+	end
+
+	if not wantsTicker then
+		self.countdownTicker:Cancel()
+		self.countdownTicker = nil
+
+		return
+	end
+
+	self.countdownTicker = C_Timer.NewTicker(COUNTDOWN_TICK_SECONDS, function()
+		if not self.pool:RefreshCountdowns() then
+			self:SyncCountdownTicker()
+		end
+	end)
 end
 
 --- The header's button row. Exposed so the composition root can hang buttons
@@ -493,6 +521,11 @@ function OwnTrackerFrame:SetShown(isShown)
 	end
 
 	self.root:SetShown(isShown)
+
+	if not isShown and self.countdownTicker then
+		self.countdownTicker:Cancel()
+		self.countdownTicker = nil
+	end
 end
 
 Addon.OwnTrackerFrame = OwnTrackerFrame
