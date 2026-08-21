@@ -23,6 +23,7 @@ local SUITES = {
 	"Core/Filtering/Filters",
 	"Core/Filtering/Filtering",
 	"Core/Tracker/SectionOrder",
+	"Core/Tracker/Place",
 	"Core/Tracker/SectionArrangement",
 	"Core/Tracker/Content",
 	"Core/Tracker/Display",

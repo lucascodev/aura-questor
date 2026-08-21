@@ -5,6 +5,18 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
 ## [Não publicado]
 
+### Corrigido
+
+- A janela andava um pouco a cada `/reload`, e com ela mudava a altura. Para se
+  reancorar, o rastreador media a própria posição a cada mudança de tamanho, e o
+  jogo responde a essa medida com o desenho anterior, não com o atual. No login
+  isso gravava um lugar um pouco diferente do real, e a janela caminhava. Agora
+  a posição guardada é a única referência: medir só acontece quando você solta o
+  arrasto.
+- Mudar a escala nas opções levava a janela para outro ponto da tela. Os números
+  guardados valem na escala da janela, então trocar a escala mudava o que eles
+  significam. O lugar passa a ser reaplicado logo depois da escala.
+
 ### Alterado
 
 - A ordem das seções passa a ser guardada como preferência, e não como tabela do

@@ -90,6 +90,7 @@ read_globals = {
 	"GetCategoryList",
 	"GetLocale",
 	"GetScreenHeight",
+	"GetScreenWidth",
 	"GetQuestDifficultyColor",
 	"GetQuestLogCompletionText",
 	"GetQuestLogQuestText",
