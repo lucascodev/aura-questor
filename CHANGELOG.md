@@ -23,10 +23,11 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
 ### Alterado
 
-- As barras de progresso ganharam estilo à escolha, na página Moldura: **do
-  jogo**, com a moldura de metal do rastreador, ou **do addon**, plana, com
-  contorno fino. Nos dois, missão mundial e objetivo bônus saem divididas em
-  cinco partes, como no rastreador do jogo. A altura também virou preferência.
+- As barras de progresso ganharam estilo à escolha, na página Moldura:
+  **Aura Questor**, plana e com contorno fino, que é o padrão, ou **Blizzard**,
+  com a moldura de metal do rastreador do jogo. Nos dois, missão mundial e
+  objetivo bônus saem divididas em cinco partes, como no rastreador do jogo. A
+  altura também virou preferência.
 
 ### Corrigido
 
