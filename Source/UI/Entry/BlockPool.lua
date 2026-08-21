@@ -33,10 +33,13 @@ local BAR_DIVIDER_COLOR = { red = 0, green = 0, blue = 0, alpha = 0.75 }
 local BAR_OWN_MARGIN = 2
 local BAR_OWN_OUTLINE_COLOR = { red = 0.35, green = 0.38, blue = 0.46, alpha = 1 }
 
---- Content the game itself draws with the split frame.
+--- Content the game itself draws with the split frame: bonus objective, world
+--- quest and scenario all use the same five part art, and only a plain quest
+--- gets the smooth bar.
 local BAR_SPLIT_KINDS = {
 	worldQuest = true,
 	bonus = true,
+	scenario = true,
 }
 
 ---@param entry TrackerEntry
@@ -625,6 +628,14 @@ end
 function EntryBlockPool:ApplyWidgetSet(container, widgetSetID)
 	if container.widgetSetID ~= widgetSetID then
 		container:RegisterForWidgetSet(widgetSetID, DefaultWidgetLayout)
+	end
+
+	-- A set can hold widgets that are all hidden right now, and the container is
+	-- the one that knows: shown anyway, it opens a gap the size of nothing.
+	if container.HasAnyWidgetsShowing and not container:HasAnyWidgetsShowing() then
+		container:Hide()
+
+		return 0
 	end
 
 	container:Show()

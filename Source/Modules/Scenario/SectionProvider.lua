@@ -208,6 +208,27 @@ local function FormatStage(stageName, currentStage, numStages)
 	return ("%s (%d/%d)"):format(stageName, currentStage, numStages)
 end
 
+--- Two sets the game's own tracker keeps registered beside the step's own: the
+--- zone publishes into them, and that is where content like the supply wagon's
+--- health comes from. Same places the game puts them, above the stage and under
+--- the objectives.
+local TOP_WIDGET_SET = 514
+local BOTTOM_WIDGET_SET = 252
+
+--- An empty set would open a gap, so only a set with something in it becomes a
+--- line.
+---@param objectives TrackerObjective[]
+---@param widgetSetID number
+local function AddWidgetSet(objectives, widgetSetID)
+	local widgets = C_UIWidgetManager.GetAllWidgetsBySetID(widgetSetID)
+
+	if not widgets or #widgets == 0 then
+		return
+	end
+
+	table.insert(objectives, { text = "", widgetSetID = widgetSetID, isComplete = false })
+end
+
 --- The step can publish a widget set: the wave timer, the delve header with
 --- tier, lives and modifiers. When it exists the game draws that block itself.
 ---@return number?
@@ -245,6 +266,8 @@ function ScenarioSectionProvider:Collect()
 
 	local stageName, stageDescription = C_Scenario.GetStepInfo()
 	local objectives = {}
+
+	AddWidgetSet(objectives, TOP_WIDGET_SET)
 
 	-- In a dungeon the stage is the dungeon itself, so the card becomes the
 	-- title instead of sitting under it.
@@ -287,6 +310,7 @@ function ScenarioSectionProvider:Collect()
 
 	AddCriteria(objectives)
 	AddChallengeInfo(objectives)
+	AddWidgetSet(objectives, BOTTOM_WIDGET_SET)
 
 	-- In a delve the scenario name is the category itself, already translated,
 	-- and the widget carries the delve name. Promoted to section title, nothing

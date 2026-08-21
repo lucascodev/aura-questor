@@ -3,6 +3,17 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Corrigido
+
+- Em combate, clicar numa missão para segui-la não fazia nada. A escrita
+  esperava o fim da luta por causa de um problema com os pinos do mapa, que só
+  acontece com o mapa aberto. Agora só espera nesse caso, e com o mapa fechado
+  o clique vale na hora, como no rastreador do jogo.
+- A barra de um cenário saía lisa, e o jogo a desenha dividida em cinco, a mesma
+  arte do objetivo bônus e da missão mundial. Só missão comum usa a barra lisa.
+
 ## [0.83.1] - 2026-08-21
 
 ### Corrigido
