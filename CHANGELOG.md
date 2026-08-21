@@ -24,10 +24,9 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 ### Alterado
 
 - As barras de progresso ganharam estilo à escolha, na página Moldura: **do
-  jogo**, que usa a arte que ele mesmo desenha, lisa nas missões e cenários e
-  dividida em cinco nas missões mundiais e objetivos bônus, ou **do addon**,
-  plana, com contorno fino e as mesmas divisões marcadas por linhas. A altura
-  também virou preferência.
+  jogo**, com a moldura de metal do rastreador, ou **do addon**, plana, com
+  contorno fino. Nos dois, missão mundial e objetivo bônus saem divididas em
+  cinco partes, como no rastreador do jogo. A altura também virou preferência.
 
 ### Corrigido
 

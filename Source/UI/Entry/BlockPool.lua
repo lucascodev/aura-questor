@@ -20,44 +20,18 @@ local BAR_BORDER_FILE = [[Interface\PaperDollInfoFrame\UI-Character-Skills-BarBo
 local BAR_BORDER_WIDTH = 9
 local BAR_BORDER_OVERHANG = 3
 
---- The frame the game draws around a bonus objective and a world quest, split
---- into five parts by the art itself. Stretched here, since our bars are as
---- wide as the block and its own width is fixed.
-local BAR_SPLIT_ATLAS = "bonusobjectives-bar-frame-5"
+--- The game splits these bars into five parts. Its own art for that is a
+--- decorative piece of a fixed size, 240 by 51 around a bar of 191 by 17, with
+--- the extra width on the right holding the reward ring, so it cannot frame a
+--- bar as wide as the block. The parts are drawn here instead, over whichever
+--- frame the chosen style puts around the bar.
+local BAR_PARTS = 5
+local BAR_DIVIDER_WIDTH = 1
+local BAR_DIVIDER_COLOR = { red = 0, green = 0, blue = 0, alpha = 0.75 }
 
---- The art was drawn around a bar of this size, and what is left over is its
---- own frame: half of the difference on each side. Both measures are needed,
---- since the fill has to sit inside the opening and not over the frame.
-local BAR_SPLIT_INNER_WIDTH = 191
-local BAR_SPLIT_INNER_HEIGHT = 17
-local BAR_SPLIT_FALLBACK_HEIGHT = 22
-local BAR_SPLIT_FALLBACK_WIDTH = 207
-local splitFrameArt
-
----@return number heightRatio How much taller than the bar the frame is.
----@return number sideWidth Frame on each side, in the art's own pixels.
-local function SplitFrameArt()
-	if not splitFrameArt then
-		local info = C_Texture.GetAtlasInfo(BAR_SPLIT_ATLAS)
-		local height = info and info.height or BAR_SPLIT_FALLBACK_HEIGHT
-		local width = info and info.width or BAR_SPLIT_FALLBACK_WIDTH
-
-		splitFrameArt = {
-			heightRatio = height / BAR_SPLIT_INNER_HEIGHT,
-			sideWidth = (width - BAR_SPLIT_INNER_WIDTH) / 2,
-		}
-	end
-
-	return splitFrameArt.heightRatio, splitFrameArt.sideWidth
-end
-
---- Ours: a thin outline instead of metal, and the same five parts marked by
---- lines drawn over the bar.
+--- Ours: a thin outline instead of the metal one.
 local BAR_OWN_MARGIN = 2
-local BAR_OWN_PARTS = 5
-local BAR_OWN_DIVIDER_WIDTH = 1
 local BAR_OWN_OUTLINE_COLOR = { red = 0.35, green = 0.38, blue = 0.46, alpha = 1 }
-local BAR_OWN_DIVIDER_COLOR = { red = 0, green = 0, blue = 0, alpha = 0.7 }
 
 --- Content the game itself draws with the split frame.
 local BAR_SPLIT_KINDS = {
@@ -347,11 +321,11 @@ local function CreateBarOutline(bar, point, isVertical)
 	if isVertical then
 		edge:SetPoint(point == "LEFT" and "TOPLEFT" or "TOPRIGHT")
 		edge:SetPoint(point == "LEFT" and "BOTTOMLEFT" or "BOTTOMRIGHT")
-		edge:SetWidth(BAR_OWN_DIVIDER_WIDTH)
+		edge:SetWidth(BAR_DIVIDER_WIDTH)
 	else
 		edge:SetPoint(point == "TOP" and "TOPLEFT" or "BOTTOMLEFT")
 		edge:SetPoint(point == "TOP" and "TOPRIGHT" or "BOTTOMRIGHT")
-		edge:SetHeight(BAR_OWN_DIVIDER_WIDTH)
+		edge:SetHeight(BAR_DIVIDER_WIDTH)
 	end
 
 	return edge
@@ -382,12 +356,8 @@ local function CreateBar(block)
 	borderMiddle:SetPoint("TOPLEFT", borderLeft, "TOPRIGHT")
 	borderMiddle:SetPoint("BOTTOMRIGHT", borderRight, "BOTTOMLEFT")
 
-	local splitFrame = bar:CreateTexture(nil, "ARTWORK")
-	splitFrame:SetAtlas(BAR_SPLIT_ATLAS)
-
 	bar.gamePieces = { borderLeft, borderRight, borderMiddle }
 	bar.borderEnds = { borderLeft, borderRight }
-	bar.splitFrame = splitFrame
 
 	bar.outline = {
 		CreateBarOutline(bar, "TOP", false),
@@ -398,16 +368,16 @@ local function CreateBar(block)
 
 	bar.dividers = {}
 
-	for index = 1, BAR_OWN_PARTS - 1 do
+	for index = 1, BAR_PARTS - 1 do
 		local divider = bar:CreateTexture(nil, "OVERLAY")
 
 		divider:SetColorTexture(
-			BAR_OWN_DIVIDER_COLOR.red,
-			BAR_OWN_DIVIDER_COLOR.green,
-			BAR_OWN_DIVIDER_COLOR.blue,
-			BAR_OWN_DIVIDER_COLOR.alpha
+			BAR_DIVIDER_COLOR.red,
+			BAR_DIVIDER_COLOR.green,
+			BAR_DIVIDER_COLOR.blue,
+			BAR_DIVIDER_COLOR.alpha
 		)
-		divider:SetWidth(BAR_OWN_DIVIDER_WIDTH)
+		divider:SetWidth(BAR_DIVIDER_WIDTH)
 		divider:SetPoint("TOP")
 		divider:SetPoint("BOTTOM")
 		bar.dividers[index] = divider
@@ -652,12 +622,6 @@ function EntryBlockPool:BarMargin(isSplit)
 		return BAR_OWN_MARGIN
 	end
 
-	if isSplit then
-		local heightRatio = SplitFrameArt()
-
-		return self:BarHeight() * (heightRatio - 1)
-	end
-
 	return BAR_BORDER_MARGIN
 end
 
@@ -785,30 +749,22 @@ function EntryBlockPool:DressBar(bar, isSplit)
 	local height = self:BarHeight()
 
 	for _, piece in ipairs(bar.gamePieces) do
-		piece:SetShown(not isOwnStyle and not isSplit)
+		piece:SetShown(not isOwnStyle)
 	end
 
 	for _, border in ipairs(bar.borderEnds) do
 		border:SetSize(BAR_BORDER_WIDTH, height + BAR_BORDER_MARGIN)
 	end
 
-	local heightRatio, sideWidth = SplitFrameArt()
-	local scale = height / BAR_SPLIT_INNER_HEIGHT
-
-	bar.splitFrame:SetShown(not isOwnStyle and isSplit)
-	bar.splitFrame:SetHeight(height * heightRatio)
-	bar.splitFrame:SetPoint("LEFT", -sideWidth * scale, 0)
-	bar.splitFrame:SetPoint("RIGHT", sideWidth * scale, 0)
-
 	for _, edge in ipairs(bar.outline) do
 		edge:SetShown(isOwnStyle)
 	end
 
-	local width = bar:GetWidth() / BAR_OWN_PARTS
+	local partWidth = bar:GetWidth() / BAR_PARTS
 
 	for index, divider in ipairs(bar.dividers) do
-		divider:SetShown(isOwnStyle and isSplit)
-		divider:SetPoint("LEFT", bar, "LEFT", width * index, 0)
+		divider:SetShown(isSplit)
+		divider:SetPoint("LEFT", bar, "LEFT", partWidth * index, 0)
 	end
 end
 
