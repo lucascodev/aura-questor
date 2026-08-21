@@ -76,6 +76,8 @@ Addon.RegisterLocale("enUS", {
 	PREF_BORDER_CLASS_COLOR = "Border in class colour",
 	PREF_BORDER_THICKNESS = "Border thickness",
 	PREF_BORDER_OPACITY = "Border opacity",
+	PREF_PROGRESS_BAR_HEIGHT = "Progress bar height",
+	PREF_PROGRESS_BAR_HEIGHT_TIP = "How thick the bar is drawn, frame included.",
 	PREF_PROGRESS_BAR_TEXTURE = "Progress bar texture",
 	PREF_SHOW_FILTER_BUTTON = "Filter button",
 	PREF_SHOW_FILTER_BUTTON_TIP = "The button in the header corner that opens the menu of filters, sections, sorting and achievements.",

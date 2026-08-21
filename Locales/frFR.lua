@@ -76,6 +76,8 @@ Addon.RegisterLocale("frFR", {
 	PREF_BORDER_CLASS_COLOR = "Bordure aux couleurs de la classe",
 	PREF_BORDER_THICKNESS = "Épaisseur de la bordure",
 	PREF_BORDER_OPACITY = "Opacité de la bordure",
+	PREF_PROGRESS_BAR_HEIGHT = "Hauteur de la barre de progression",
+	PREF_PROGRESS_BAR_HEIGHT_TIP = "Épaisseur du tracé de la barre, cadre compris.",
 	PREF_PROGRESS_BAR_TEXTURE = "Texture de la barre de progression",
 	PREF_SHOW_FILTER_BUTTON = "Bouton de filtres",
 	PREF_SHOW_FILTER_BUTTON_TIP = "Le bouton dans le coin de l'en-tête qui ouvre le menu des filtres, sections, tri et hauts faits.",

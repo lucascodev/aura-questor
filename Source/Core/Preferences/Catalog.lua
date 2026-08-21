@@ -187,6 +187,17 @@ local PreferenceCatalog = {
 		label = L.PREF_PROGRESS_BAR_TEXTURE,
 	},
 	{
+		key = Keys.PROGRESS_BAR_HEIGHT,
+		panel = FRAME_PANEL,
+		kind = "number",
+		default = 12,
+		label = L.PREF_PROGRESS_BAR_HEIGHT,
+		tooltip = L.PREF_PROGRESS_BAR_HEIGHT_TIP,
+		minimum = 8,
+		maximum = 24,
+		step = 1,
+	},
+	{
 		key = Keys.BORDER_OPACITY,
 		panel = FRAME_PANEL,
 		kind = "number",

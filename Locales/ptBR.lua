@@ -74,6 +74,8 @@ Addon.RegisterLocale("ptBR", {
 	PREF_BORDER_CLASS_COLOR = "Cor da borda pela classe",
 	PREF_BORDER_THICKNESS = "Espessura da borda",
 	PREF_BORDER_OPACITY = "Opacidade da borda",
+	PREF_PROGRESS_BAR_HEIGHT = "Altura da barra de progresso",
+	PREF_PROGRESS_BAR_HEIGHT_TIP = "Espessura com que a barra é desenhada, moldura incluída.",
 	PREF_PROGRESS_BAR_TEXTURE = "Textura da barra de progresso",
 	PREF_SHOW_FILTER_BUTTON = "Botão de filtro",
 	PREF_SHOW_FILTER_BUTTON_TIP = "O botão no canto do cabeçalho que abre o menu de filtros, seções, ordenação e conquistas.",

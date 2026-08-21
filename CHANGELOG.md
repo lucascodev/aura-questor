@@ -24,7 +24,8 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 ### Alterado
 
 - As barras de progresso passam a usar a moldura e as cores da barra do
-  rastreador do jogo, no lugar do retângulo escuro sem contorno.
+  rastreador do jogo, no lugar do retângulo escuro sem contorno, e a altura
+  delas virou preferência, na página Moldura.
 
 ### Corrigido
 

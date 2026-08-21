@@ -50,6 +50,7 @@ function FramePanel.Register(category, catalog, preferences)
 			rows = {
 				{
 					{ key = Keys.PROGRESS_BAR_TEXTURE, choices = Addon.MediaLibrary.ProgressBarChoices },
+					{ key = Keys.PROGRESS_BAR_HEIGHT },
 				},
 			},
 		},

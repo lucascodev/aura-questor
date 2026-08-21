@@ -11,12 +11,11 @@ local NUMBER_OFFSET_Y = 1
 local TITLE_SIZE_DELTA = 0
 local LINE_SIZE_DELTA = -1
 
---- The bar and its frame, in the same measures the game's own objective bar
---- uses: the border art is taller than the bar and hangs over it, so the row
---- reserves the border height and the bar sits centred inside it.
-local BAR_HEIGHT = 15
-local BAR_ROW_HEIGHT = 22
-local BAR_TOP_INSET = (BAR_ROW_HEIGHT - BAR_HEIGHT) / 2
+--- The border art of the game's own objective bar is taller than the bar and
+--- hangs over it, by the same amount above and below. The row reserves that
+--- whole height and the bar sits centred in it.
+local BAR_DEFAULT_HEIGHT = 12
+local BAR_BORDER_MARGIN = 7
 local BAR_BORDER_FILE = [[Interface\PaperDollInfoFrame\UI-Character-Skills-BarBorder]]
 local BAR_BORDER_WIDTH = 9
 local BAR_BORDER_OVERHANG = 3
@@ -282,7 +281,6 @@ end
 ---@return table
 local function CreateBar(block)
 	local bar = CreateFrame("StatusBar", nil, block.frame)
-	bar:SetHeight(BAR_HEIGHT)
 	bar:SetMinMaxValues(0, FULL_PERCENT)
 
 	local background = bar:CreateTexture(nil, "BACKGROUND", nil, -1)
@@ -295,16 +293,16 @@ local function CreateBar(block)
 	background:SetAllPoints()
 
 	local borderLeft = CreateBarBorder(bar, 0.007843, 0.043137)
-	borderLeft:SetSize(BAR_BORDER_WIDTH, BAR_ROW_HEIGHT)
 	borderLeft:SetPoint("LEFT", -BAR_BORDER_OVERHANG, 0)
 
 	local borderRight = CreateBarBorder(bar, 0.043137, 0.007843)
-	borderRight:SetSize(BAR_BORDER_WIDTH, BAR_ROW_HEIGHT)
 	borderRight:SetPoint("RIGHT", BAR_BORDER_OVERHANG, 0)
 
 	local borderMiddle = CreateBarBorder(bar, 0.113726, 0.1490196)
 	borderMiddle:SetPoint("TOPLEFT", borderLeft, "TOPRIGHT")
 	borderMiddle:SetPoint("BOTTOMRIGHT", borderRight, "BOTTOMLEFT")
+
+	bar.borderEnds = { borderLeft, borderRight }
 
 	local label = bar:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
 	label:SetPoint("CENTER", 0, -1)
@@ -525,6 +523,17 @@ function EntryBlockPool:SetProgressBarTexture(path)
 	self.progressBarTexture = path
 end
 
+---@param height number
+function EntryBlockPool:SetProgressBarHeight(height)
+	self.progressBarHeight = height
+end
+
+---@private
+---@return number
+function EntryBlockPool:BarHeight()
+	return self.progressBarHeight or BAR_DEFAULT_HEIGHT
+end
+
 --- Devolve a altura, porque ela sai do tamanho da fonte escolhida e o layout
 --- não tem como saber antes de o texto estar posto.
 --- Registrar de novo o mesmo conjunto destruiria e recriaria cada widget a
@@ -624,6 +633,13 @@ end
 ---@param percent number
 function EntryBlockPool:ApplyBar(bar, percent)
 	local color = percent >= FULL_PERCENT and BAR_COMPLETE_COLOR or BAR_FILL_COLOR
+	local height = self:BarHeight()
+
+	bar:SetHeight(height)
+
+	for _, border in ipairs(bar.borderEnds) do
+		border:SetSize(BAR_BORDER_WIDTH, height + BAR_BORDER_MARGIN)
+	end
 
 	bar:SetStatusBarTexture(self.progressBarTexture)
 	bar:SetStatusBarColor(color.red, color.green, color.blue)
@@ -964,11 +980,11 @@ function EntryBlockPool:Build(entry, width, index)
 				block.frame,
 				"TOPLEFT",
 				objectiveLeft,
-				-(height + LINE_SPACING + BAR_TOP_INSET)
+				-(height + LINE_SPACING + BAR_BORDER_MARGIN / 2)
 			)
 			bar:Show()
 
-			height = height + LINE_SPACING + BAR_ROW_HEIGHT
+			height = height + LINE_SPACING + self:BarHeight() + BAR_BORDER_MARGIN
 		else
 			usedLines = usedLines + 1
 
