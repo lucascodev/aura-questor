@@ -7,6 +7,10 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
 ### Corrigido
 
+- A janela subia sozinha quando a lista chegava na borda de baixo da tela: ela
+  crescia além do limite e o jogo empurrava tudo para cima, levando o cabeçalho
+  junto. Agora ela para de crescer ali e a lista rola, como já fazia ao bater no
+  limite de altura.
 - A janela podia sair do lugar quando a lista mudava de tamanho, e a posição de
   fábrica é ancorada pela borda direita, onde isso acontecia sempre. Ela passa a
   ser presa pelo canto de cima, que é o que mantém o cabeçalho parado, e o lugar

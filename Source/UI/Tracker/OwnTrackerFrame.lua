@@ -37,6 +37,8 @@ local EXPANDED_MARK = "-"
 local COLLAPSED_MARK = "+"
 
 --- Collapsed, only the header and the rule under it are left.
+--- Breathing room left between the window and the bottom edge of the screen.
+local SCREEN_MARGIN = 8
 local COLLAPSED_HEIGHT = FRAME_PADDING * 2 + HEADER_HEIGHT + HEADER_RULE_GAP + SECTION_LINE_THICKNESS
 
 local TITLE_SIZE_DELTA = 1
@@ -409,20 +411,37 @@ function OwnTrackerFrame:IsCollapsed()
 	return self.state.isCollapsed == true
 end
 
+--- How far the window can grow before it reaches the bottom of the screen. Past
+--- that the game pushes the whole frame up to keep it on screen, and the header
+--- travels with it; stopping here leaves the header still and lets the list
+--- scroll instead.
+---@private
+---@return number
+function OwnTrackerFrame:RoomBelow()
+	local top = self.root:GetTop()
+
+	if not top then
+		return math.huge
+	end
+
+	return top - SCREEN_MARGIN
+end
+
 --- What the list needs right now, never past the height the player chose, which
 --- becomes a ceiling instead of a fixed size.
 ---@private
 ---@return number
 function OwnTrackerFrame:WantedHeight()
 	if not self.isAutoHeight then
-		return self.expandedHeight
+		return math.max(math.min(self.expandedHeight, self:RoomBelow()), COLLAPSED_HEIGHT)
 	end
 
 	-- Everything around the list is what the collapsed window already is, plus
 	-- the padding under it.
 	local needed = self.content:GetHeight() + COLLAPSED_HEIGHT + FRAME_PADDING
+	local room = math.min(self.expandedHeight, self:RoomBelow())
 
-	return math.min(math.max(needed, COLLAPSED_HEIGHT), self.expandedHeight)
+	return math.max(math.min(needed, room), COLLAPSED_HEIGHT)
 end
 
 ---@private
