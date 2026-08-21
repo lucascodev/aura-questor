@@ -4,7 +4,6 @@ local _, Addon = ...
 --- learn the order without opening ten providers.
 ---@type table<string, number>
 local SectionOrder = {
-	zoneWidgets = 3,
 	scenario = 5,
 	campaign = 10,
 	quests = 20,

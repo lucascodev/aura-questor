@@ -5,13 +5,6 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
 ## [Não publicado]
 
-### Adicionado
-
-- O que a zona publica direto no rastreador, como o cronômetro de uma ofensiva
-  no templo, passa a aparecer. O jogo desenha isso por conjuntos de widgets que
-  o rastreador dele mantém sempre registrados, e que não são cenário: perguntar
-  por cenário ali não responde nada.
-
 ### Corrigido
 
 - A barra de um cenário saía lisa, e o jogo a desenha dividida em cinco, a mesma

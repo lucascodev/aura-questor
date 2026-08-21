@@ -40,7 +40,6 @@ local BAR_SPLIT_KINDS = {
 	worldQuest = true,
 	bonus = true,
 	scenario = true,
-	zoneWidget = true,
 }
 
 ---@param entry TrackerEntry

@@ -211,7 +211,6 @@ local function Build()
 
 	display = Addon.TrackerDisplay.New(
 		Addon.TrackerContent.New({
-			Addon.ZoneWidgetSectionProvider.New(),
 			Addon.ScenarioSectionProvider.New(),
 			Addon.QuestSectionProvider.New(),
 			Addon.WorldQuestSectionProvider.New(preferences),
