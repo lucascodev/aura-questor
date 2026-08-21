@@ -3,6 +3,20 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Adicionado
+
+- O que a zona publica direto no rastreador, como o cronômetro de uma ofensiva
+  no templo, passa a aparecer. O jogo desenha isso por conjuntos de widgets que
+  o rastreador dele mantém sempre registrados, e que não são cenário: perguntar
+  por cenário ali não responde nada.
+
+### Corrigido
+
+- A barra de um cenário saía lisa, e o jogo a desenha dividida em cinco, a mesma
+  arte do objetivo bônus e da missão mundial. Só missão comum usa a barra lisa.
+
 ## [0.83.1] - 2026-08-21
 
 ### Corrigido

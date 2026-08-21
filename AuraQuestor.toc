@@ -112,6 +112,7 @@ Source\System\ChallengeTimer.lua
 Source\System\TomTomArrow.lua
 
 # One folder per kind of content: what it collects, and what its entries do.
+Source\Modules\ZoneWidget\SectionProvider.lua
 Source\Modules\Scenario\SectionProvider.lua
 Source\Modules\Scenario\EntryActions.lua
 Source\Modules\Quest\SectionProvider.lua
