@@ -5,19 +5,25 @@ local _, Addon = ...
 --- Clearing is not a per-entry action: there is a single super-tracked thing in
 --- the game, and letting go of it is the same call whatever was being followed.
 ---
---- Writing the tracked target in combat taints the path the map takes when
---- creating pins, and SetPassThroughButtons is blocked in combat, so the
---- request waits for the fight to end. Only the last click counts, as it would
---- outside combat.
+--- Writing the tracked target while the map is redrawing its pins taints that
+--- path, and the pins call SetPassThroughButtons, which combat blocks. With the
+--- map closed there are no pins to redraw, so only a fight with the map open
+--- makes the request wait. Only the last click counts, as it would outside
+--- combat.
 ---@class SuperTracking
 local SuperTracking = {}
 
 local pendingWrite = nil
 local combatListener = nil
 
+---@return boolean
+local function IsMapRedrawingPins()
+	return WorldMapFrame ~= nil and WorldMapFrame:IsShown()
+end
+
 ---@param write fun()
 local function RunOrDefer(write)
-	if not InCombatLockdown() then
+	if not InCombatLockdown() or not IsMapRedrawingPins() then
 		write()
 		return
 	end

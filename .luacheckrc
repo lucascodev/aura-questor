@@ -175,6 +175,7 @@ read_globals = {
 	"UnitName",
 	"WHITE_FONT_COLOR",
 	"YES",
+	"WorldMapFrame",
 	"strtrim",
 	"time",
 	"wipe",
