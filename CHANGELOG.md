@@ -21,11 +21,6 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 - **Link do Wowhead** no menu de uma missão ou conquista, no idioma do cliente,
   numa caixa para copiar, já que o jogo não abre navegador.
 
-### Alterado
-
-- Perto da borda de baixo da tela, a janela passa a crescer e encolher para
-  cima, em vez de empurrar a própria base para fora da tela.
-
 ## [0.84.1] - 2026-08-21
 
 ### Corrigido

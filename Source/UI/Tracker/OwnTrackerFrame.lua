@@ -433,26 +433,20 @@ function OwnTrackerFrame:ApplyHeight()
 	self.scroll:SetShown(not isCollapsed)
 end
 
---- The edge that stays put while the height changes. Near the bottom of the
---- screen it is the bottom one, so the window grows and shrinks upwards instead
---- of walking off the screen; anywhere else the top stays and the header keeps
---- its place.
+--- The top corner is what stays put while the height changes: the header is the
+--- part the player aims at, and collapsing has to leave it where it was.
+--- Anchoring by the bottom instead makes the header fall to the foot of the
+--- window every time the list shrinks.
 ---@private
 function OwnTrackerFrame:PinTop()
-	local left, top, bottom = self.root:GetLeft(), self.root:GetTop(), self.root:GetBottom()
+	local left, top = self.root:GetLeft(), self.root:GetTop()
 
-	if not left or not top or not bottom then
+	if not left or not top then
 		return
 	end
 
 	self.root:ClearAllPoints()
-
-	if bottom < UIParent:GetHeight() / 2 then
-		self.root:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", left, bottom)
-	else
-		self.root:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", left, top)
-	end
-
+	self.root:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", left, top)
 	self.position:Save()
 end
 
