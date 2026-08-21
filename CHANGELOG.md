@@ -3,6 +3,21 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Adicionado
+
+- Os eventos do mundo passam a mostrar o **progresso** que o jogo publica, o
+  mesmo que aparece no ponto do mapa, desenhado pelo próprio jogo dentro do
+  bloco.
+
+### Corrigido
+
+- Evento em andamento não mostrava quanto tempo ainda tinha. O prazo desses não
+  vem do agendador, e sim do ponto no mapa, e agora é de lá que ele é lido.
+- A arte, a contagem e a origem do progresso passam a seguir o que o próprio
+  evento pede, em vez de valerem para todos igual.
+
 ## [0.82.0] - 2026-08-20
 
 ### Adicionado
