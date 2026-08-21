@@ -973,13 +973,17 @@ function EntryBlockPool:Build(entry, width, index)
 			block.bars[usedBars] = bar
 
 			self:ApplyBar(bar, row.percent)
-			bar:SetWidth(rowWidth)
+
+			-- The border ends hang past the bar on both sides, so the bar is
+			-- narrowed by them: what lines up with the text is the frame around
+			-- it, not the fill inside.
+			bar:SetWidth(rowWidth - BAR_BORDER_OVERHANG * 2)
 			bar:ClearAllPoints()
 			bar:SetPoint(
 				"TOPLEFT",
 				block.frame,
 				"TOPLEFT",
-				objectiveLeft,
+				objectiveLeft + BAR_BORDER_OVERHANG,
 				-(height + LINE_SPACING + BAR_BORDER_MARGIN / 2)
 			)
 			bar:Show()
