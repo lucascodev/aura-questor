@@ -10,8 +10,9 @@ local _, Addon = ...
 ---@class MapNavigator
 local MapNavigator = {}
 
---- Um campo escrito por addon fica manchado, e o atalho de mapa da Blizzard
---- lê o modo de exibição: escrever o valor que já está lá mancharia de graça.
+--- A field written by an addon becomes tainted, and Blizzard's map shortcut
+--- reads the display mode: writing the value already there would taint it for
+--- nothing.
 ---@param displayMode number
 ---@return boolean
 local function IsDisplayMode(displayMode)

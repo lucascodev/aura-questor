@@ -5,9 +5,10 @@ local _, Addon = ...
 --- Clearing is not a per-entry action: there is a single super-tracked thing in
 --- the game, and letting go of it is the same call whatever was being followed.
 ---
---- Escrever a supervisão em combate mancha o caminho que o mapa percorre ao
---- criar pinos, e SetPassThroughButtons é bloqueada em combate; o pedido
---- espera o combate acabar. Só o último clique vale, como valeria fora dele.
+--- Writing the tracked target in combat taints the path the map takes when
+--- creating pins, and SetPassThroughButtons is blocked in combat, so the
+--- request waits for the fight to end. Only the last click counts, as it would
+--- outside combat.
 ---@class SuperTracking
 local SuperTracking = {}
 

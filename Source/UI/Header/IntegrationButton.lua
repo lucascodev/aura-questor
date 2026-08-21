@@ -9,7 +9,7 @@ local HIGHLIGHT_ATLAS = "ui-questtrackerbutton-red-highlight"
 local BUTTON_LABEL = "I"
 local LABEL_COLOR = { red = 1, green = 0.95, blue = 0.85 }
 
---- Abre a página de integrações a partir do cabeçalho do rastreador.
+--- Opens the integrations page from the tracker header.
 ---@class TrackerIntegrationButton
 ---@field private onClick fun()
 local TrackerIntegrationButton = {}

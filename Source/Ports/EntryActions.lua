@@ -18,7 +18,7 @@
 ---@field Describe? fun(self: EntryActions, entry: TrackerEntry): string? Extra text for the tooltip.
 ---@field InsertChatLink? fun(self: EntryActions, entry: TrackerEntry): boolean Chat-link click; true when the link went to the chat box.
 
---- Manda uma entrada para a seta de navegação, quando há uma disponível.
+--- Sends an entry to the navigation arrow, when one is available.
 ---@class EntryWaypoints
 ---@field isAvailable fun(): boolean
 ---@field send fun(entry: TrackerEntry)

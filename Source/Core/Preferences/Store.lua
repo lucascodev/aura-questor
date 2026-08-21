@@ -52,9 +52,8 @@ function Preferences:Set(key, value)
 	self.onChanged(key)
 end
 
---- Devolve ao padrão de fábrica só as chaves pedidas. Cada uma é anunciada
---- como qualquer outra mudança, para quem escuta não precisar saber que a mão
---- que mexeu foi a de um botão de restaurar.
+--- Puts only the given keys back to their defaults. Each one is announced like
+--- any other change, so listeners never have to know a reset did it.
 ---@param keys string[]
 function Preferences:Reset(keys)
 	local wanted = {}

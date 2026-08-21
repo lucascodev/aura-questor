@@ -1,8 +1,9 @@
 local _, Addon = ...
 
---- A Inter e a JetBrains Mono acompanham o addon, mas não têm glifo CJK: num
---- cliente chinês, japonês ou coreano todo texto delas vira quadrado. O jogo
---- publica em STANDARD_TEXT_FONT a fonte certa do idioma do cliente.
+--- Inter and JetBrains Mono ship with the addon but have no CJK glyphs: on a
+--- Chinese, Japanese or Korean client every character drawn with them turns
+--- into a box. The game publishes the right font for the client language in
+--- STANDARD_TEXT_FONT.
 ---@class ClientFont
 local ClientFont = {}
 

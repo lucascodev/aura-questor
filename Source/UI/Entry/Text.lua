@@ -101,7 +101,8 @@ function EntryText.Rows(entry)
 	end
 
 	for _, objective in ipairs(entry.objectives) do
-		-- Card e widget têm moldura própria, então o traço de objetivo sobraria.
+		-- Cards and widgets have their own frame, so the objective dash would be
+		-- one mark too many.
 		local isFramed = objective.card ~= nil or objective.widgetSetID ~= nil
 
 		local color = objective.isComplete and OBJECTIVE_COMPLETE_COLOR or OBJECTIVE_COLOR
@@ -113,8 +114,8 @@ function EntryText.Rows(entry)
 			widgetSetID = objective.widgetSetID,
 		})
 
-		-- A barra diz a fração, não o que está sendo medido. Sozinha, "0%" não
-		-- informa nada, então ela vem depois da linha em vez de no lugar dela.
+		-- The bar shows the share, not what is being measured. On its own "0%"
+		-- says nothing, so it comes after the line instead of replacing it.
 		if objective.percent and not isFramed then
 			table.insert(rows, { text = objective.text, color = color, percent = objective.percent })
 		end

@@ -17,8 +17,8 @@ function AppearancePanel.Register(category, catalog, preferences)
 
 	local height = Addon.PreferenceLookup.Find(catalog, Keys.TRACKER_HEIGHT)
 
-	--- Medido quando a página aparece, e não no carregamento: a escala da
-	--- interface só vale depois, e antes dela a tela responde outro tamanho.
+	--- Measured when the page shows, not at load: the interface scale only
+	--- applies later, and before that the screen reports another size.
 	local function HeightCeiling()
 		return Addon.PreferenceBounds.Maximum(height, GetScreenHeight())
 	end

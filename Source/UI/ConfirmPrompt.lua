@@ -2,11 +2,10 @@ local _, Addon = ...
 
 local DIALOG_KEY = "AURAQUESTOR_CONFIRM"
 
---- Pergunta sim ou não antes do que não tem como desfazer.
+--- Asks yes or no before something that cannot be undone.
 ---
---- Dialog próprio, e não o de nome com a caixa de texto escondida: os dois
---- respondem coisas diferentes, e um só com campos ligados e desligados a cada
---- uso erra na primeira vez que alguém esquecer de desligar.
+--- Its own dialog rather than the name prompt with the text box hidden: turning
+--- fields on and off per use breaks the first time someone forgets one.
 ---@class ConfirmPrompt
 local ConfirmPrompt = {}
 

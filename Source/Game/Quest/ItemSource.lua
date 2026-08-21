@@ -1,8 +1,8 @@
 local _, Addon = ...
 
---- Toda entrada que vive no diário de missões pode carregar item, não só a
---- missão comum. A lista existe para não consultar o diário com o id de uma
---- conquista, que por acaso pode coincidir com o de alguma missão.
+--- Every entry that lives in the quest log can carry an item, not just a plain
+--- quest. The list exists so the log is never asked about an achievement id,
+--- which can happen to match a quest one.
 local QUEST_LOG_KINDS = {
 	quest = true,
 	worldQuest = true,
@@ -41,7 +41,7 @@ function QuestItemSource.Read(entry)
 	}
 end
 
---- Nil quando o item não tem restrição de alcance nenhuma, e aí não há o que
+--- Nil when the item has no range restriction at all, and then there is nothing
 --- pintar de vermelho.
 ---@param entry TrackerEntry
 ---@return boolean?

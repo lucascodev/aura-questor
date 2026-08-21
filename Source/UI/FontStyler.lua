@@ -29,7 +29,7 @@ function FontStyler.Apply(fontString, style, sizeDelta)
 	)
 end
 
---- Números alinham em mono; o resto do estilo acompanha a fonte escolhida.
+--- Numbers line up in mono; the rest of the style follows the chosen font.
 ---@param fontString table
 ---@param style TrackerFontStyle
 ---@param sizeDelta number
