@@ -5,6 +5,13 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
 ## [Não publicado]
 
+### Corrigido
+
+- A janela podia sair do lugar quando a lista mudava de tamanho, e a posição de
+  fábrica é ancorada pela borda direita, onde isso acontecia sempre. Ela passa a
+  ser presa pelo canto de cima, que é o que mantém o cabeçalho parado, e o lugar
+  escolhido por você é gravado por esse mesmo canto.
+
 ### Adicionado
 
 - **Altura conforme a lista**, ligada de fábrica: a janela encolhe até o tamanho

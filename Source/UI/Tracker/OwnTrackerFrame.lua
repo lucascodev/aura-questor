@@ -102,7 +102,7 @@ function OwnTrackerFrame:Build(addonInfo, position)
 	root:SetScript("OnDragStart", root.StartMoving)
 	root:SetScript("OnDragStop", function(frame)
 		frame:StopMovingOrSizing()
-		self.position:Save()
+		self:PinTop()
 	end)
 	root:Hide()
 
@@ -428,6 +428,11 @@ end
 ---@private
 function OwnTrackerFrame:ApplyHeight()
 	local isCollapsed = self:IsCollapsed()
+
+	-- Held by the top before the height moves: anchored anywhere else, and the
+	-- factory position is anchored to the right edge, a taller or shorter list
+	-- would carry the header with it.
+	self:PinTop()
 
 	self.root:SetHeight(isCollapsed and COLLAPSED_HEIGHT or self:WantedHeight())
 	self.scroll:SetShown(not isCollapsed)
