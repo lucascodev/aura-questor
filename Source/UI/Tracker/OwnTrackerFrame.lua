@@ -343,6 +343,10 @@ function OwnTrackerFrame:Render(sections)
 
 	self.pool:HideUnused()
 	self.content:SetHeight(math.max(offset, 1))
+
+	-- After the content is measured: with the height following the list, the
+	-- window only knows its size once the list has one.
+	self:ApplyHeight()
 	self:SyncCountdownTicker()
 end
 
@@ -386,6 +390,7 @@ function OwnTrackerFrame:SetAppearance(appearance)
 	end
 
 	self.expandedHeight = appearance.height
+	self.isAutoHeight = appearance.isAutoHeight
 	self.root:SetWidth(appearance.width)
 	self.content:SetWidth(appearance.width - FRAME_PADDING * 2)
 
@@ -404,22 +409,50 @@ function OwnTrackerFrame:IsCollapsed()
 	return self.state.isCollapsed == true
 end
 
+--- What the list needs right now, never past the height the player chose, which
+--- becomes a ceiling instead of a fixed size.
+---@private
+---@return number
+function OwnTrackerFrame:WantedHeight()
+	if not self.isAutoHeight then
+		return self.expandedHeight
+	end
+
+	-- Everything around the list is what the collapsed window already is, plus
+	-- the padding under it.
+	local needed = self.content:GetHeight() + COLLAPSED_HEIGHT + FRAME_PADDING
+
+	return math.min(math.max(needed, COLLAPSED_HEIGHT), self.expandedHeight)
+end
+
 ---@private
 function OwnTrackerFrame:ApplyHeight()
 	local isCollapsed = self:IsCollapsed()
 
-	self.root:SetHeight(isCollapsed and COLLAPSED_HEIGHT or self.expandedHeight)
+	self.root:SetHeight(isCollapsed and COLLAPSED_HEIGHT or self:WantedHeight())
 	self.scroll:SetShown(not isCollapsed)
 end
 
---- Anchored by the top corner: around a centre or bottom anchor the header
---- would jump every time the height changed.
+--- The edge that stays put while the height changes. Near the bottom of the
+--- screen it is the bottom one, so the window grows and shrinks upwards instead
+--- of walking off the screen; anywhere else the top stays and the header keeps
+--- its place.
 ---@private
 function OwnTrackerFrame:PinTop()
-	local left, top = self.root:GetLeft(), self.root:GetTop()
+	local left, top, bottom = self.root:GetLeft(), self.root:GetTop(), self.root:GetBottom()
+
+	if not left or not top or not bottom then
+		return
+	end
 
 	self.root:ClearAllPoints()
-	self.root:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", left, top)
+
+	if bottom < UIParent:GetHeight() / 2 then
+		self.root:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", left, bottom)
+	else
+		self.root:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", left, top)
+	end
+
 	self.position:Save()
 end
 
@@ -442,6 +475,16 @@ function OwnTrackerFrame:ToggleCollapsed()
 	end
 
 	return self:IsCollapsed()
+end
+
+--- Opens a collapsed tracker, for when something new was tracked and the list
+--- has no way to say so.
+function OwnTrackerFrame:Expand()
+	if not self:IsCollapsed() or self:IsLockedByCombat() then
+		return
+	end
+
+	self:ToggleCollapsed()
 end
 
 ---@param style TrackerFontStyle

@@ -42,6 +42,7 @@ Locales\frFR.lua
 
 # Rules, in plain Lua. Nothing here knows the game exists.
 Source\Core\HexColor.lua
+Source\Core\WowheadLink.lua
 Source\Core\ToggleSet.lua
 Source\Core\Profiles.lua
 Source\Core\LegacyDatabase.lua

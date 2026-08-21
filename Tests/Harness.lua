@@ -21,6 +21,7 @@ local LOCALE_FILES = {
 --- at file scope.
 local CORE_FILES = {
 	"HexColor",
+	"WowheadLink",
 	"ToggleSet",
 	"Profiles",
 	"LegacyDatabase",

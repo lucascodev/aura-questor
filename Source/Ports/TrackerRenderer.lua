@@ -18,7 +18,8 @@
 --- arrive resolved to paths, and nil means the player chose to have none.
 ---@class TrackerAppearance
 ---@field width number
----@field height number
+---@field height number Ceiling when isAutoHeight is on, fixed height otherwise.
+---@field isAutoHeight boolean
 ---@field opacity number Between 0 and 1.
 ---@field backgroundTexture string?
 ---@field backgroundColor TrackerColor
@@ -42,3 +43,4 @@
 ---@field SetScale fun(self: TrackerRenderer, scale: number)
 ---@field SetEditing fun(self: TrackerRenderer, isEditing: boolean)
 ---@field ResetPosition fun(self: TrackerRenderer)
+---@field Expand fun(self: TrackerRenderer)

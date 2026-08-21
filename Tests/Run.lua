@@ -11,6 +11,7 @@ local Support = dofile("Tests/Support.lua")
 --- umas das outras.
 local SUITES = {
 	"Core/HexColor",
+	"Core/WowheadLink",
 	"Core/ToggleSet",
 	"Core/Profiles",
 	"Core/LegacyDatabase",

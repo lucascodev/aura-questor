@@ -36,6 +36,10 @@ function ContentPanel.Register(category, catalog, preferences)
 				},
 				{
 					{ key = Keys.INSTANCE_FOCUS },
+					{ key = Keys.HIDE_WHEN_EMPTY },
+				},
+				{
+					{ key = Keys.AUTO_EXPAND },
 				},
 			},
 		},

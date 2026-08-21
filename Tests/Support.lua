@@ -126,6 +126,9 @@ function Support.Renderer()
 			self.editing = isEditing
 		end,
 		ResetPosition = function() end,
+		Expand = function(self)
+			self.expanded = (self.expanded or 0) + 1
+		end,
 	}
 end
 

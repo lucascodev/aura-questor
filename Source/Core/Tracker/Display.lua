@@ -147,6 +147,7 @@ function TrackerDisplay:ApplyAppearance()
 	self.renderer:SetAppearance({
 		width = self.preferences:Get(Keys.TRACKER_WIDTH),
 		height = self.preferences:Get(Keys.TRACKER_HEIGHT),
+		isAutoHeight = self.preferences:Get(Keys.AUTO_HEIGHT),
 		opacity = self.preferences:Get(Keys.PANEL_OPACITY) / PERCENTAGE_MAXIMUM,
 		backgroundTexture = self.sources.Background(self.preferences:Get(Keys.BACKGROUND_TEXTURE)),
 		backgroundColor = self:Color(Keys.BACKGROUND_COLOR),
@@ -162,6 +163,68 @@ end
 function TrackerDisplay:ApplyWidgets()
 	for key, widget in pairs(self.widgets) do
 		widget:SetShown(self.preferences:Get(key))
+	end
+end
+
+--- Nothing tracked at all, which is not the same as nothing on screen: hiding
+--- every section is the player filtering, and a window that vanishes for that
+--- would look broken.
+---@private
+---@return boolean
+function TrackerDisplay:IsEmpty()
+	for _, section in ipairs(self.lastSections) do
+		if #section.entries > 0 then
+			return false
+		end
+	end
+
+	return true
+end
+
+--- What is on the list right now, so the next refresh can tell an entry that
+--- was already there from one that has just been tracked.
+---@private
+---@param sections TrackerSection[]
+---@return table<string, boolean>
+local function EntryKeys(sections)
+	local keys = {}
+
+	for _, section in ipairs(sections) do
+		for _, entry in ipairs(section.entries) do
+			keys[section.id .. ":" .. tostring(entry.id)] = true
+		end
+	end
+
+	return keys
+end
+
+---@private
+---@param sections TrackerSection[]
+function TrackerDisplay:RememberEntries(sections)
+	self.lastEntryKeys = EntryKeys(sections)
+end
+
+--- Collapsed, the tracker has no way to say something arrived. Opening it is
+--- opt in, since a window that opens by itself while the player is doing
+--- something else is worse than one that stays put.
+---@private
+---@param sections TrackerSection[]
+function TrackerDisplay:OpenForNewEntries(sections)
+	local keys = EntryKeys(sections)
+	local previous = self.lastEntryKeys
+
+	self.lastEntryKeys = keys
+
+	if not previous or not self.preferences:Get(Keys.AUTO_EXPAND) then
+		return
+	end
+
+	for key in pairs(keys) do
+		if not previous[key] then
+			self.renderer:Expand()
+
+			return
+		end
 	end
 end
 
@@ -185,9 +248,23 @@ function TrackerDisplay:Refresh()
 
 	self.lastSections = self.content:Build()
 
-	self.renderer:SetShown(true)
+	local visible = self:Visible(self.lastSections)
+
+	-- Ahead of the empty check: the look is applied whether or not the list has
+	-- anything, so the font is already in place when the first entry arrives and
+	-- the layout is measured.
 	self:ApplyAppearance()
-	self.renderer:Render(self:Visible(self.lastSections))
+
+	if self:IsEmpty() and self.preferences:Get(Keys.HIDE_WHEN_EMPTY) then
+		self.renderer:SetShown(false)
+		self:RememberEntries(visible)
+
+		return
+	end
+
+	self.renderer:SetShown(true)
+	self.renderer:Render(visible)
+	self:OpenForNewEntries(visible)
 end
 
 Addon.TrackerDisplay = TrackerDisplay

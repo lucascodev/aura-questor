@@ -35,6 +35,9 @@ function AppearancePanel.Register(category, catalog, preferences)
 					{ key = Keys.TRACKER_SCALE, suffix = "%" },
 					{ key = Keys.PANEL_OPACITY, suffix = "%" },
 				},
+				{
+					{ key = Keys.AUTO_HEIGHT, span = 2 },
+				},
 				"divider",
 				{
 					{ key = Keys.EDIT_MODE, span = 2 },

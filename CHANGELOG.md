@@ -3,6 +3,26 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Adicionado
+
+- **Altura conforme a lista**, ligada de fábrica: a janela encolhe até o tamanho
+  do que está rastreado, e a altura escolhida no painel passa a ser o limite em
+  vez de um tamanho fixo.
+- **Esconder quando vazio**, ligada de fábrica: sem nada rastreado a janela sai
+  da tela. Esconder seções pelo filtro não conta como vazio, porque isso é
+  escolha sua.
+- **Abrir ao rastrear algo**, desligada de fábrica: com a janela recolhida, ela
+  se abre sozinha quando algo novo entra na lista.
+- **Link do Wowhead** no menu de uma missão ou conquista, no idioma do cliente,
+  numa caixa para copiar, já que o jogo não abre navegador.
+
+### Alterado
+
+- Perto da borda de baixo da tela, a janela passa a crescer e encolher para
+  cima, em vez de empurrar a própria base para fora da tela.
+
 ## [0.84.1] - 2026-08-21
 
 ### Corrigido

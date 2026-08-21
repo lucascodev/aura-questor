@@ -1,6 +1,15 @@
 return function(Addon, T, Support)
 	local Keys = Addon.PreferenceKeys
 
+	--- Uma seção sem entrada nunca chega aqui: o TrackerContent descarta as
+	--- vazias antes.
+	local ENTRY = { id = 1, kind = "quest", title = "Missao", objectives = {} }
+
+	---@return table
+	local function Section()
+		return { id = "quests", title = "Missoes", order = 1, entries = { ENTRY } }
+	end
+
 	---@param overrides table?
 	---@return table
 	local function Values(overrides)
@@ -60,7 +69,7 @@ return function(Addon, T, Support)
 
 	T.Suite("TrackerDisplay", function()
 		T.Test("com o nosso ligado, o da Blizzard sai de cena", function()
-			local built = Build()
+			local built = Build({ sections = { Section() } })
 			built.display:Refresh()
 
 			T.Equals(built.blizzard.hidden, true)
@@ -68,7 +77,10 @@ return function(Addon, T, Support)
 		end)
 
 		T.Test("manter o da Blizzard deixa os dois na tela", function()
-			local built = Build({ values = { [Keys.KEEP_BLIZZARD_TRACKER] = true } })
+			local built = Build({
+				sections = { Section() },
+				values = { [Keys.KEEP_BLIZZARD_TRACKER] = true },
+			})
 			built.display:Refresh()
 
 			T.Equals(built.blizzard.hidden, false)
@@ -204,11 +216,68 @@ return function(Addon, T, Support)
 			T.IsTrue(built.renderer.appearance ~= nil)
 		end)
 
+		T.Test("sem nada rastreado a janela sai da tela", function()
+			local built = Build()
+			built.display:Refresh()
+
+			T.Equals(built.renderer.shown, false)
+		end)
+
+		T.Test("esconder quando vazio e desligavel", function()
+			local built = Build({ values = { [Keys.HIDE_WHEN_EMPTY] = false } })
+			built.display:Refresh()
+
+			T.Equals(built.renderer.shown, true)
+		end)
+
+		T.Test("esconder secao nao esconde a janela", function()
+			local built = Build({ sections = { Section() } })
+
+			built.display:Refresh()
+			built.display:ToggleSection("quests")
+
+			T.Equals(built.renderer.shown, true, "filtrar e escolha, nao lista vazia")
+		end)
+
+		T.Test("abrir sozinho so acontece com a preferencia ligada", function()
+			local sections = {}
+			local built = Build({ sections = sections, values = { [Keys.AUTO_EXPAND] = true } })
+
+			built.display:Refresh()
+			table.insert(sections, Section())
+			built.display:Refresh()
+
+			T.Equals(built.renderer.expanded, 1)
+		end)
+
+		T.Test("desligado, nada abre sozinho", function()
+			local sections = {}
+			local built = Build({ sections = sections })
+
+			built.display:Refresh()
+			table.insert(sections, Section())
+			built.display:Refresh()
+
+			T.Equals(built.renderer.expanded, nil)
+		end)
+
+		T.Test("entrada que ja estava na lista nao abre a janela", function()
+			local built = Build({
+				sections = { Section() },
+				values = { [Keys.AUTO_EXPAND] = true },
+			})
+
+			built.display:Refresh()
+			built.display:Refresh()
+
+			T.Equals(built.renderer.expanded, nil, "a primeira leitura nao conta como novidade")
+		end)
+
 		T.Test("pedra-chave ativa deixa so a secao da instancia", function()
 			local sections = {
-				{ id = "scenario", title = "Masmorra", order = 1, entries = {} },
-				{ id = "quests", title = "Missoes", order = 2, entries = {} },
-				{ id = "worldQuests", title = "Mundiais", order = 3, entries = {} },
+				{ id = "scenario", title = "Masmorra", order = 1, entries = { ENTRY } },
+				{ id = "quests", title = "Missoes", order = 2, entries = { ENTRY } },
+				{ id = "worldQuests", title = "Mundiais", order = 3, entries = { ENTRY } },
 			}
 			local built = Build({ sections = sections, isChallengeActive = true })
 			built.display:Refresh()
@@ -219,8 +288,8 @@ return function(Addon, T, Support)
 
 		T.Test("com o foco desligado a pedra-chave nao esconde nada", function()
 			local sections = {
-				{ id = "scenario", title = "Masmorra", order = 1, entries = {} },
-				{ id = "quests", title = "Missoes", order = 2, entries = {} },
+				{ id = "scenario", title = "Masmorra", order = 1, entries = { ENTRY } },
+				{ id = "quests", title = "Missoes", order = 2, entries = { ENTRY } },
 			}
 			local built = Build({
 				sections = sections,
@@ -234,8 +303,8 @@ return function(Addon, T, Support)
 
 		T.Test("fora da pedra-chave o foco nao muda nada", function()
 			local sections = {
-				{ id = "scenario", title = "Masmorra", order = 1, entries = {} },
-				{ id = "quests", title = "Missoes", order = 2, entries = {} },
+				{ id = "scenario", title = "Masmorra", order = 1, entries = { ENTRY } },
+				{ id = "quests", title = "Missoes", order = 2, entries = { ENTRY } },
 			}
 			local built = Build({ sections = sections })
 			built.display:Refresh()
