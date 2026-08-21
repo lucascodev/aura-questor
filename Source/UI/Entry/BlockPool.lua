@@ -86,7 +86,11 @@ local TAG_SIZE = 18
 local TAG_GAP = 3
 local GROUP_SIZE = 20
 local GROUP_GAP = 4
-local LINE_SPACING = 2
+--- Between the lines of a block: the title, the zone and each objective. An
+--- objective that wraps carries its own lines close together, so this has to be
+--- clearly wider than that, otherwise a wrapped line and the next objective
+--- read the same.
+local LINE_SPACING = 5
 
 --- Used when a quest reports an item but no icon comes with it. An empty
 --- button would read as broken.
