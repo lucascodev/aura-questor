@@ -38,6 +38,7 @@ local CORE_FILES = {
 	"Filtering/FilterIds",
 	"Filtering/Filters",
 	"Filtering/Filtering",
+	"Tracker/Place",
 	"Tracker/SectionOrder",
 	"Tracker/SectionArrangement",
 	"Tracker/Content",

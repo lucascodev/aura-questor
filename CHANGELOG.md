@@ -7,10 +7,15 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
 ### Corrigido
 
-- A janela andava um pouco a cada `/reload`, e com ela mudava a altura. A cada
-  ajuste de tamanho a posição era gravada de novo, e no login isso registrava o
-  lugar para onde o jogo tinha acabado de empurrar a janela para mantê-la na
-  tela. Gravar voltou a ser só o que você faz: arrastar e recolher.
+- A janela andava um pouco a cada `/reload`, e com ela mudava a altura. Para se
+  reancorar, o rastreador media a própria posição a cada mudança de tamanho, e o
+  jogo responde a essa medida com o desenho anterior, não com o atual. No login
+  isso gravava um lugar um pouco diferente do real, e a janela caminhava. Agora
+  a posição guardada é a única referência: medir só acontece quando você solta o
+  arrasto.
+- Mudar a escala nas opções levava a janela para outro ponto da tela. Os números
+  guardados valem na escala da janela, então trocar a escala mudava o que eles
+  significam. O lugar passa a ser reaplicado logo depois da escala.
 
 ### Alterado
 
