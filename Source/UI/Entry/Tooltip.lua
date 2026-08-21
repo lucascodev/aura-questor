@@ -3,6 +3,7 @@ local _, Addon = ...
 local FULL_ALPHA = 1
 local WRAP = true
 local WHITE = { 1, 1, 1 }
+local WIDGET_PADDING = 10
 
 local GROUP_COLOR = { red = 0.45, green = 0.65, blue = 0.9 }
 local OBJECTIVE_COLOR = { red = 0.82, green = 0.82, blue = 0.82 }
@@ -75,6 +76,12 @@ function EntryTooltip.Show(actions, entry, owner)
 		for _, reward in ipairs(rewards) do
 			GameTooltip:AddLine(reward, WHITE[1], WHITE[2], WHITE[3])
 		end
+	end
+
+	-- Where this content was made to live: it is the set the map draws in the
+	-- point's tooltip, with items and rewards that have no place in a block.
+	if entry.tooltipWidgetSetID then
+		GameTooltip_AddWidgetSet(GameTooltip, entry.tooltipWidgetSetID, WIDGET_PADDING)
 	end
 
 	GameTooltip:Show()

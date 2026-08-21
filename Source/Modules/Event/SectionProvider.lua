@@ -84,6 +84,7 @@ local function ReadEntry(eventInfo, secondsLeft)
 		table.insert(objectives, { text = zoneName, isComplete = false })
 	end
 
+	local displayInfo = DisplayInfo(eventInfo)
 	local _, superTrackedPoiID = C_SuperTrack.GetSuperTrackedMapPin(Enum.SuperTrackingMapPinType.AreaPOI)
 
 	return {
@@ -97,6 +98,7 @@ local function ReadEntry(eventInfo, secondsLeft)
 		isSuperTrackable = true,
 		isSuperTracked = superTrackedPoiID == eventInfo.areaPoiID,
 		timeLeftSeconds = ReadTimeLeft(eventInfo, secondsLeft),
+		tooltipWidgetSetID = displayInfo.overrideTooltipWidgetSetID or poiInfo.tooltipWidgetSet,
 	}
 end
 

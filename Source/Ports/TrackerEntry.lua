@@ -45,6 +45,8 @@
 ---@field isSuperTrackable? boolean Whether the pin can drive the on-screen arrow.
 ---@field isSuperTracked? boolean Whether it currently does.
 ---@field timeLeftSeconds? number
+---@field tooltipWidgetSetID? number The set the game draws in the map tooltip
+--- for this entry: the tracker hands it to the tooltip, never to the block.
 
 --- A titled group of entries, drawn in one block.
 ---@class TrackerSection

@@ -10,6 +10,11 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 - A contagem regressiva mostra segundos: `4min 32s` abaixo de uma hora e `45s`
   no último minuto. Acima de uma hora nada muda. O número anda de segundo em
   segundo enquanto houver contagem na tela.
+- O que o jogo mostra no ponto do mapa de um evento, com recompensas e itens,
+  passa a aparecer no tooltip da entrada, que é onde esse conteúdo cabe.
+- O menu do evento ganhou **seguir** e **parar de seguir**, com os mesmos
+  nomes que o jogo usa no ponto do mapa. Clicar no ícone do evento já fazia
+  isso, mas nada dizia.
 
 ### Corrigido
 

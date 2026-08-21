@@ -30,9 +30,23 @@ function EventEntryActions:SuperTrack(entry)
 end
 
 ---@param entry TrackerEntry
+--- Following an event is already a click on its icon, but nothing on screen
+--- says so, and the same pair of labels is what the map pin offers.
 ---@return EntryMenuItem[]
 function EventEntryActions:MenuItems(entry)
 	return {
+		{
+			label = entry.isSuperTracked and POI_REMOVE_FOCUS or POI_FOCUS,
+			run = function()
+				if entry.isSuperTracked then
+					Addon.SuperTracking.Clear()
+
+					return
+				end
+
+				self:SuperTrack(entry)
+			end,
+		},
 		{
 			label = OBJECTIVES_SHOW_QUEST_MAP,
 			run = function()
