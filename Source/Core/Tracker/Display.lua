@@ -72,8 +72,8 @@ function TrackerDisplay:ToggleSection(sectionID)
 	self:Refresh()
 end
 
---- Numa pedra-chave ativa o jogo inteiro vira a masmorra, e o rastreador da
---- Blizzard tira as missões de cena; com o foco ligado, o nosso faz o mesmo.
+--- During a keystone run the game's own tracker takes the quests off screen,
+--- and with the focus setting on, ours does the same.
 local INSTANCE_SECTION_ID = "scenario"
 
 ---@private

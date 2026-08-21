@@ -1,7 +1,7 @@
 local _, Addon = ...
 
---- Nome fixo de propósito: é chave de SavedVariables, e traduzi-lo faria o
---- perfil sumir quando o jogador trocasse o idioma do cliente.
+--- Fixed on purpose: it is a SavedVariables key, and translating it would make
+--- the profile disappear when the player changed the client language.
 local DEFAULT_NAME = "Default"
 
 --- Tables a profile owns besides its settings. Named here so migration and

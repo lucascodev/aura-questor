@@ -2,8 +2,7 @@ local _, Addon = ...
 
 local ENTRY_KIND = "scenario"
 
---- Above everything else: a scenario is what the player is doing right now,
---- and the quests can wait until they are out of it.
+--- Above everything else: a scenario is what the player is doing right now.
 
 local SECONDS_PER_MINUTE = 60
 local REMAINING_LABEL = Addon.L.SCENARIO_REMAINING
@@ -42,8 +41,8 @@ local function FormatCriteria(criteria)
 	return ("%d/%d %s"):format(criteria.quantity, criteria.totalQuantity, criteria.description)
 end
 
---- Weighted progress is a share of the whole, not a count of things: the
---- quantity is already the percentage, and it belongs in a bar.
+--- Weighted progress is a share of the whole: the quantity is already the
+--- percentage, and it belongs in a bar.
 ---@param criteria table
 ---@return TrackerObjective
 local function AsObjective(criteria)
@@ -94,9 +93,6 @@ local function FormatAffixes(affixIDs)
 	return table.concat(names, AFFIXES_SEPARATOR)
 end
 
---- The keystone level, the affixes and the death count are what a Mythic+ run
---- is judged on, so they belong beside the objectives rather than in a separate
---- panel the player has to go looking for.
 --- The elapsed time lives with the world state timers, not with the challenge
 --- API, and has to be picked out of them by type.
 ---@return number?
@@ -169,9 +165,9 @@ local function AddChallengeInfo(objectives)
 	})
 end
 
---- Cada cenário declara o seu conjunto de arte, e o fundo do bloco segue dele
---- por nome. Quando o atlas não existe naquela versão do cliente, o card volta
---- para a caixa lisa em vez de sumir.
+--- Each scenario declares its own art kit and the block background follows it
+--- by name. When the atlas is missing on that client the card falls back to the
+--- plain box instead of disappearing.
 ---@return string?
 local function ReadHeaderAtlas()
 	local textureKit = select(TEXTURE_KIT_RETURN, C_Scenario.GetInfo()) or DEFAULT_TEXTURE_KIT
@@ -191,8 +187,8 @@ local function ReadHeaderAtlas()
 	return nil
 end
 
---- Mítica+ não serve de teste: uma masmorra normal também é masmorra, e só o
---- tipo da instância separa isso de um cenário a céu aberto.
+--- Mythic+ is no test: a normal dungeon is a dungeon too, and only the instance
+--- type tells it from an outdoor scenario.
 ---@return boolean
 local function IsInDungeon()
 	local _, instanceType = IsInInstance()
@@ -212,10 +208,8 @@ local function FormatStage(stageName, currentStage, numStages)
 	return ("%s (%d/%d)"):format(stageName, currentStage, numStages)
 end
 
---- O passo pode publicar um conjunto de widgets: o cronômetro de onda, o
---- cabeçalho de Imersão com nível, vidas e modificadores. Quando existe, o
---- próprio jogo desenha esse bloco, e correr atrás de cada temporada com
---- desenho nosso deixa de ser necessário.
+--- The step can publish a widget set: the wave timer, the delve header with
+--- tier, lives and modifiers. When it exists the game draws that block itself.
 ---@return number?
 ---@return boolean isDelve
 local function ReadWidgetSet()
@@ -252,8 +246,8 @@ function ScenarioSectionProvider:Collect()
 	local stageName, stageDescription = C_Scenario.GetStepInfo()
 	local objectives = {}
 
-	-- Numa masmorra o estágio é a própria masmorra: não há nome a repetir, e o
-	-- card passa a ser o título em vez de vir abaixo dele.
+	-- In a dungeon the stage is the dungeon itself, so the card becomes the
+	-- title instead of sitting under it.
 	local hasOwnStage = stageName and stageName ~= "" and stageName ~= scenarioName
 	local stageLabel = hasOwnStage and FormatStage(stageName, currentStage, numStages)
 		or scenarioName
@@ -294,9 +288,9 @@ function ScenarioSectionProvider:Collect()
 	AddCriteria(objectives)
 	AddChallengeInfo(objectives)
 
-	-- Numa Imersão o nome do cenário é a própria categoria, já localizado pelo
-	-- jogo, e o widget carrega o nome da Delve. Promovido a título da seção,
-	-- nada sobra para a linha de título dizer.
+	-- In a delve the scenario name is the category itself, already translated,
+	-- and the widget carries the delve name. Promoted to section title, nothing
+	-- is left for the title line to say.
 	local title = TRACKER_HEADER_SCENARIO
 
 	if isDelve then

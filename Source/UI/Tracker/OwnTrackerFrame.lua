@@ -16,9 +16,6 @@ local SECTION_GAP = 18
 
 local HEADER_COLOR = { red = 1, green = 0.82, blue = 0 }
 
---- Sections read as quiet labels rather than gold banners: the rule under them
---- carries the structure, and a short bright segment at its head marks where a
---- section starts. Weight and spacing do the work that ornament does elsewhere.
 local SECTION_COLOR = { red = 0.60, green = 0.56, blue = 0.48 }
 local SECTION_LINE_COLOR = { red = 0.26, green = 0.24, blue = 0.20, alpha = 0.9 }
 local SECTION_ACCENT_COLOR = { red = 0.95, green = 0.72, blue = 0.25, alpha = 1 }
@@ -28,21 +25,18 @@ local SECTION_LINE_THICKNESS = 1
 local SECTION_LINE_GAP = 4
 local SECTION_HEADER_HEIGHT = 18
 
---- O mesmo desenho do icone do addon, na altura da linha do titulo.
 local LOGO_TEXTURE = [[Interface\AddOns\AuraQuestor\Media\Logo]]
 local LOGO_SIZE = 18
 local LOGO_GAP = 6
 local TITLE_BUTTONS_GAP = 8
 
---- A regua sob o cabecalho repete a das secoes, com o segmento claro na cabeca,
---- para o painel inteiro ter um so vocabulario visual.
 local HEADER_RULE_GAP = 3
 local HEADER_ACCENT_WIDTH = 34
 
 local EXPANDED_MARK = "-"
 local COLLAPSED_MARK = "+"
 
---- Recolhido, sobra o cabecalho com a regua embaixo, e mais nada.
+--- Collapsed, only the header and the rule under it are left.
 local COLLAPSED_HEIGHT = FRAME_PADDING * 2 + HEADER_HEIGHT + HEADER_RULE_GAP + SECTION_LINE_THICKNESS
 
 local TITLE_SIZE_DELTA = 1
@@ -100,7 +94,6 @@ end
 ---@private
 ---@param addonInfo AddonInfo
 function OwnTrackerFrame:Build(addonInfo, position)
-	-- BackdropTemplate is what puts SetBackdrop on a frame.
 	local root = CreateFrame("Frame", "AuraQuestorTracker", UIParent, "BackdropTemplate")
 	root:SetSize(INITIAL_WIDTH, INITIAL_HEIGHT)
 	root:SetClampedToScreen(true)
@@ -131,9 +124,6 @@ function OwnTrackerFrame:Build(addonInfo, position)
 	self.position = Addon.FramePosition.New(root, position)
 	self.position:Restore()
 
-	-- A real header strip rather than a loose title: everything that belongs to
-	-- the header centres inside it, so buttons of different heights still share
-	-- one middle line.
 	local header = CreateFrame("Frame", nil, root)
 	header:SetPoint("TOPLEFT", root, "TOPLEFT", FRAME_PADDING, -FRAME_PADDING)
 	header:SetPoint("TOPRIGHT", root, "TOPRIGHT", -FRAME_PADDING, -FRAME_PADDING)
@@ -147,8 +137,8 @@ function OwnTrackerFrame:Build(addonInfo, position)
 
 	self.headerButtons = Addon.HeaderButtonRow.New(header)
 
-	-- Preso entre o logo e a faixa de botoes: quando o painel estreita, o nome
-	-- corta com reticencias em vez de passar por baixo dos botoes.
+	-- Held between the logo and the button row so a narrow panel cuts the name
+	-- with an ellipsis instead of running it under the buttons.
 	local title = header:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 	title:SetPoint("LEFT", logo, "RIGHT", LOGO_GAP, 0)
 	title:SetPoint("RIGHT", self.headerButtons:Frame(), "LEFT", -TITLE_BUTTONS_GAP, 0)
@@ -179,8 +169,9 @@ function OwnTrackerFrame:Build(addonInfo, position)
 	accent:SetSize(HEADER_ACCENT_WIDTH, SECTION_LINE_THICKNESS)
 	accent:SetPoint("TOPLEFT", rule, "TOPLEFT")
 
-	-- Ancorado ao cabeçalho, não à régua: o botão de item de missão é protegido,
-	-- e o jogo recusa ancorar frame protegido a uma cadeia que passa por textura.
+	-- Anchored to the header, not to the rule: the quest item button is
+	-- protected, and the game refuses to anchor a protected frame to a chain
+	-- that passes through a texture.
 	local scrollTop = HEADER_RULE_GAP + SECTION_LINE_THICKNESS + FRAME_PADDING
 
 	local scroll = CreateFrame("ScrollFrame", nil, root)
@@ -208,8 +199,6 @@ function OwnTrackerFrame:Build(addonInfo, position)
 	self.pool = Addon.EntryBlockPool.New(content, self.actions)
 end
 
---- A clickable title plus the rule under it. The line is what stops the sections
---- from reading as one long list; the click is what collapses them.
 ---@private
 ---@return table
 function OwnTrackerFrame:AcquireSectionHeader()
@@ -246,7 +235,7 @@ function OwnTrackerFrame:AcquireSectionHeader()
 		header = { button = button, text = text, line = line, accent = accent }
 		self.sectionHeaders[self.usedHeaders] = header
 
-		-- Built after the font was chosen, so it has to catch up on its own.
+		-- Built after the font was chosen, so it catches up on its own.
 		if self.fontStyle then
 			Addon.FontStyler.Apply(text, self.fontStyle, SECTION_SIZE_DELTA)
 		end
@@ -306,8 +295,7 @@ function OwnTrackerFrame:Render(sections)
 	local width = self.content:GetWidth()
 	local offset = 0
 
-	-- Numbered in reading order across every section, the way the player scans
-	-- the list, not by the game's internal watch index.
+	-- Numbered in reading order, not by the game's internal watch index.
 	local entryNumber = 0
 
 	for _, section in ipairs(sections) do
@@ -383,9 +371,7 @@ function OwnTrackerFrame:SyncCountdownTicker()
 	end)
 end
 
---- The header's button row. Exposed so the composition root can hang buttons
---- on it without this frame having to know what they do, and so they all
---- centre on the same line whatever their size.
+--- Exposed so buttons can be hung on it without this frame knowing what they do.
 ---@return HeaderButtonRow
 function OwnTrackerFrame:HeaderButtons()
 	return self.headerButtons
@@ -426,9 +412,8 @@ function OwnTrackerFrame:ApplyHeight()
 	self.scroll:SetShown(not isCollapsed)
 end
 
---- Mudar a altura em torno de uma ancora no centro ou embaixo faria o
---- cabecalho pular; preso pelo canto de cima, ele fica onde estava e so o
---- corpo cresce ou some.
+--- Anchored by the top corner: around a centre or bottom anchor the header
+--- would jump every time the height changed.
 ---@private
 function OwnTrackerFrame:PinTop()
 	local left, top = self.root:GetLeft(), self.root:GetTop()
@@ -438,9 +423,8 @@ function OwnTrackerFrame:PinTop()
 	self.position:Save()
 end
 
---- Em combate com botao de item na lista o frame e protegido e nao muda de
---- tamanho; o estado fica gravado e o refresh que segue o fim do combate
---- aplica.
+--- With an item button on the list the frame is protected in combat and cannot
+--- be resized, so the state is saved and applied by the refresh that follows.
 ---@return boolean isCollapsed
 function OwnTrackerFrame:ToggleCollapsed()
 	self.state.isCollapsed = not self:IsCollapsed() or nil

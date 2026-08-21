@@ -10,8 +10,8 @@ local EVENTS = {
 	"QUEST_WATCH_LIST_CHANGED",
 	"QUEST_ACCEPTED",
 	"QUEST_REMOVED",
-	-- A missão que se completa à distância chega por aqui, e o aviso dela
-	-- precisa entrar na lista assim que surge.
+	-- A quest that completes from a distance arrives here, and its popup has to
+	-- reach the list as soon as it shows up.
 	"QUEST_AUTOCOMPLETE",
 	-- Text of a world quest tracked from another zone arrives here, after we
 	-- ask for it.

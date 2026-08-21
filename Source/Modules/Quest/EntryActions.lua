@@ -4,8 +4,7 @@ local OFFER_POPUP = "OFFER"
 local QUEST_KIND = "quest"
 local WORLD_QUEST_KIND = "worldQuest"
 
---- EntryActions for quests, including world quests, both live in the quest log
---- and answer to the same calls.
+--- EntryActions for quests, world quests included: both live in the quest log.
 ---@class QuestEntryActions : EntryActions
 ---@field private waypoints EntryWaypoints?
 local QuestEntryActions = {}
@@ -17,9 +16,8 @@ function QuestEntryActions.New(waypoints)
 	return setmetatable({ waypoints = waypoints }, QuestEntryActions)
 end
 
---- A quest that turns in from here opens its reward window, and an offer
---- pending in the queue opens the offer, the way Blizzard's blocks answer the
---- click; only the rest goes to the quest log.
+--- A quest ready to turn in opens its reward window and a pending offer opens
+--- the offer, as Blizzard's blocks do; the rest goes to the quest log.
 ---@param entry TrackerEntry
 function QuestEntryActions:OpenDetails(entry)
 	if Addon.QuestPopupSource.CanComplete(entry.id) then
@@ -37,9 +35,8 @@ function QuestEntryActions:OpenDetails(entry)
 	QuestMapFrame_OpenToQuestDetails(entry.id)
 end
 
---- O clique de link de chat (shift por padrão) põe a missão na caixa de
---- texto, como no rastreador da Blizzard; a função dela já confere o
---- modificador e se há chat aberto.
+--- The chat link click (shift by default) drops the quest into the text box.
+--- The game's own call checks the modifier and whether a chat box is open.
 ---@param entry TrackerEntry
 ---@return boolean
 function QuestEntryActions:InsertChatLink(entry)
@@ -61,13 +58,11 @@ function QuestEntryActions:ShowOnMap(entry)
 	end
 end
 
---- Points the on-screen arrow and the map waypoint at this quest.
 ---@param entry TrackerEntry
 function QuestEntryActions:SuperTrack(entry)
 	Addon.SuperTracking.SetQuest(entry.id)
 end
 
---- Opens the group finder already searching for this quest.
 ---@param entry TrackerEntry
 function QuestEntryActions:FindGroup(entry)
 	LFGListUtil_FindQuestGroup(entry.id)
@@ -95,8 +90,6 @@ function QuestEntryActions:Untrack(entry)
 	C_QuestLog.RemoveQuestWatch(entry.id)
 end
 
---- The quest's own briefing text.
----
 --- Reading it means selecting the quest, and the selection is global state the
 --- quest log reads too, so whatever was selected is put back. Skipping that
 --- would make hovering the tracker quietly change what the quest log shows.
@@ -115,7 +108,6 @@ function QuestEntryActions:Describe(entry)
 	return description
 end
 
---- Blizzard's own strings, so the menu arrives translated.
 ---@param entry TrackerEntry
 ---@return EntryMenuItem[]
 function QuestEntryActions:MenuItems(entry)
