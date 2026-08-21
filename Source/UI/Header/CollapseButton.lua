@@ -1,7 +1,7 @@
 local _, Addon = ...
 
---- O mesmo botao que o rastreador da Blizzard poe no canto do cabecalho, no
---- tamanho em que a arte foi feita.
+--- The same button Blizzard's tracker puts in the header corner, at the size
+--- the art was made for.
 local BUTTON_WIDTH = 18
 local BUTTON_HEIGHT = 19
 

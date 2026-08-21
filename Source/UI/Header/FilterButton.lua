@@ -164,8 +164,8 @@ function TrackerFilterButton:BuildMenu(rootDescription)
 	rootDescription:CreateDivider()
 	self:AddAchievements(rootDescription)
 
-	-- Por ultimo e separado do conteudo: mexe no painel, nao na lista, e e onde
-	-- o menu do rastreador da Blizzard poe o modo de edicao.
+	-- Last and apart from the content: it changes the panel, not the list, and
+	-- it is where Blizzard's tracker menu puts edit mode.
 	rootDescription:CreateDivider()
 	rootDescription:CreateTitle(WINDOW_LABEL)
 	rootDescription:CreateCheckbox(

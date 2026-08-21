@@ -36,9 +36,9 @@ local function NewProfile()
 	return profile
 end
 
---- O perfil padrao ja teve o nome traduzido, e um cliente em outro idioma
---- deixaria de encontra-lo. Renomear preserva as configuracoes; sem isso o
---- personagem que nunca escolheu um perfil ganharia um vazio.
+--- The default profile once had a translated name, and a client in another
+--- language would stop finding it. Renaming keeps the settings: without it a
+--- character that never picked a profile would get an empty one.
 local LEGACY_DEFAULT_NAMES = { "Padrão" }
 
 ---@private
@@ -118,8 +118,8 @@ end
 
 --- The active profile, created on demand so a character pointed at a deleted
 --- profile still gets somewhere to write instead of erroring.
---- Um perfil salvo por uma versao anterior pode nao ter uma tabela criada
---- depois; ela nasce vazia na primeira leitura, sem tocar no que ja existia.
+--- A profile saved by an earlier version may be missing a table added later:
+--- it starts empty on first read, without touching what was already there.
 ---@param profile table
 local function Complete(profile)
 	for _, name in ipairs(PROFILE_TABLES) do

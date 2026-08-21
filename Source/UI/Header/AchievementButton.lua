@@ -1,8 +1,8 @@
 local _, Addon = ...
 
---- Nenhum botao da familia do rastreador vem sem glifo proprio, entao a moldura
---- do item de missao e a unica base vazia disponivel. Desenhada no tamanho em
---- que a arte foi feita: encolhe-la lava o vermelho ate virar bege.
+--- No button in the tracker family comes without a glyph of its own, so the
+--- quest item frame is the only empty base available. Drawn at the size the art
+--- was made for: shrinking it washes the red out to beige.
 local BUTTON_SIZE = 24
 
 local FRAME_ATLAS = "UI-QuestTrackerButton-QuestItem-Frame"

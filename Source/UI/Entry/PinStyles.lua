@@ -1,8 +1,7 @@
 local _, Addon = ...
 
---- Event art is drawn smaller than a quest pin, it reads better that way, and
---- it is the size it had before the pins grew. The column stays the same width
---- either way, so a smaller pin is centred in it instead of shifting the text.
+--- Event art is drawn smaller than a quest pin. The column keeps its width
+--- either way, so the smaller pin is centred instead of shifting the text.
 local EVENT_PIN_SIZE = 26
 
 --- Every numbered quest pin comes as the same four-part set, so the family name
@@ -29,9 +28,8 @@ local function IconPin(prefix)
 	return style
 end
 
---- Blizzard's own pin art, matched to what each kind of objective is. Using the
---- same families the map uses is what makes a campaign quest here look like the
---- campaign quest there.
+--- Blizzard's own pin art, by kind of objective, so a campaign quest here looks
+--- like the campaign quest on the map.
 ---@class EntryPinStyles
 local EntryPinStyles = {
 	normal = NumberedPin("UI-QuestPoi-QuestNumber"),
@@ -53,8 +51,7 @@ local EntryPinStyles = {
 		showsNumber = false,
 	},
 
-	-- No pin at all. A number that cannot be clicked and points at nothing is
-	-- noise, and the column it reserved goes back to the text.
+	-- No pin at all: the column it would reserve goes back to the text.
 	none = { isHidden = true, showsNumber = false },
 }
 
@@ -79,8 +76,6 @@ function EntryPinStyles.OwnArt(atlas)
 	}
 end
 
---- The art for one entry: what it names for itself wins, then what its kind
---- says, and a plain pin as the last resort.
 ---@param entry TrackerEntry
 ---@return table
 function EntryPinStyles.For(entry)

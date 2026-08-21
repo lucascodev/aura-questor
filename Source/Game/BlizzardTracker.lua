@@ -19,13 +19,11 @@ function BlizzardTracker.New()
 	return setmetatable({}, BlizzardTracker)
 end
 
---- Refresh fires constantly and this frame is Blizzard's: every touch of ours
---- taints it a little more, so nothing is written unless the frame disagrees
---- with the answer. The frame is what gets asked, never a copy of the last
---- answer kept here, and that copy is what broke: the right side frame
---- container fades its frames back in with SetAlpha(1) every time UIParent
---- returns, after a cinematic or a vehicle, so a tracker already put away came
---- back on screen and stayed until a reload.
+--- Refresh fires constantly and this frame is Blizzard's, so nothing is written
+--- unless the frame disagrees with the answer. The frame is what gets asked,
+--- never a copy kept here: the right side container fades its frames back in
+--- with SetAlpha(1) every time UIParent returns, after a cinematic or a
+--- vehicle, and a tracker already put away came back until a reload.
 ---@param isHidden boolean
 function BlizzardTracker:SetHidden(isHidden)
 	self:ApplyAlpha(isHidden)

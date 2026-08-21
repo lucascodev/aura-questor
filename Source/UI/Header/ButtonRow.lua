@@ -2,9 +2,9 @@ local _, Addon = ...
 
 local BUTTON_GAP = 6
 
---- Os botoes vivem numa faixa propria, colada a direita do cabecalho e do
---- tamanho exato do que esta visivel. Quem precisa parar antes deles, como o
---- titulo, ancora nessa faixa em vez de adivinhar a largura.
+--- The buttons live in a strip of their own, the exact width of what is
+--- visible, so whatever has to stop before them anchors to the strip instead of
+--- guessing that width.
 ---@class HeaderButtonRow
 ---@field private strip table
 ---@field private buttons table[]
@@ -22,7 +22,7 @@ function HeaderButtonRow.New(header)
 	return setmetatable({ strip = strip, buttons = {} }, HeaderButtonRow)
 end
 
---- A faixa: pai dos botoes e limite direito do que vem antes deles.
+--- The strip: parent of the buttons and right edge for whatever precedes them.
 ---@return table
 function HeaderButtonRow:Frame()
 	return self.strip

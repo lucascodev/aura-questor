@@ -1,6 +1,6 @@
 local _, Addon = ...
 
---- WaypointArrow sobre o TomTom.
+--- WaypointArrow on top of TomTom.
 ---
 --- TomTom is a plain global that only exists after it loads, so its presence is
 --- checked on every call instead of decided once. Without it every method here
