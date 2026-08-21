@@ -489,6 +489,11 @@ function OwnTrackerFrame:SetProgressBarHeight(height)
 	self.pool:SetProgressBarHeight(height)
 end
 
+---@param style string
+function OwnTrackerFrame:SetProgressBarStyle(style)
+	self.pool:SetProgressBarStyle(style)
+end
+
 --- Dragging is off until the player asks for it.
 ---
 --- A tracker that moves whenever a click lands on it gets nudged out of place

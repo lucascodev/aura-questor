@@ -38,6 +38,7 @@
 ---@field SetItemButtonsShown fun(self: TrackerRenderer, isShown: boolean)
 ---@field SetProgressBarTexture fun(self: TrackerRenderer, path: string)
 ---@field SetProgressBarHeight fun(self: TrackerRenderer, height: number)
+---@field SetProgressBarStyle fun(self: TrackerRenderer, style: string)
 ---@field SetScale fun(self: TrackerRenderer, scale: number)
 ---@field SetEditing fun(self: TrackerRenderer, isEditing: boolean)
 ---@field ResetPosition fun(self: TrackerRenderer)

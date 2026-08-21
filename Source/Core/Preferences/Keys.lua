@@ -37,6 +37,7 @@ local PreferenceKeys = {
 	BORDER_THICKNESS = "borderThickness",
 	PROGRESS_BAR_TEXTURE = "progressBarTexture",
 	PROGRESS_BAR_HEIGHT = "progressBarHeight",
+	PROGRESS_BAR_STYLE = "progressBarStyle",
 	SHOW_FILTER_BUTTON = "showFilterButton",
 	SHOW_ACHIEVEMENT_BUTTON = "showAchievementButton",
 	SHOW_INTEGRATION_BUTTON = "showIntegrationButton",

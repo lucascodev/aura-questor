@@ -28,6 +28,7 @@ local CORE_FILES = {
 	"Preferences/FontFlags",
 	"Preferences/SortModes",
 	"Preferences/SoundChannels",
+	"Preferences/ProgressBarStyles",
 	"Preferences/Catalog",
 	"Preferences/Store",
 	"Preferences/Lookup",

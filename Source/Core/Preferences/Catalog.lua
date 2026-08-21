@@ -187,6 +187,15 @@ local PreferenceCatalog = {
 		label = L.PREF_PROGRESS_BAR_TEXTURE,
 	},
 	{
+		key = Keys.PROGRESS_BAR_STYLE,
+		panel = FRAME_PANEL,
+		kind = "string",
+		default = Addon.ProgressBarStyles.GAME,
+		label = L.PREF_PROGRESS_BAR_STYLE,
+		tooltip = L.PREF_PROGRESS_BAR_STYLE_TIP,
+		choices = Addon.ProgressBarStyles.Choices,
+	},
+	{
 		key = Keys.PROGRESS_BAR_HEIGHT,
 		panel = FRAME_PANEL,
 		kind = "number",

@@ -23,9 +23,11 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
 ### Alterado
 
-- As barras de progresso passam a usar a moldura e as cores da barra do
-  rastreador do jogo, no lugar do retângulo escuro sem contorno, e a altura
-  delas virou preferência, na página Moldura.
+- As barras de progresso ganharam estilo à escolha, na página Moldura: **do
+  jogo**, que usa a arte que ele mesmo desenha, lisa nas missões e cenários e
+  dividida em cinco nas missões mundiais e objetivos bônus, ou **do addon**,
+  plana, com contorno fino e as mesmas divisões marcadas por linhas. A altura
+  também virou preferência.
 
 ### Corrigido
 

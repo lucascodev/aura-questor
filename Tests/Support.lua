@@ -116,6 +116,9 @@ function Support.Renderer()
 		SetProgressBarHeight = function(self, height)
 			self.progressBarHeight = height
 		end,
+		SetProgressBarStyle = function(self, style)
+			self.progressBarStyle = style
+		end,
 		SetScale = function(self, scale)
 			self.scale = scale
 		end,

@@ -52,6 +52,7 @@ Source\Core\Preferences\Keys.lua
 Source\Core\Preferences\FontFlags.lua
 Source\Core\Preferences\SortModes.lua
 Source\Core\Preferences\SoundChannels.lua
+Source\Core\Preferences\ProgressBarStyles.lua
 Source\Core\Preferences\Catalog.lua
 Source\Core\Preferences\Store.lua
 Source\Core\Preferences\Lookup.lua
