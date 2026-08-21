@@ -15,6 +15,9 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 - O menu do evento ganhou **seguir** e **parar de seguir**, com os mesmos
   nomes que o jogo usa no ponto do mapa. Clicar no ícone do evento já fazia
   isso, mas nada dizia.
+- O evento que está sendo seguido ganha o mesmo brilho que o jogo põe atrás do
+  ponto no mapa. A arte própria dele não tem versão de selecionado, então antes
+  não havia como saber qual estava escolhido.
 
 ### Corrigido
 

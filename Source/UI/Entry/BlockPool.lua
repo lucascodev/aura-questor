@@ -1,6 +1,7 @@
 local _, Addon = ...
 
 local BADGE_SIZE = 30
+local BADGE_GLOW_SIZE = 38
 local BADGE_GAP = 6
 
 --- A font string centres on its bounding box, descender included, which leaves
@@ -54,6 +55,7 @@ local LINE_SPACING = 2
 --- the art".
 local FALLBACK_ICON = "Interface\\Icons\\INV_Misc_QuestionMark"
 
+local BADGE_GLOW_ATLAS = "UI-QuestPoi-OuterGlow"
 local BADGE_COLOR = { red = 0.6, green = 0.75, blue = 1 }
 
 --- Recycles the widgets that draw a single entry.
@@ -143,6 +145,14 @@ local function CreateBlock(parent, actions)
 	badgeIcon:SetPoint("CENTER")
 	badgeIcon:Hide()
 
+	-- The same glow the map puts behind a pin it is following, for the art that
+	-- has no followed version of itself.
+	local badgeGlow = badge:CreateTexture(nil, "BACKGROUND")
+	badgeGlow:SetAtlas(BADGE_GLOW_ATLAS)
+	badgeGlow:SetSize(BADGE_GLOW_SIZE, BADGE_GLOW_SIZE)
+	badgeGlow:SetPoint("CENTER")
+	badgeGlow:Hide()
+
 	local tag = frame:CreateTexture(nil, "ARTWORK")
 	tag:SetSize(TAG_SIZE, TAG_SIZE)
 	tag:Hide()
@@ -164,6 +174,7 @@ local function CreateBlock(parent, actions)
 		badge = badge,
 		badgeNumber = badgeNumber,
 		badgeIcon = badgeIcon,
+		badgeGlow = badgeGlow,
 		tag = tag,
 		title = title,
 		group = group,
@@ -804,6 +815,7 @@ function EntryBlockPool:Build(entry, width, index)
 	block.badge:SetShown(hasPin)
 	block.badgeNumber:SetShown(hasPin and style.showsNumber and not pinIcon)
 	block.badgeIcon:SetShown(pinIcon ~= nil)
+	block.badgeGlow:SetShown(hasPin and isSuperTracked and style.glowsWhenSelected == true)
 
 	if pinIcon then
 		block.badgeIcon:SetAtlas(pinIcon.atlas, pinIcon.width == nil)
