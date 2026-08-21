@@ -16,7 +16,6 @@
 ---@field FindGroup fun(self: EntryActions, entry: TrackerEntry) Only called when entry.canFindGroup.
 ---@field SuperTrack? fun(self: EntryActions, entry: TrackerEntry) Only where entry.isSuperTrackable.
 ---@field Describe? fun(self: EntryActions, entry: TrackerEntry): string? Extra text for the tooltip.
----@field Rewards? fun(self: EntryActions, entry: TrackerEntry): string[] Already formatted, icons included.
 ---@field InsertChatLink? fun(self: EntryActions, entry: TrackerEntry): boolean Chat-link click; true when the link went to the chat box.
 
 --- Manda uma entrada para a seta de navegação, quando há uma disponível.

@@ -64,6 +64,7 @@ local function ReadEntry(questID, isZoneWide)
 	return {
 		id = questID,
 		kind = ENTRY_KIND,
+		rewardsQuestID = questID,
 		title = taskName,
 		objectives = Addon.QuestObjectiveReader.Read(questID),
 		isComplete = C_QuestLog.IsComplete(questID),

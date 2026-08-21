@@ -120,6 +120,7 @@ local function ReadEntry(questID, groupNames)
 		pinIcon = isComplete and TurnInIcon(classification) or nil,
 		isSuperTrackable = true,
 		isSuperTracked = C_SuperTrack.GetSuperTrackedQuestID() == questID,
+		rewardsQuestID = questID,
 	}
 
 	return entry, info.campaignID ~= nil

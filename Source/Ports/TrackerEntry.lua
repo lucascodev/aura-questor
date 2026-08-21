@@ -44,6 +44,8 @@
 ---@field pinIcon? TrackerPinIcon Drawn inside the pin, instead of a number.
 ---@field isSuperTrackable? boolean Whether the pin can drive the on-screen arrow.
 ---@field isSuperTracked? boolean Whether it currently does.
+---@field rewardsQuestID? number Whose rewards the tooltip draws, using the
+--- game's own block, with currencies, reputation and war mode included.
 ---@field timeLeftSeconds? number
 ---@field tooltipWidgetSetID? number The set the game draws in the map tooltip
 --- for this entry: the tracker hands it to the tooltip, never to the block.

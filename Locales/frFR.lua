@@ -147,7 +147,6 @@ Addon.RegisterLocale("frFR", {
 	CHANNEL_MUSIC = "Musique",
 	CHANNEL_AMBIENCE = "Ambiance",
 	CHANNEL_DIALOG = "Dialogues",
-	REWARD_CHOICE_HEADING = "Choisissez-en une :",
 	SOUND_NONE = "Aucun",
 	SOUND_QUEST_COMPLETE = "Quête terminée",
 	SOUND_QUEST_FORWARD = "Objectif atteint",

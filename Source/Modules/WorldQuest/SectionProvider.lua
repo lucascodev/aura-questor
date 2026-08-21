@@ -74,6 +74,7 @@ local function ReadEntry(questID)
 		pinIcon = ReadPinIcon(questID),
 		isSuperTrackable = true,
 		isSuperTracked = C_SuperTrack.GetSuperTrackedQuestID() == questID,
+		rewardsQuestID = questID,
 		timeLeftSeconds = C_TaskQuest.GetQuestTimeLeftSeconds(questID),
 	}
 end

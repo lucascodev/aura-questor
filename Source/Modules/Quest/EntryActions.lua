@@ -1,12 +1,5 @@
 local _, Addon = ...
 
-local REWARD_ICON_SIZE = 14
-
---- The game reports a choice as either an item or a currency, and each is read
---- through a different call.
-local CHOICE_LOOT_CURRENCY = 1
-local CHOICE_HEADING = Addon.L.REWARD_CHOICE_HEADING
-
 local OFFER_POPUP = "OFFER"
 local QUEST_KIND = "quest"
 local WORLD_QUEST_KIND = "worldQuest"
@@ -120,90 +113,6 @@ function QuestEntryActions:Describe(entry)
 	end
 
 	return description
-end
-
----@param texture string|number|nil
----@param count number?
----@param name string
----@return string
-local function FormatReward(texture, count, name)
-	local icon = texture and ("|T%s:%d|t "):format(texture, REWARD_ICON_SIZE) or ""
-	local amount = count and count > 1 and ("%dx "):format(count) or ""
-
-	return icon .. amount .. name
-end
-
----@param rewards string[]
----@param questID number
-local function AddGuaranteed(rewards, questID)
-	local money = GetQuestLogRewardMoney(questID)
-
-	if money and money > 0 then
-		-- Already carries its own coin icons.
-		table.insert(rewards, GetCoinTextureString(money))
-	end
-
-	for index = 1, GetNumQuestLogRewards(questID) do
-		local name, texture, count = GetQuestLogRewardInfo(index, questID)
-
-		if name then
-			table.insert(rewards, FormatReward(texture, count, name))
-		end
-	end
-end
-
---- Rewards the player picks between, which are a separate list from the
---- guaranteed ones, reading only the latter is why a quest paying four
---- reputation choices looked like it paid nothing.
----@param rewards string[]
----@param questID number
-local function AddChoices(rewards, questID)
-	local numChoices = GetNumQuestLogChoices(questID, true)
-
-	if numChoices == 0 then
-		return
-	end
-
-	table.insert(rewards, CHOICE_HEADING)
-
-	for index = 1, numChoices do
-		if GetQuestLogChoiceInfoLootType(index) == CHOICE_LOOT_CURRENCY then
-			local info = C_QuestLog.GetQuestRewardCurrencyInfo(questID, index, true)
-
-			if info and info.name then
-				table.insert(rewards, FormatReward(info.texture, info.totalRewardAmount, info.name))
-			end
-		else
-			local name, texture, count = GetQuestLogChoiceInfo(index)
-
-			if name then
-				table.insert(rewards, FormatReward(texture, count, name))
-			end
-		end
-	end
-end
-
---- What the quest pays out, ready to print.
----
---- Icons are inlined because a reward you recognise at a glance is the whole
---- point of showing it here instead of just naming it. Selecting the quest is
---- required (the choice API reads the selected one) and the previous
---- selection goes back, since the quest log shares that state.
----@param entry TrackerEntry
----@return string[]
-function QuestEntryActions:Rewards(entry)
-	local rewards = {}
-	local previous = C_QuestLog.GetSelectedQuest()
-
-	C_QuestLog.SetSelectedQuest(entry.id)
-	AddGuaranteed(rewards, entry.id)
-	AddChoices(rewards, entry.id)
-
-	if previous then
-		C_QuestLog.SetSelectedQuest(previous)
-	end
-
-	return rewards
 end
 
 --- Blizzard's own strings, so the menu arrives translated.

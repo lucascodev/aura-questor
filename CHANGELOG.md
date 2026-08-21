@@ -20,6 +20,10 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
   não havia como saber qual estava escolhido.
 - Evento vai para o bate-papo com o mesmo clique das missões, usando o link de
   evento que o próprio jogo criou para os lembretes dele.
+- O tooltip de uma missão passa a mostrar as recompensas com o mesmo bloco que
+  o jogo desenha no mapa, então moeda, reputação e bônus de Modo de Guerra
+  aparecem. O nosso lia só dinheiro e itens, e uma missão mundial paga fora do
+  diário, o que deixava o tooltip dela sem recompensa nenhuma.
 
 ### Alterado
 

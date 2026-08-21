@@ -141,7 +141,6 @@ Addon.RegisterLocale("ptBR", {
 	CHANNEL_MUSIC = "Música",
 	CHANNEL_AMBIENCE = "Ambiente",
 	CHANNEL_DIALOG = "Diálogo",
-	REWARD_CHOICE_HEADING = "Escolha uma:",
 	SOUND_NONE = "Nenhum",
 	SOUND_QUEST_COMPLETE = "Missão concluída",
 	SOUND_QUEST_FORWARD = "Objetivo cumprido",

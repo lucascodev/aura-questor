@@ -67,14 +67,14 @@ function EntryTooltip.Show(actions, entry, owner)
 		end
 	end
 
-	local rewards = actions:Rewards(entry)
-
-	if #rewards > 0 then
-		GameTooltip:AddLine(" ")
-		GameTooltip:AddLine(REWARDS, title.red, title.green, title.blue)
-
-		for _, reward in ipairs(rewards) do
-			GameTooltip:AddLine(reward, WHITE[1], WHITE[2], WHITE[3])
+	-- The game's own rewards block, so currencies, reputation and the war mode
+	-- bonus come out as they do on the map. A world quest carries its rewards
+	-- outside the quest log, and they arrive on request.
+	if entry.rewardsQuestID then
+		if HaveQuestRewardData(entry.rewardsQuestID) then
+			GameTooltip_AddQuestRewardsToTooltip(GameTooltip, entry.rewardsQuestID)
+		else
+			C_TaskQuest.RequestPreloadRewardData(entry.rewardsQuestID)
 		end
 	end
 

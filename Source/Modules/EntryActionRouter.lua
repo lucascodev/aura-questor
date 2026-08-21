@@ -51,20 +51,6 @@ function EntryActionRouter:Describe(entry)
 	return actions:Describe(entry)
 end
 
---- Optional for the same reason as Describe: an achievement pays nothing, and
---- saying so with an empty list is truer than pretending it has rewards.
----@param entry TrackerEntry
----@return string[]
-function EntryActionRouter:Rewards(entry)
-	local actions = self.byKind[entry.kind]
-
-	if not actions.Rewards then
-		return {}
-	end
-
-	return actions:Rewards(entry)
-end
-
 --- Optional like Describe: only what exists as a link in chat implements it.
 ---@param entry TrackerEntry
 ---@return boolean handled

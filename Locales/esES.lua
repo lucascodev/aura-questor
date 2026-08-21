@@ -149,7 +149,6 @@ local entries = {
 	CHANNEL_MUSIC = "Música",
 	CHANNEL_AMBIENCE = "Ambiente",
 	CHANNEL_DIALOG = "Diálogo",
-	REWARD_CHOICE_HEADING = "Elige una:",
 	SOUND_NONE = "Ninguno",
 	SOUND_QUEST_COMPLETE = "Misión completada",
 	SOUND_QUEST_FORWARD = "Objetivo cumplido",
