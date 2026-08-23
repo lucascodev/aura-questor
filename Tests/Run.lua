@@ -25,6 +25,7 @@ local SUITES = {
 	"Core/Tracker/SectionOrder",
 	"Core/Tracker/Place",
 	"Core/Tracker/SectionArrangement",
+	"Core/Tracker/ChallengeCollapse",
 	"Core/Tracker/Content",
 	"Core/Tracker/Display",
 	"Core/Tracker/CompletionWatcher",

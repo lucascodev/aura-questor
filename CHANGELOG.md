@@ -3,6 +3,16 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Adicionado
+
+- **Recolher em Mítica+**, em Conteúdo: a janela se recolhe sozinha quando a
+  chave começa e abre de volta quando a corrida termina. Só a janela que o addon
+  recolheu é aberta de volta; se você mesmo recolheu antes, ela fica como você
+  deixou, e se abrir na mão durante a corrida, o addon não mexe mais. Nasce
+  desligada. Pedido de um jogador no CurseForge.
+
 ## [0.86.1] - 2026-08-22
 
 ### Corrigido

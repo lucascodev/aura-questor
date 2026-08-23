@@ -44,3 +44,5 @@
 ---@field SetEditing fun(self: TrackerRenderer, isEditing: boolean)
 ---@field ResetPosition fun(self: TrackerRenderer)
 ---@field Expand fun(self: TrackerRenderer)
+---@field IsCollapsed fun(self: TrackerRenderer): boolean
+---@field SetCollapsed fun(self: TrackerRenderer, isCollapsed: boolean)
