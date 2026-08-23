@@ -6,7 +6,7 @@
 ## Notes-esES: Un rastreador de objetivos independiente, construido sobre las API públicas del juego.
 ## Notes-esMX: Un rastreador de objetivos independiente, construido sobre las API públicas del juego.
 ## Notes-frFR: Un suivi d'objectifs autonome, construit sur les API publiques du jeu.
-## Version: 0.86.1
+## Version: 0.87.0
 ## Author: Lucascodev
 ## X-License: MIT
 ## X-Curse-Project-ID: 1651416
