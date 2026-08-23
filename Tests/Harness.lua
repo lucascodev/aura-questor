@@ -41,6 +41,7 @@ local CORE_FILES = {
 	"Tracker/Place",
 	"Tracker/SectionOrder",
 	"Tracker/SectionArrangement",
+	"Tracker/ChallengeCollapse",
 	"Tracker/Content",
 	"Tracker/Display",
 	"Tracker/CompletionWatcher",

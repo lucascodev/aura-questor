@@ -67,6 +67,7 @@ Source\Core\Filtering\Filtering.lua
 Source\Core\Tracker\Place.lua
 Source\Core\Tracker\SectionOrder.lua
 Source\Core\Tracker\SectionArrangement.lua
+Source\Core\Tracker\ChallengeCollapse.lua
 Source\Core\Tracker\Content.lua
 Source\Core\Tracker\Display.lua
 Source\Core\Tracker\CompletionWatcher.lua

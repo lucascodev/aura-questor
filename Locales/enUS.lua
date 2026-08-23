@@ -78,6 +78,8 @@ Addon.RegisterLocale("enUS", {
 	PREF_HIDE_WHEN_EMPTY_TIP = "With nothing to show, the window leaves the screen instead of standing there empty.",
 	PREF_AUTO_EXPAND = "Open when something is tracked",
 	PREF_AUTO_EXPAND_TIP = "Collapsed, the window opens on its own as soon as something new reaches the list.",
+	PREF_COLLAPSE_IN_CHALLENGE = "Collapse during Mythic+",
+	PREF_COLLAPSE_IN_CHALLENGE_TIP = "Folds the window away when a key starts and opens it again when the run ends. A window you folded yourself is left as you left it.",
 	PREF_BACKGROUND_COLOR = "Background colour",
 	PREF_BACKGROUND_INSET = "Background inset",
 	PREF_BORDER_TEXTURE = "Border texture",

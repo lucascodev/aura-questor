@@ -123,6 +123,27 @@ function TrackerDisplay:BorderColor()
 	return self:Color(Keys.BORDER_COLOR)
 end
 
+--- Folds the window away for a Mythic+ run, and opens it again when the run
+--- ends. Only the fold this addon did is opened back: a window the player put
+--- away is theirs, and unfolding it would undo a choice nobody asked about.
+---@private
+function TrackerDisplay:ApplyChallengeCollapse()
+	local action, isOurs = Addon.ChallengeCollapse.Decide({
+		isEnabled = self.preferences:Get(Keys.COLLAPSE_IN_CHALLENGE) == true,
+		isChallengeActive = self.gameState.IsChallengeActive(),
+		isCollapsed = self.renderer:IsCollapsed(),
+		isOurs = self.isChallengeFold == true,
+	})
+
+	self.isChallengeFold = isOurs
+
+	if action == Addon.ChallengeCollapse.COLLAPSE then
+		self.renderer:SetCollapsed(true)
+	elseif action == Addon.ChallengeCollapse.EXPAND then
+		self.renderer:SetCollapsed(false)
+	end
+end
+
 ---@private
 function TrackerDisplay:ApplyAppearance()
 	-- Font before size: the layout measures text, so it has to be laid out with
@@ -245,6 +266,8 @@ function TrackerDisplay:Refresh()
 		self.renderer:SetShown(false)
 		return
 	end
+
+	self:ApplyChallengeCollapse()
 
 	self.lastSections = self.content:Build()
 
