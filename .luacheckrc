@@ -128,6 +128,7 @@ read_globals = {
 	"OBJECTIVES_VIEW_IN_QUESTLOG",
 	"OBJECTIVES_VIEW_IN_TRAVELERS_LOG",
 	"ObjectiveTrackerFrame",
+	"ObjectiveTrackerManager",
 	"PERCENTAGE_STRING",
 	"POI_FOCUS",
 	"POI_REMOVE_FOCUS",

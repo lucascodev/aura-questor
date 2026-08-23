@@ -3,6 +3,19 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Corrigido
+
+- Dentro de masmorra mítica+ aparecia um erro de Lua citando o Aura Questor,
+  vindo da leitura de auras feita pelo rastreador do jogo. Escondido, ele
+  continuava montando os blocos dele a cada atualização, e essa montagem lê
+  aura, que dentro de instância o cliente recusa entregar a código que um addon
+  encostou. Agora, enquanto o rastreador do jogo está escondido, os módulos
+  dele saem do painel: o trecho que dava erro não chega a rodar, e some junto o
+  trabalho de desenhar um rastreador que ninguém vê. Voltar a mostrá-lo devolve
+  tudo no lugar, sem `/reload`.
+
 ## [0.86.0] - 2026-08-21
 
 ### Corrigido
