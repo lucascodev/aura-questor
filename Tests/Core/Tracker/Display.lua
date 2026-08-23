@@ -38,6 +38,7 @@ return function(Addon, T, Support)
 			end,
 		}
 		local renderer = Support.Renderer()
+		local gameState = Support.GameState(options.isChallengeActive)
 		local blizzard = Support.BlizzardTracker()
 		local hiddenSections = options.hiddenSections or {}
 		local widgets = options.widgets or {}
@@ -55,7 +56,7 @@ return function(Addon, T, Support)
 			hiddenSections,
 			Support.AppearanceSources(),
 			widgets,
-			Support.GameState(options.isChallengeActive)
+			gameState
 		)
 
 		return {
@@ -64,10 +65,44 @@ return function(Addon, T, Support)
 			blizzard = blizzard,
 			hiddenSections = hiddenSections,
 			preferences = preferences,
+			gameState = gameState,
 		}
 	end
 
 	T.Suite("TrackerDisplay", function()
+		--- Pedido de um jogador: durante a chave a tela ja tem cronometro,
+		--- afixos e o que mais, e a lista de missoes so ocupa lugar.
+		T.Test("na chave, a janela se recolhe sozinha", function()
+			local built = Build({
+				sections = { Section() },
+				isChallengeActive = true,
+				values = { [Keys.COLLAPSE_IN_CHALLENGE] = true },
+			})
+			built.display:Refresh()
+
+			T.Equals(built.renderer.collapsed, true)
+		end)
+
+		T.Test("fim da chave abre de volta o que nos recolhemos", function()
+			local built = Build({
+				sections = { Section() },
+				isChallengeActive = true,
+				values = { [Keys.COLLAPSE_IN_CHALLENGE] = true },
+			})
+			built.display:Refresh()
+			built.gameState.isChallengeActive = false
+			built.display:Refresh()
+
+			T.Equals(built.renderer.collapsed, false)
+		end)
+
+		T.Test("com a opcao desligada, a chave nao mexe na janela", function()
+			local built = Build({ sections = { Section() }, isChallengeActive = true })
+			built.display:Refresh()
+
+			T.Equals(built.renderer.collapsed, nil)
+		end)
+
 		T.Test("com o nosso ligado, o da Blizzard sai de cena", function()
 			local built = Build({ sections = { Section() } })
 			built.display:Refresh()

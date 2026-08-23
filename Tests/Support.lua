@@ -129,6 +129,12 @@ function Support.Renderer()
 		Expand = function(self)
 			self.expanded = (self.expanded or 0) + 1
 		end,
+		IsCollapsed = function(self)
+			return self.collapsed == true
+		end,
+		SetCollapsed = function(self, isCollapsed)
+			self.collapsed = isCollapsed
+		end,
 	}
 end
 
@@ -156,12 +162,16 @@ end
 --- chegou sem precisar de acervo de mídia.
 ---@return AppearanceSources
 ---@return GameState
+--- O estado fica num campo, e nao preso na chamada, para um teste conseguir
+--- terminar a chave no meio do caminho.
 function Support.GameState(isChallengeActive)
-	return {
-		IsChallengeActive = function()
-			return isChallengeActive == true
-		end,
-	}
+	local state = { isChallengeActive = isChallengeActive == true }
+
+	function state.IsChallengeActive()
+		return state.isChallengeActive
+	end
+
+	return state
 end
 
 function Support.AppearanceSources()

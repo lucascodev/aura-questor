@@ -76,6 +76,8 @@ Addon.RegisterLocale("ptBR", {
 	PREF_HIDE_WHEN_EMPTY_TIP = "Sem nada para mostrar, a janela sai da tela em vez de ficar ali vazia.",
 	PREF_AUTO_EXPAND = "Abrir ao rastrear algo",
 	PREF_AUTO_EXPAND_TIP = "Recolhida, a janela se abre sozinha assim que algo novo entra na lista.",
+	PREF_COLLAPSE_IN_CHALLENGE = "Recolher em Mítica+",
+	PREF_COLLAPSE_IN_CHALLENGE_TIP = "Recolhe a janela quando a chave começa e abre de volta quando a corrida termina. Uma janela que você mesmo recolheu fica como você deixou.",
 	PREF_BACKGROUND_COLOR = "Cor do fundo",
 	PREF_BACKGROUND_INSET = "Recuo do fundo",
 	PREF_BORDER_TEXTURE = "Textura da borda",

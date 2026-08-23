@@ -473,6 +473,16 @@ function OwnTrackerFrame:PinTop()
 	self.position:Save()
 end
 
+--- For a caller that knows the state it wants instead of a switch to flip.
+---@param isCollapsed boolean
+function OwnTrackerFrame:SetCollapsed(isCollapsed)
+	if self:IsCollapsed() == isCollapsed then
+		return
+	end
+
+	self:ToggleCollapsed()
+end
+
 --- With an item button on the list the frame is protected in combat and cannot
 --- be resized, so the state is saved and applied by the refresh that follows.
 ---@return boolean isCollapsed
