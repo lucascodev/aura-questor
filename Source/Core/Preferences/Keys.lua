@@ -24,6 +24,7 @@ local PreferenceKeys = {
 	AUTO_HEIGHT = "autoHeight",
 	HIDE_WHEN_EMPTY = "hideWhenEmpty",
 	AUTO_EXPAND = "autoExpand",
+	COLLAPSE_IN_CHALLENGE = "collapseInChallenge",
 	PANEL_OPACITY = "panelOpacity",
 	TRACKER_SCALE = "trackerScale",
 	EDIT_MODE = "editMode",

@@ -78,6 +78,8 @@ Addon.RegisterLocale("frFR", {
 	PREF_HIDE_WHEN_EMPTY_TIP = "Sans rien à afficher, la fenêtre quitte l'écran au lieu de rester vide.",
 	PREF_AUTO_EXPAND = "Ouvrir au suivi",
 	PREF_AUTO_EXPAND_TIP = "Repliée, la fenêtre s'ouvre d'elle-même dès que quelque chose de nouveau entre dans la liste.",
+	PREF_COLLAPSE_IN_CHALLENGE = "Replier en Mythique+",
+	PREF_COLLAPSE_IN_CHALLENGE_TIP = "Replie la fenêtre au début de la clé et la rouvre à la fin de la course. Une fenêtre que vous avez repliée vous-même reste comme vous l'avez laissée.",
 	PREF_BACKGROUND_COLOR = "Couleur du fond",
 	PREF_BACKGROUND_INSET = "Marge du fond",
 	PREF_BORDER_TEXTURE = "Texture de la bordure",

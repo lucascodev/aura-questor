@@ -333,6 +333,16 @@ local PreferenceCatalog = {
 		tooltip = L.PREF_AUTO_EXPAND_TIP,
 	},
 	{
+		-- Off by default: folding the window away on its own is a surprise for
+		-- anyone who did not ask for it.
+		key = Keys.COLLAPSE_IN_CHALLENGE,
+		panel = CONTENT_PANEL,
+		kind = "boolean",
+		default = false,
+		label = L.PREF_COLLAPSE_IN_CHALLENGE,
+		tooltip = L.PREF_COLLAPSE_IN_CHALLENGE_TIP,
+	},
+	{
 		key = Keys.INSTANCE_FOCUS,
 		panel = CONTENT_PANEL,
 		kind = "boolean",

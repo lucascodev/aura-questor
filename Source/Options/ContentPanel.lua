@@ -52,6 +52,7 @@ function ContentPanel.Register(category, catalog, preferences)
 				},
 				{
 					{ key = Keys.AUTO_EXPAND },
+					{ key = Keys.COLLAPSE_IN_CHALLENGE },
 				},
 			},
 		},
