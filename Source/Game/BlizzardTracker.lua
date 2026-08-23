@@ -11,6 +11,7 @@ local HIDDEN_ALPHA = 0
 --- still updates, so this is reversible with no reload and no side effects.
 ---@class BlizzardTracker : TrackerVisibility
 ---@field private didHide boolean?
+---@field private parked table<table, table>?
 local BlizzardTracker = {}
 BlizzardTracker.__index = BlizzardTracker
 
@@ -28,6 +29,7 @@ end
 function BlizzardTracker:SetHidden(isHidden)
 	self:ApplyAlpha(isHidden)
 	self:ApplyMouse(not isHidden)
+	self:ApplyModules(isHidden)
 end
 
 --- Hiding is enforced every time, showing back lifts only the zero this addon
@@ -67,6 +69,85 @@ function BlizzardTracker:ApplyMouse(wantsMouse)
 	end
 
 	ObjectiveTrackerFrame:EnableMouse(wantsMouse)
+end
+
+--- Out of sight was not enough. An invisible tracker kept laying out its blocks
+--- every update, and inside an instance that layout reads aura data the client
+--- refuses to hand to code an addon has touched: a player in a dungeon got the
+--- error while nothing was even on screen.
+---
+--- Taking each module off its container ends it at the source. The container
+--- only updates the modules on its list, so the layout that reads auras never
+--- runs, and the work of drawing a tracker nobody can see stops with it.
+---
+--- Reversible on purpose: where each module came from is kept here, and putting
+--- them back is the same call the game makes itself. Skipped in combat, where
+--- the frame is protected, and the refresh that follows finishes the job.
+---@private
+---@param isHidden boolean
+function BlizzardTracker:ApplyModules(isHidden)
+	if InCombatLockdown() then
+		return
+	end
+
+	if isHidden then
+		self:ParkModules()
+		return
+	end
+
+	self:RestoreModules()
+end
+
+--- Runs on every refresh instead of once, because the game hands modules back
+--- to their containers on its own, and a module that returned would start
+--- laying out again.
+---@private
+function BlizzardTracker:ParkModules()
+	local containers = ObjectiveTrackerManager and ObjectiveTrackerManager.containers
+
+	if type(containers) ~= "table" then
+		return
+	end
+
+	for container in pairs(containers) do
+		self:ParkContainer(container)
+	end
+end
+
+--- The container is asked what it holds, instead of the map of who belongs
+--- where: a module handed back by any other route is still on this list, and
+--- this list is the one the update walks.
+---@private
+---@param container table
+function BlizzardTracker:ParkContainer(container)
+	if type(container) ~= "table" or type(container.RemoveModule) ~= "function" then
+		return
+	end
+
+	local attached = {}
+
+	for _, module in ipairs(container.modules or {}) do
+		table.insert(attached, module)
+	end
+
+	for _, module in ipairs(attached) do
+		self.parked = self.parked or {}
+		self.parked[module] = self.parked[module] or container
+		container:RemoveModule(module)
+	end
+end
+
+---@private
+function BlizzardTracker:RestoreModules()
+	if not self.parked or not ObjectiveTrackerManager then
+		return
+	end
+
+	for module, container in pairs(self.parked) do
+		ObjectiveTrackerManager:SetModuleContainer(module, container)
+	end
+
+	self.parked = nil
 end
 
 Addon.BlizzardTracker = BlizzardTracker
