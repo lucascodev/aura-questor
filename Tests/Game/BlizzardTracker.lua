@@ -21,8 +21,43 @@ return function(_, T)
 		}
 	end
 
+	--- O gerenciador do jogo, com um container e dois modulos pendurados nele.
+	---@return table manager, table container
+	local function Manager()
+		local container = { modules = {} }
+
+		function container:RemoveModule(module)
+			for index, current in ipairs(self.modules) do
+				if current == module then
+					table.remove(self.modules, index)
+					return
+				end
+			end
+		end
+
+		local manager = { moduleToContainerMap = {}, containers = { [container] = true } }
+
+		--- Como no jogo: sair do container nao apaga o registro do gerenciador.
+		function manager:SetModuleContainer(module, target)
+			self.moduleToContainerMap[module] = target
+
+			for _, current in ipairs(target.modules) do
+				if current == module then
+					return
+				end
+			end
+
+			table.insert(target.modules, module)
+		end
+
+		manager:SetModuleContainer({ name = "missoes" }, container)
+		manager:SetModuleContainer({ name = "cenario" }, container)
+
+		return manager, container
+	end
+
 	---@param isInCombat boolean?
-	---@return table tracker, table frame
+	---@return table tracker, table frame, table container
 	local function Load(isInCombat)
 		local addon = {}
 		local chunk = assert(loadfile("Source/Game/BlizzardTracker.lua"))
@@ -30,13 +65,15 @@ return function(_, T)
 		chunk("AuraQuestor", addon)
 
 		local frame = TrackerFrame()
+		local manager, container = Manager()
 
 		ObjectiveTrackerFrame = frame
+		ObjectiveTrackerManager = manager
 		InCombatLockdown = function()
 			return isInCombat == true
 		end
 
-		return addon.BlizzardTracker.New(), frame
+		return addon.BlizzardTracker.New(), frame, container
 	end
 
 	T.Suite("BlizzardTracker", function()
@@ -98,6 +135,62 @@ return function(_, T)
 
 			T.Equals(frame.alpha, 0, "opacidade nao e protegida")
 			T.Equals(frame.hasMouse, true, "EnableMouse e bloqueado no frame protegido")
+		end)
+
+		--- O erro que apareceu numa mitica: invisivel, o rastreador do jogo
+		--- continuava montando blocos, e essa montagem le aura, que dentro de
+		--- instancia o cliente recusa entregar a codigo que um addon encostou.
+		T.Test("escondido, os modulos saem do container", function()
+			local tracker, _, container = Load()
+
+			tracker:SetHidden(true)
+
+			T.Equals(#container.modules, 0)
+		end)
+
+		T.Test("mostrar de volta devolve os modulos", function()
+			local tracker, _, container = Load()
+
+			tracker:SetHidden(true)
+			tracker:SetHidden(false)
+
+			T.Equals(#container.modules, 2)
+		end)
+
+		T.Test("modulo que o jogo devolveu sai de novo", function()
+			local tracker, _, container = Load()
+
+			tracker:SetHidden(true)
+			table.insert(container.modules, { name = "voltou" })
+			tracker:SetHidden(true)
+
+			T.Equals(#container.modules, 0)
+		end)
+
+		T.Test("esconder duas vezes nao duplica na volta", function()
+			local tracker, _, container = Load()
+
+			tracker:SetHidden(true)
+			tracker:SetHidden(true)
+			tracker:SetHidden(false)
+
+			T.Equals(#container.modules, 2)
+		end)
+
+		T.Test("em combate os modulos ficam onde estao", function()
+			local tracker, _, container = Load(true)
+
+			tracker:SetHidden(true)
+
+			T.Equals(#container.modules, 2, "mexer no frame protegido e bloqueado")
+		end)
+
+		T.Test("sem o gerenciador do jogo, nada estoura", function()
+			local tracker = Load()
+			ObjectiveTrackerManager = nil
+
+			tracker:SetHidden(true)
+			tracker:SetHidden(false)
 		end)
 	end)
 end
