@@ -3,6 +3,20 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não publicado]
+
+### Corrigido
+
+- Em combate o rastreador congelava inteiro: nada de novo entrava na lista, o
+  cenário não mudava de estado e recolher ou mover a janela não respondia. A
+  causa era o botão de item da missão, que fica dentro do bloco e, por regra do
+  jogo, protege todo frame acima dele. Agora ele mora num frame próprio, fora do
+  painel, e é só ancorado ao bloco. A lista atualiza durante a luta como em
+  qualquer outro momento.
+- O que continua parado em combate é só o botão em si, porque o jogo proíbe:
+  botão de item de uma missão que apareceu no meio da luta entra quando ela
+  acaba.
+
 ## [0.87.0] - 2026-08-23
 
 ### Adicionado

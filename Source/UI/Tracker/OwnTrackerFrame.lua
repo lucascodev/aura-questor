@@ -39,6 +39,10 @@ local COLLAPSED_MARK = "+"
 --- Collapsed, only the header and the rule under it are left.
 --- Breathing room left between the window and the bottom edge of the screen.
 local SCREEN_MARGIN = 8
+
+--- Clear of the blocks and everything they draw, so an item button is never
+--- covered by the row it sits on.
+local ITEM_BUTTON_LEVELS_ABOVE = 10
 local COLLAPSED_HEIGHT = FRAME_PADDING * 2 + HEADER_HEIGHT + HEADER_RULE_GAP + SECTION_LINE_THICKNESS
 
 local TITLE_SIZE_DELTA = 1
@@ -188,19 +192,28 @@ function OwnTrackerFrame:Build(addonInfo, position)
 
 	scroll:EnableMouseWheel(true)
 	scroll:SetScript("OnMouseWheel", function(frame, delta)
-		if self:IsLockedByCombat() then
-			return
-		end
-
 		local hidden = math.max(0, content:GetHeight() - frame:GetHeight())
 		local wanted = frame:GetVerticalScroll() - delta * WHEEL_STEP
 
 		frame:SetVerticalScroll(math.min(math.max(wanted, 0), hidden))
 	end)
 
+	-- Outside the panel on purpose. A SecureActionButton protects every frame
+	-- above it, and a protected panel cannot redraw during a fight: that is what
+	-- froze the whole tracker in combat. Under UIParent the buttons keep their
+	-- own restrictions and the list keeps none. Clipped to the visible area,
+	-- because living outside means the scroll no longer cuts them.
+	local itemButtons = CreateFrame("Frame", "AuraQuestorItemButtons", UIParent)
+	itemButtons:SetAllPoints(scroll)
+	itemButtons:SetClipsChildren(true)
+	itemButtons:SetFrameStrata(root:GetFrameStrata())
+	itemButtons:SetFrameLevel(root:GetFrameLevel() + ITEM_BUTTON_LEVELS_ABOVE)
+	itemButtons:Hide()
+
 	self.scroll = scroll
 	self.content = content
-	self.pool = Addon.EntryBlockPool.New(content, self.actions)
+	self.itemButtons = itemButtons
+	self.pool = Addon.EntryBlockPool.New(content, self.actions, itemButtons)
 end
 
 ---@private
@@ -266,25 +279,8 @@ function OwnTrackerFrame:ToggleSection(sectionID)
 	self:Render(self.lastSections)
 end
 
---- Once a quest item button exists, the blocks around it are protected frames,
---- and combat forbids moving, resizing or hiding those. Waiting is the only
---- legal answer, PLAYER_REGEN_ENABLED brings the refresh straight back.
----
---- Nothing is locked until an item button actually exists, so the usual case is
---- a tracker that keeps updating right through the fight.
----@private
----@return boolean
-function OwnTrackerFrame:IsLockedByCombat()
-	return self.pool:IsProtected() and InCombatLockdown()
-end
-
 ---@param sections TrackerSection[]
 function OwnTrackerFrame:Render(sections)
-	if self:IsLockedByCombat() then
-		self.pool:RewriteInPlace(sections)
-		return
-	end
-
 	self.lastSections = sections
 
 	-- Collapsed, the list is off screen, so no blocks are built for it.
@@ -389,10 +385,6 @@ end
 --- and not on every quest update.
 ---@param appearance TrackerAppearance
 function OwnTrackerFrame:SetAppearance(appearance)
-	if self:IsLockedByCombat() then
-		return
-	end
-
 	self.expandedHeight = appearance.height
 	self.isAutoHeight = appearance.isAutoHeight
 	self.root:SetWidth(appearance.width)
@@ -449,6 +441,23 @@ function OwnTrackerFrame:ApplyHeight()
 	-- grows and shrinks downwards and the header stays where the player put it.
 	self.root:SetHeight(isCollapsed and COLLAPSED_HEIGHT or self:WantedHeight())
 	self.scroll:SetShown(not isCollapsed)
+	self:ShowItemButtons(self.root:IsShown() and not isCollapsed)
+end
+
+--- The buttons follow the list they belong to, and they live in another frame,
+--- so nothing hides them along with it. Hiding a frame that holds secure
+--- buttons is forbidden in combat, and alpha is not: a fight leaves them
+--- invisible until the refresh that follows can put them away properly.
+---@private
+---@param isShown boolean
+function OwnTrackerFrame:ShowItemButtons(isShown)
+	if InCombatLockdown() then
+		self.itemButtons:SetAlpha(isShown and 1 or 0)
+		return
+	end
+
+	self.itemButtons:SetAlpha(1)
+	self.itemButtons:SetShown(isShown)
 end
 
 --- Turns wherever the drag left the frame into the top left corner everything
@@ -483,15 +492,9 @@ function OwnTrackerFrame:SetCollapsed(isCollapsed)
 	self:ToggleCollapsed()
 end
 
---- With an item button on the list the frame is protected in combat and cannot
---- be resized, so the state is saved and applied by the refresh that follows.
 ---@return boolean isCollapsed
 function OwnTrackerFrame:ToggleCollapsed()
 	self.state.isCollapsed = not self:IsCollapsed() or nil
-
-	if self:IsLockedByCombat() then
-		return self:IsCollapsed()
-	end
 
 	self:ApplyHeight()
 
@@ -505,7 +508,7 @@ end
 --- Opens a collapsed tracker, for when something new was tracked and the list
 --- has no way to say so.
 function OwnTrackerFrame:Expand()
-	if not self:IsCollapsed() or self:IsLockedByCombat() then
+	if not self:IsCollapsed() then
 		return
 	end
 
@@ -553,10 +556,6 @@ end
 --- moving deliberate, and the outline says the frame is listening.
 ---@param isEditing boolean
 function OwnTrackerFrame:SetEditing(isEditing)
-	if self:IsLockedByCombat() then
-		return
-	end
-
 	self.root:EnableMouse(isEditing)
 	self.editOutline:SetShown(isEditing)
 end
@@ -569,13 +568,27 @@ end
 --- saved numbers in the scale they are about to be drawn in.
 ---@param scale number
 function OwnTrackerFrame:SetScale(scale)
-	if self:IsLockedByCombat() or scale == self.scale then
+	if scale == self.scale then
 		return
 	end
 
 	self.scale = scale
 	self.root:SetScale(scale)
+	self:ScaleItemButtons(scale)
 	self.position:Restore()
+end
+
+--- The buttons hang outside the panel, so the panel scale does not reach them.
+--- Combat forbids scaling a frame that holds secure buttons, and the refresh
+--- after the fight comes back through here.
+---@private
+---@param scale number
+function OwnTrackerFrame:ScaleItemButtons(scale)
+	if InCombatLockdown() then
+		return
+	end
+
+	self.itemButtons:SetScale(scale)
 end
 
 function OwnTrackerFrame:ResetPosition()
@@ -584,11 +597,8 @@ end
 
 ---@param isShown boolean
 function OwnTrackerFrame:SetShown(isShown)
-	if self:IsLockedByCombat() then
-		return
-	end
-
 	self.root:SetShown(isShown)
+	self:ShowItemButtons(isShown and not self:IsCollapsed())
 
 	if not isShown and self.countdownTicker then
 		self.countdownTicker:Cancel()
