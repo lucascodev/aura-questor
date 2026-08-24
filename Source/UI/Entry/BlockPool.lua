@@ -107,27 +107,23 @@ local BADGE_COLOR = { red = 0.6, green = 0.75, blue = 1 }
 ---@field private actions EntryActions
 ---@field private blocks table[]
 ---@field private used number
----@field private hasSecureChildren boolean
+---@field private host table Where the secure buttons live, outside the panel.
 local EntryBlockPool = {}
 EntryBlockPool.__index = EntryBlockPool
 
 ---@param parent table
 ---@param actions EntryActions
+---@param host table A frame outside the panel, for the secure item buttons.
 ---@return EntryBlockPool
-function EntryBlockPool.New(parent, actions)
+function EntryBlockPool.New(parent, actions, host)
 	return setmetatable({
 		parent = parent,
 		actions = actions,
+		host = host,
 		blocks = {},
 		used = 0,
-		hasSecureChildren = false,
 		areItemButtonsShown = true,
 	}, EntryBlockPool)
-end
-
----@return boolean
-function EntryBlockPool:IsProtected()
-	return self.hasSecureChildren
 end
 
 ---@param row table
@@ -146,12 +142,6 @@ local function RowKind(row)
 	end
 
 	return "line"
-end
-
----@param entry TrackerEntry
----@return string
-local function EntryKey(entry)
-	return entry.kind .. ":" .. tostring(entry.id)
 end
 
 ---@param parent table
@@ -466,17 +456,22 @@ local function CreateLine(block)
 	return line
 end
 
---- Created only for the quest that carries an item. A SecureActionButton makes
---- every frame above it protected, and a protected frame cannot be moved or
---- hidden in combat.
+--- Created only for the quest that carries an item, and never inside the block.
+--- A SecureActionButton makes every frame above it protected, and a protected
+--- panel cannot redraw during a fight: parented to the block, one quest item
+--- was enough to freeze the whole tracker in combat. It hangs from the host
+--- frame instead and is merely anchored to the block, which costs nothing and
+--- keeps the list free.
+---@param pool EntryBlockPool
 ---@param block table
 ---@return table
-local function CreateItemButton(block)
-	local item = CreateFrame("Button", nil, block.frame, "SecureActionButtonTemplate")
+local function CreateItemButton(pool, block)
+	local item = CreateFrame("Button", nil, pool.host, "SecureActionButtonTemplate")
 	item:SetSize(ITEM_SIZE, ITEM_SIZE)
-	-- Anchored once, to the RIGHT: the vertical centre follows the block's
-	-- height on its own, and a protected frame cannot be re-anchored in combat.
-	item:SetPoint("RIGHT")
+	-- Anchored once, to the block's right edge: the vertical centre follows the
+	-- block height on its own, and a protected frame cannot be re-anchored in
+	-- combat.
+	item:SetPoint("RIGHT", block.frame, "RIGHT", 0, 0)
 	item:SetAttribute("type", "item")
 	-- Since 10.0 the secure handler only fires when the registered press matches
 	-- the ActionButtonUseKeyDown cvar. Registering both instead would make the
@@ -534,6 +529,24 @@ end
 --- A secure button's attributes are locked while the player is in combat, and so
 --- is hiding it. Leaving it exactly as it was is the only legal move, the same
 --- restriction Blizzard's own tracker lives with.
+--- The button hangs outside the block, so hiding the block leaves it on screen.
+--- Hiding a secure button is forbidden in combat, and alpha is not: it goes
+--- invisible now and is put away properly by the refresh after the fight.
+---@param block table
+local function HideItemButton(block)
+	if not block.item then
+		return
+	end
+
+	if InCombatLockdown() then
+		block.item:SetAlpha(0)
+		return
+	end
+
+	block.item:SetAlpha(1)
+	block.item:Hide()
+end
+
 ---@param pool EntryBlockPool
 ---@param block table
 ---@param entry TrackerEntry
@@ -546,16 +559,13 @@ local function UpdateItem(pool, block, entry)
 	end
 
 	if not item then
-		if block.item then
-			block.item:Hide()
-		end
+		HideItemButton(block)
 
 		return false
 	end
 
 	if not block.item then
-		block.item = CreateItemButton(block)
-		pool.hasSecureChildren = true
+		block.item = CreateItemButton(pool, block)
 	end
 
 	block.item:SetAttribute("item", item.link)
@@ -568,6 +578,7 @@ local function UpdateItem(pool, block, entry)
 	block.itemCount:SetText(item.charges)
 	block.itemCooldown:SetCooldown(item.cooldownStart, item.cooldownDuration)
 
+	block.item:SetAlpha(1)
 	block.item:Show()
 
 	return true
@@ -802,25 +813,9 @@ function EntryBlockPool:ApplyLineFont(line)
 	Addon.FontStyler.Apply(line, self.fontStyle, LINE_SIZE_DELTA)
 end
 
----@param block table
----@param rows table[]
----@return boolean
-local function MatchesShape(block, rows)
-	if not block.shape or #block.shape ~= #rows then
-		return false
-	end
-
-	for index, row in ipairs(rows) do
-		if block.shape[index].kind ~= RowKind(row) then
-			return false
-		end
-	end
-
-	return true
-end
-
---- New text that wraps to a different height would need the rows below it
---- moved, which combat forbids; the old text stays until then.
+--- New text that changes the wrapped height would push every row below it, so
+--- a whole layout would run for one ticking second. The old text stays until
+--- the next full render, which is cheap because it happens anyway.
 ---@param line table
 ---@param text string
 ---@param height number
@@ -838,58 +833,8 @@ local function RewriteText(line, text, height)
 	return true
 end
 
-local function RewriteLine(line, row, height)
-	if not RewriteText(line, row.text, height) then
-		return
-	end
-
-	line:SetTextColor(row.color.red, row.color.green, row.color.blue)
-end
-
----@private
----@param block table
----@param entry TrackerEntry
-function EntryBlockPool:RewriteBlock(block, entry)
-	local rows = Addon.EntryText.Rows(entry)
-
-	if not MatchesShape(block, rows) then
-		return
-	end
-
-	block.entry = entry
-
-	local titleColor = Addon.EntryText.TitleColor(entry, entry.isSuperTracked == true)
-	block.title:SetTextColor(titleColor.red, titleColor.green, titleColor.blue)
-
-	local usedLines = 0
-	local usedBars = 0
-
-	block.countdown = nil
-
-	for index, row in ipairs(rows) do
-		local slot = block.shape[index]
-
-		if slot.kind == "bar" then
-			usedBars = usedBars + 1
-			self:ApplyBar(block.bars[usedBars], row.percent, IsSplitBar(entry))
-		elseif slot.kind == "line" then
-			usedLines = usedLines + 1
-			RewriteLine(block.lines[usedLines], row, slot.height)
-
-			if row.expiresAt then
-				block.countdown = {
-					line = block.lines[usedLines],
-					expiresAt = row.expiresAt,
-					height = slot.height,
-				}
-			end
-		end
-	end
-end
-
 --- Rewrites only the countdown lines, from the deadline each block kept, so a
---- ticking second costs no game call and no layout. A line that would change
---- height keeps the text it had: growing a block is what combat forbids.
+--- ticking second costs no game call and no layout.
 ---@return boolean hasCountdown Whether any block is still counting down.
 function EntryBlockPool:RefreshCountdowns()
 	local now = time()
@@ -911,32 +856,6 @@ function EntryBlockPool:RefreshCountdowns()
 	return hasCountdown
 end
 
---- In combat the blocks around a quest item are protected: nothing may move,
---- grow, appear or hide. Their words may still change, since font strings and
---- status bars are not guarded, and a fight is exactly when a "slay creatures"
---- bar moves. So the blocks on screen are rewritten in place, entry by entry,
---- and anything whose shape changed waits for the refresh that follows the
---- combat.
----@param sections TrackerSection[]
-function EntryBlockPool:RewriteInPlace(sections)
-	local entriesByKey = {}
-
-	for _, section in ipairs(sections) do
-		for _, entry in ipairs(section.entries) do
-			entriesByKey[EntryKey(entry)] = entry
-		end
-	end
-
-	for index = 1, self.used do
-		local block = self.blocks[index]
-		local entry = block.entry and entriesByKey[EntryKey(block.entry)]
-
-		if entry then
-			self:RewriteBlock(block, entry)
-		end
-	end
-end
-
 --- Blocks are handed out again in order, so the ones still in use keep their
 --- frames shown from one render to the next: hiding and reshowing them would
 --- fire every OnHide and OnShow underneath for nothing.
@@ -946,7 +865,10 @@ end
 
 function EntryBlockPool:HideUnused()
 	for index = self.used + 1, #self.blocks do
-		self.blocks[index].frame:Hide()
+		local block = self.blocks[index]
+
+		block.frame:Hide()
+		HideItemButton(block)
 	end
 end
 

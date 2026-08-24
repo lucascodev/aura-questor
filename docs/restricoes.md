@@ -38,22 +38,25 @@ Consequências observadas neste projeto:
 - em combate não é possível mover, redimensionar nem esconder o que está acima
   deles
 
-Solução adotada: o botão é criado sob demanda, apenas quando uma missão de fato
-tem item. Enquanto nenhum existir, nada está protegido e o rastreador atualiza
-normalmente em combate. Quando existe,
-[`OwnTrackerFrame:IsLockedByCombat`](../Source/UI/Tracker/OwnTrackerFrame.lua) segura o
-redesenho até `PLAYER_REGEN_ENABLED`.
+**Solução adotada: o botão não mora dentro do bloco.** Ele é filho de um frame
+próprio, `AuraQuestorItemButtons`, pendurado no `UIParent`, e apenas *ancorado*
+ao bloco. Âncora não protege ninguém: acima do botão só existe a tela, então o
+painel nunca fica protegido e **redesenha normalmente em combate**, inclusive
+mudando de estado no meio de um cenário.
 
-Atributos de botão seguro também não podem ser alterados em combate. É a mesma
-limitação do rastreador da Blizzard.
+Antes deste desenho, uma única missão com item congelava a lista inteira até a
+luta acabar. Era a maior limitação do addon e não precisava existir.
 
-O que **não** é protegido: o texto de um FontString e o valor de uma StatusBar.
-Por isso, em combate, `EntryBlockPool:RewriteInPlace` reescreve as linhas e as
-barras dos blocos que já estão na tela, sem mover, criar, mostrar ou esconder
-frame nenhum. Uma missão mundial de "matar criaturas" só progride dentro do
-combate; sem isso a barra ficava parada até a luta acabar. Bloco cuja forma
-mudaria (linha a mais, entrada nova, texto que passa a quebrar) espera o
-refresh que segue o `PLAYER_REGEN_ENABLED`.
+O que continua valendo, porque é regra do jogo:
+
+- **atributo de botão seguro não muda em combate**, então o botão continua
+  apontando para o item que já estava armado
+- **criar, mover, mostrar ou esconder** o botão é bloqueado em combate. Botão
+  novo espera o `PLAYER_REGEN_ENABLED`; o que precisa sair de cena vai a alpha
+  zero, que não é protegido, e é escondido de verdade no refresh seguinte
+
+O frame recorta o que passa dele (`SetClipsChildren`), porque morando fora do
+painel o botão não é mais cortado pela rolagem.
 
 ## Taint no mapa: um erro conhecido e sem correção
 
