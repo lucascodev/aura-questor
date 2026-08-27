@@ -8,7 +8,6 @@
 ## Author: Lucascodev
 ## X-License: MIT
 ## X-Curse-Project-ID: 1651416
-## X-Wago-ID: qGYZ1vNg
 ## IconTexture: Interface\AddOns\AuraQuestor\Media\Logo
 ## SavedVariables: AuraTrackerQuestorDB
 ## Group: AuraQuestor
