@@ -3,6 +3,17 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [0.88.0] - 2026-08-28
+
+### Adicionado
+
+- **Mais recentes primeiro**, em Ordenação: as missões aceitas há menos tempo
+  vão para o topo da seção. O jogo não guarda quando uma missão foi aceita, então
+  o addon passa a registrar isso por conta própria, por personagem.
+- As missões que já estavam no log quando esta versão sobe entram todas de uma
+  vez, na ordem em que o log as devolve. Só o que for aceito daqui em diante tem
+  a ordem de chegada exata.
+
 ## [0.87.1] - 2026-08-24
 
 ### Corrigido
