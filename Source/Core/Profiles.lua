@@ -142,6 +142,32 @@ function Profiles:Current()
 	return self.database.profiles[name]
 end
 
+--- State that belongs to the character rather than to its settings: a profile
+--- is shared by several characters, and their quest logs are not the same one.
+---@param name string
+---@return table
+function Profiles:CharacterTable(name)
+	local characters = self.database.characterTables
+
+	if type(characters) ~= "table" then
+		characters = {}
+		self.database.characterTables = characters
+	end
+
+	local own = characters[self.characterKey]
+
+	if type(own) ~= "table" then
+		own = {}
+		characters[self.characterKey] = own
+	end
+
+	if type(own[name]) ~= "table" then
+		own[name] = {}
+	end
+
+	return own[name]
+end
+
 ---@return string[]
 function Profiles:Names()
 	local names = {}

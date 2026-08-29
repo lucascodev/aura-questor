@@ -150,6 +150,29 @@ return function(Addon, T, Support)
 			T.Equals(entries[1].title, "baixo")
 		end)
 
+		T.Test("ordenacao por recencia poe a mais nova no topo", function()
+			local entries = Content({
+				Support.Provider("quests", 20, {
+					Support.Entry({ id = 1, title = "antiga", arrival = 1 }),
+					Support.Entry({ id = 2, title = "nova", arrival = 9 }),
+				}),
+			}, "recent"):Build()[1].entries
+
+			T.Equals(entries[1].title, "nova")
+			T.Equals(entries[2].title, "antiga")
+		end)
+
+		T.Test("por recencia, o que nao tem chegada fica embaixo", function()
+			local entries = Content({
+				Support.Provider("quests", 20, {
+					Support.Entry({ id = 1, title = "conquista" }),
+					Support.Entry({ id = 2, title = "missao", arrival = 3 }),
+				}),
+			}, "recent"):Build()[1].entries
+
+			T.Equals(entries[1].title, "missao", "so missao tem chegada")
+		end)
+
 		T.Test("ordenar nao promove concluida acima de aberta", function()
 			local entries = Content({
 				Support.Provider("quests", 20, {

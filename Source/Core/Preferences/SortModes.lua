@@ -39,6 +39,15 @@ local SortModes = {
 			return left.title < right.title
 		end,
 	},
+	{
+		id = "recent",
+		label = L.SORT_RECENT,
+		-- Only quests carry an arrival, so every other kind of entry settles at
+		-- the bottom of its own section, in whatever order the source gave.
+		compare = function(left, right)
+			return (left.arrival or 0) > (right.arrival or 0)
+		end,
+	},
 }
 
 Addon.SortModes = SortModes

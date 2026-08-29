@@ -45,6 +45,7 @@ Source\Core\WowheadLink.lua
 Source\Core\ToggleSet.lua
 Source\Core\Profiles.lua
 Source\Core\LegacyDatabase.lua
+Source\Core\QuestRecency.lua
 
 # Keys, choice lists and the catalog that reads them at file scope, so the
 # lists load first.
@@ -96,6 +97,7 @@ Source\Game\Quest\LogSource.lua
 Source\Game\Quest\GroupReader.lua
 Source\Game\Quest\ItemSource.lua
 Source\Game\Quest\PopupSource.lua
+Source\Game\Quest\Arrivals.lua
 
 Source\Game\Achievement\CategoryReader.lua
 Source\Game\Achievement\Tracking.lua

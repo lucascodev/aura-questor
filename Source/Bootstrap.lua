@@ -172,8 +172,11 @@ local function Build()
 		end
 	)
 
+	local questSource = Addon.QuestLogSource.New()
+	local recency = Addon.QuestRecency.New(profiles:CharacterTable("questArrivals"))
+
 	local filtering = Addon.QuestFiltering.New(
-		Addon.QuestLogSource.New(),
+		questSource,
 		Addon.QuestFilters,
 		logger
 	)
@@ -212,7 +215,7 @@ local function Build()
 	display = Addon.TrackerDisplay.New(
 		Addon.TrackerContent.New({
 			Addon.ScenarioSectionProvider.New(),
-			Addon.QuestSectionProvider.New(),
+			Addon.QuestSectionProvider.New(recency),
 			Addon.WorldQuestSectionProvider.New(preferences),
 			Addon.EventSectionProvider.New(preferences),
 			Addon.BonusObjectiveSectionProvider.New(preferences),
@@ -255,6 +258,7 @@ local function Build()
 	Addon.TrackerEvents.New(RefreshFromGame):Start()
 	Addon.ChallengeTimer.New(RefreshFromGame):Start()
 	Addon.QuestPopupSource.Start()
+	Addon.QuestArrivals.Start(recency, questSource)
 
 	-- Switching a profile reloads the interface: re-pointing every table handed
 	-- out would work until one was forgotten, and that fails silently.

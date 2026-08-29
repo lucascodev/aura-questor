@@ -147,6 +147,7 @@ Addon.RegisterLocale("ptBR", {
 	SORT_LEVEL = "Por nível",
 	SORT_GROUP = "Por agrupamento",
 	SORT_TITLE = "Por título",
+	SORT_RECENT = "Mais recentes primeiro",
 
 	FONT_FLAG_NONE = "Nenhum",
 	FONT_FLAG_OUTLINE = "Contorno",

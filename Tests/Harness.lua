@@ -25,6 +25,7 @@ local CORE_FILES = {
 	"ToggleSet",
 	"Profiles",
 	"LegacyDatabase",
+	"QuestRecency",
 	"Preferences/Keys",
 	"Preferences/FontFlags",
 	"Preferences/SortModes",
