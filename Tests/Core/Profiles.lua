@@ -186,6 +186,25 @@ return function(Addon, T)
 			T.Equals(database.profiles["Padrão"].settings.fontSize, 2, "o outro segue intacto")
 		end)
 
+		T.Test("tabela de personagem sobrevive entre chamadas", function()
+			local database = { profiles = {}, characters = {} }
+			local profiles = Addon.Profiles.New(database, CHARACTER)
+
+			profiles:CharacterTable("questArrivals").lastArrival = 7
+
+			T.Equals(profiles:CharacterTable("questArrivals").lastArrival, 7)
+		end)
+
+		T.Test("cada personagem tem a sua tabela, mesmo compartilhando perfil", function()
+			local database = { profiles = {}, characters = {} }
+			local mine = Addon.Profiles.New(database, CHARACTER)
+			local other = Addon.Profiles.New(database, "Outro - Azralon")
+
+			mine:CharacterTable("questArrivals").lastArrival = 7
+
+			T.Equals(other:CharacterTable("questArrivals").lastArrival, nil)
+		end)
+
 		T.Test("migracao nao roda de novo sobre um banco ja migrado", function()
 			local database = { fontSize = 16 }
 			Addon.Profiles.New(database, CHARACTER)

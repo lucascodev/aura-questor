@@ -34,6 +34,8 @@
 ---@field objectives TrackerObjective[]
 ---@field groupName? string What the quest log files it under: zone, campaign, category.
 ---@field level? number
+---@field arrival? number Higher means accepted more recently. Counted by the
+--- addon, because the game does not record when a quest was picked up.
 ---@field isComplete boolean
 ---@field canFindGroup boolean Group content the player may look for a party for.
 ---@field tagAtlas? string Badge for what kind of content it is: PvP, group, elite.

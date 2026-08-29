@@ -153,6 +153,7 @@ local entries = {
 	SORT_LEVEL = "Por nivel",
 	SORT_GROUP = "Por agrupación",
 	SORT_TITLE = "Por título",
+	SORT_RECENT = "Más recientes primero",
 
 	-- Font flags
 	FONT_FLAG_NONE = "Ninguno",

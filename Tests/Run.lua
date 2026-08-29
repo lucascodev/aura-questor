@@ -15,6 +15,7 @@ local SUITES = {
 	"Core/ToggleSet",
 	"Core/Profiles",
 	"Core/LegacyDatabase",
+	"Core/QuestRecency",
 	"Core/Preferences/Catalog",
 	"Core/Preferences/Choices",
 	"Core/Preferences/Store",

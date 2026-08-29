@@ -151,6 +151,7 @@ Addon.RegisterLocale("enUS", {
 	SORT_LEVEL = "By level",
 	SORT_GROUP = "By grouping",
 	SORT_TITLE = "By title",
+	SORT_RECENT = "Newest first",
 
 	-- Font flags
 	FONT_FLAG_NONE = "None",

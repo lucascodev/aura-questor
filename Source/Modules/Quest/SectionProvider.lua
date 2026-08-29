@@ -9,12 +9,14 @@ local COMPLETE_POPUP = "COMPLETE"
 --- it the same way Blizzard does: campaign first, everything else after. The
 --- section titles come from the game's own globals, so they arrive translated.
 ---@class QuestSectionProvider : SectionProvider
+---@field private recency QuestRecency
 local QuestSectionProvider = {}
 QuestSectionProvider.__index = QuestSectionProvider
 
+---@param recency QuestRecency Tells how recently each quest was accepted.
 ---@return QuestSectionProvider
-function QuestSectionProvider.New()
-	return setmetatable({}, QuestSectionProvider)
+function QuestSectionProvider.New(recency)
+	return setmetatable({ recency = recency }, QuestSectionProvider)
 end
 
 --- What a finished quest shows instead of its objectives: the game's own "go
@@ -80,8 +82,9 @@ end
 
 ---@param questID number
 ---@param groupNames table<number, string>
+---@param recency QuestRecency
 ---@return TrackerEntry?, boolean isCampaign
-local function ReadEntry(questID, groupNames)
+local function ReadEntry(questID, groupNames, recency)
 	local questLogIndex = C_QuestLog.GetLogIndexForQuestID(questID)
 	if not questLogIndex then
 		return nil, false
@@ -112,6 +115,7 @@ local function ReadEntry(questID, groupNames)
 		title = info.title,
 		groupName = groupNames[questID],
 		level = info.level,
+		arrival = recency:Arrival(questID),
 		objectives = objectives,
 		isComplete = isComplete,
 		canFindGroup = QuestUtil.CanCreateQuestGroup(questID),
@@ -153,13 +157,14 @@ end
 ---@param campaign TrackerSection
 ---@param quests TrackerSection
 ---@param groupNames table<number, string>
+---@param recency QuestRecency
 ---@return table<number, boolean> handled
-local function AddPopupEntries(campaign, quests, groupNames)
+local function AddPopupEntries(campaign, quests, groupNames, recency)
 	local handled = {}
 
 	for _, popup in ipairs(Addon.QuestPopupSource.ReadAll()) do
 		if popup.popUpType == COMPLETE_POPUP then
-			local entry, isCampaign = ReadEntry(popup.questID, groupNames)
+			local entry, isCampaign = ReadEntry(popup.questID, groupNames, recency)
 
 			if entry and entry.isComplete then
 				handled[popup.questID] = true
@@ -194,12 +199,12 @@ function QuestSectionProvider:Collect()
 	}
 
 	local groupNames = Addon.QuestGroupReader.ReadAll()
-	local handled = AddPopupEntries(campaign, quests, groupNames)
+	local handled = AddPopupEntries(campaign, quests, groupNames, self.recency)
 
 	for index = 1, C_QuestLog.GetNumQuestWatches() do
 		local questID = C_QuestLog.GetQuestIDForQuestWatchIndex(index)
 		if questID and not handled[questID] then
-			local entry, isCampaign = ReadEntry(questID, groupNames)
+			local entry, isCampaign = ReadEntry(questID, groupNames, self.recency)
 			if entry then
 				table.insert(isCampaign and campaign.entries or quests.entries, entry)
 			end
