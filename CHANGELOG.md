@@ -3,6 +3,14 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [0.88.1] - 2026-09-14
+
+### Alterado
+
+- Compatível com o patch **12.1.5** do WoW, sem deixar de rodar no 12.1.0 que
+  está no ar. Nada muda no uso: as funções do jogo que o addon chama ficaram
+  iguais no patch novo, e o que a Blizzard removeu nele não era usado aqui.
+
 ## [0.88.0] - 2026-08-28
 
 ### Adicionado
