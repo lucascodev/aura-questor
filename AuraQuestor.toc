@@ -1,4 +1,4 @@
-## Interface: 120100, 120007
+## Interface: 120105, 120100
 ## Title: Aura Questor: Objective Tracker
 ## X-Brand: Aura Questor
 ## Notes: A standalone objective tracker built on the public quest APIs.

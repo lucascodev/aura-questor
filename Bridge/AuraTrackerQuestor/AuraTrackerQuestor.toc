@@ -1,4 +1,4 @@
-## Interface: 120100, 120007
+## Interface: 120105, 120100
 ## Title: Aura Questor: Objective Tracker (bridge)
 ## Notes: Keeps the settings saved under the old name, Aura Tracker Questor, so Aura Questor can carry them over. Safe to remove after logging in once with the new version.
 ## Notes-ptBR: Mantém as configurações salvas com o nome antigo, Aura Tracker Questor, para o Aura Questor aproveitá-las. Pode ser removido depois de entrar uma vez com a versão nova.
