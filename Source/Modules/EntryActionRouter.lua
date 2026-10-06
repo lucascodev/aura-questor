@@ -51,6 +51,22 @@ function EntryActionRouter:Describe(entry)
 	return actions:Describe(entry)
 end
 
+--- Optional like Describe: a bonus objective or a scenario was never tracked
+--- on purpose, so there is nothing to let go of.
+---@param entry TrackerEntry
+---@return boolean handled
+function EntryActionRouter:Untrack(entry)
+	local actions = self.byKind[entry.kind]
+
+	if not actions.Untrack then
+		return false
+	end
+
+	actions:Untrack(entry)
+
+	return true
+end
+
 --- Optional like Describe: only what exists as a link in chat implements it.
 ---@param entry TrackerEntry
 ---@return boolean handled
