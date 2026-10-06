@@ -33,7 +33,7 @@ function TrackedListSectionProvider:ReadEntry(id)
 		objectives = Addon.RequirementReader.Read(info.requirementsList),
 		isComplete = info.completed == true,
 		canFindGroup = false,
-		pinStyle = "none",
+		pinStyle = self.source.pinStyle,
 	}
 end
 

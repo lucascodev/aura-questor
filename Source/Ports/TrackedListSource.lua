@@ -7,5 +7,6 @@
 ---@field sectionID string
 ---@field title string
 ---@field titleField string Which field of the info table carries the name.
+---@field pinStyle string Which pin the entries draw, in the renderer's words.
 ---@field readTracked fun(): { trackedIDs: number[] }?
 ---@field readInfo fun(id: number): table?
