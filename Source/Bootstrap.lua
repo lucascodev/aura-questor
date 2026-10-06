@@ -189,6 +189,7 @@ local function Build()
 	-- gets a shorter set.
 	local questActions = Addon.QuestEntryActions.New(waypoints)
 	local collectableActions = Addon.CollectableEntryActions.New()
+	local professionActions = Addon.ProfessionEntryActions.New()
 	local actions = Addon.EntryActionRouter.New({
 		quest = questActions,
 		worldQuest = questActions,
@@ -196,7 +197,8 @@ local function Build()
 		achievement = Addon.AchievementEntryActions.New(),
 		event = Addon.EventEntryActions.New(),
 		scenario = Addon.ScenarioEntryActions.New(),
-		recipe = Addon.ProfessionEntryActions.New(),
+		recipe = professionActions,
+		recraft = professionActions,
 		monthlyActivity = Addon.MonthlyActivityEntryActions.New(),
 		initiativeTask = Addon.InitiativeTaskEntryActions.New(),
 		appearance = collectableActions,

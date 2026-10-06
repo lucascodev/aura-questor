@@ -123,7 +123,7 @@ os que se aplicam.
 | `OpenDetails` | clique esquerdo no bloco |
 | `MenuItems` | clique direito; lista vazia significa nenhum menu |
 | `SuperTrack` | clique no pino |
-| `Untrack` | item do menu |
+| `Untrack` | item do menu e Shift + clique direito |
 | `Describe` | texto do tooltip |
 | `Rewards` | recompensas no tooltip |
 | `FindGroup` | o olho verde de conteúdo em grupo |

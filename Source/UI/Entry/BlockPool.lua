@@ -8,6 +8,12 @@ local BADGE_GAP = 6
 --- the digit sitting low inside the pin.
 local NUMBER_OFFSET_Y = 1
 
+--- The game's own binding for letting go of a watch, Shift unless the player
+--- changed it, and what Blizzard's tracker checks for the same thing. It goes
+--- with the right button here because Shift on the left one already puts the
+--- link in chat.
+local UNTRACK_MODIFIER = "QUESTWATCHTOGGLE"
+
 local TITLE_SIZE_DELTA = 0
 local LINE_SIZE_DELTA = -1
 
@@ -247,6 +253,10 @@ local function CreateBlock(parent, actions)
 		end
 
 		if mouseButton == "RightButton" then
+			if IsModifiedClick(UNTRACK_MODIFIER) and actions:Untrack(block.entry) then
+				return
+			end
+
 			Addon.EntryTooltip.ShowMenu(actions, block.entry, owner)
 			return
 		end

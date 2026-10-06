@@ -1,6 +1,7 @@
 local _, Addon = ...
 
-local ENTRY_KIND = "recipe"
+local RECIPE_KIND = "recipe"
+local RECRAFT_KIND = "recraft"
 
 local IS_RECRAFT = true
 
@@ -8,7 +9,9 @@ local IS_RECRAFT = true
 ---
 --- Recipes are tracked in two independent lists, plain and recraft, and the same
 --- recipe can be in both, which is why the recraft ones carry the game's own
---- "Recrafting" wording rather than appearing as a duplicate.
+--- "Recrafting" wording rather than appearing as a duplicate. They also carry a
+--- kind of their own: untracking has to name the list, and two entries sharing
+--- kind and id would be one entry to everything keyed on that pair.
 ---
 ---@class ProfessionSectionProvider : SectionProvider
 local ProfessionSectionProvider = {}
@@ -35,7 +38,7 @@ local function ReadEntry(recipeID, isRecraft)
 
 	return {
 		id = recipeID,
-		kind = ENTRY_KIND,
+		kind = isRecraft and RECRAFT_KIND or RECIPE_KIND,
 		title = title,
 		objectives = Addon.ReagentReader.Read(schematic),
 		isComplete = false,

@@ -15,6 +15,7 @@
 ---@field MenuItems fun(self: EntryActions, entry: TrackerEntry): EntryMenuItem[]
 ---@field FindGroup fun(self: EntryActions, entry: TrackerEntry) Only called when entry.canFindGroup.
 ---@field SuperTrack? fun(self: EntryActions, entry: TrackerEntry) Only where entry.isSuperTrackable.
+---@field Untrack? fun(self: EntryActions, entry: TrackerEntry) Menu item and untrack click.
 ---@field Describe? fun(self: EntryActions, entry: TrackerEntry): string? Extra text for the tooltip.
 ---@field InsertChatLink? fun(self: EntryActions, entry: TrackerEntry): boolean Chat-link click; true when the link went to the chat box.
 
