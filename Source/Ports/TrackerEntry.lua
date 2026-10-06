@@ -42,7 +42,7 @@
 ---@field pinAtlas? string Art the source names for itself, used as-is when present.
 ---@field pinStyle? string What the pin should look like, in neutral words the
 --- renderer turns into art: normal, campaign, legendary, recurring, important,
---- meta, worldQuest, bonus, areaPoi.
+--- meta, worldQuest, bonus, areaPoi, contentTracking.
 ---@field pinIcon? TrackerPinIcon Drawn inside the pin, instead of a number.
 ---@field isSuperTrackable? boolean Whether the pin can drive the on-screen arrow.
 ---@field isSuperTracked? boolean Whether it currently does.

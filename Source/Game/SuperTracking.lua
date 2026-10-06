@@ -62,6 +62,16 @@ function SuperTracking.SetMapPin(pinType, pinID)
 	end)
 end
 
+--- A tracked collectable is neither a quest nor a map pin: the game keeps a
+--- third slot for it, and only this call points the arrow at one.
+---@param trackingType number
+---@param trackableID number
+function SuperTracking.SetContent(trackingType, trackableID)
+	RunOrDefer(function()
+		C_SuperTrack.SetSuperTrackedContent(trackingType, trackableID)
+	end)
+end
+
 function SuperTracking.Clear()
 	RunOrDefer(function()
 		C_SuperTrack.ClearAllSuperTracked()

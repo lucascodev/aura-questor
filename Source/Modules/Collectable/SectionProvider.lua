@@ -27,11 +27,22 @@ local function ReadEntry(trackingType, trackableID, kind)
 		return nil
 	end
 
-	local objectives = {}
-	local objectiveText = C_ContentTracking.GetObjectiveText(trackingType, trackableID)
-	if objectiveText and objectiveText ~= "" then
-		table.insert(objectives, { text = objectiveText, isComplete = false })
-	end
+	-- A tracked collectable says nothing about itself: what it costs, who sells
+	-- it and where it drops all belong to the target the game currently points
+	-- at. Reading the objective off the collectable instead of off that target
+	-- is why the line under the name came back empty.
+	--
+	-- The target arrives after the entry does, so an entry without one yet is
+	-- kept on screen carrying the game's own wording for the wait: dropping it
+	-- would make the section blink out between the click that tracked it and
+	-- the answer about where it comes from.
+	local targetType, targetID = C_ContentTracking.GetCurrentTrackingTarget(trackingType, trackableID)
+	local objectiveText = targetType and C_ContentTracking.GetObjectiveText(targetType, targetID)
+	local objectives = {
+		{ text = objectiveText or CONTENT_TRACKING_RETRIEVING_INFO, isComplete = false },
+	}
+
+	local superTrackedType, superTrackedID = C_SuperTrack.GetSuperTrackedContent()
 
 	return {
 		id = trackableID,
@@ -40,6 +51,9 @@ local function ReadEntry(trackingType, trackableID, kind)
 		objectives = objectives,
 		isComplete = false,
 		canFindGroup = false,
+		pinStyle = "contentTracking",
+		isSuperTrackable = true,
+		isSuperTracked = superTrackedType == trackingType and superTrackedID == trackableID,
 	}
 end
 
