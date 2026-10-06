@@ -38,6 +38,10 @@ local EVENTS = {
 	"INITIATIVE_TASKS_TRACKED_UPDATED",
 	"INITIATIVE_TASKS_TRACKED_LIST_CHANGED",
 	"TRACKABLE_INFO_UPDATE",
+	-- Where a tracked collectable comes from arrives here, after the entry is
+	-- already on screen: without it the line under the name stays on the
+	-- game's "retrieving information".
+	"TRACKING_TARGET_INFO_UPDATE",
 	-- Redraws the pin so the selected one is the one actually being followed.
 	"SUPER_TRACKING_CHANGED",
 	"SCENARIO_UPDATE",

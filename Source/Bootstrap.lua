@@ -39,6 +39,8 @@ local MONTHLY_ACTIVITIES = {
 	sectionID = "monthlyActivities",
 	title = TRACKER_HEADER_MONTHLY_ACTIVITIES,
 	titleField = "activityName",
+	-- No pin, as the game's own Traveler's Log block has none.
+	pinStyle = "none",
 	readTracked = function()
 		return C_PerksActivities.GetTrackedPerksActivities()
 	end,
@@ -53,6 +55,7 @@ local INITIATIVE_TASKS = {
 	sectionID = "initiativeTasks",
 	title = TRACKER_HEADER_INITIATIVE_TASKS,
 	titleField = "taskName",
+	pinStyle = "contentTracking",
 	readTracked = function()
 		return C_NeighborhoodInitiative.GetTrackedInitiativeTasks()
 	end,

@@ -51,6 +51,16 @@ local EntryPinStyles = {
 		showsNumber = false,
 	},
 
+	-- A tracked collectable is a map pin, and the game draws it as one: two
+	-- pieces of art, followed and not, with no pressed state for either.
+	contentTracking = {
+		normal = "waypoint-mappin-minimap-untracked",
+		pressed = "waypoint-mappin-minimap-untracked",
+		selected = "waypoint-mappin-minimap-tracked",
+		selectedPressed = "waypoint-mappin-minimap-tracked",
+		showsNumber = false,
+	},
+
 	-- No pin at all: the column it would reserve goes back to the text.
 	none = { isHidden = true, showsNumber = false },
 }
