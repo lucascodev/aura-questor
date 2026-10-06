@@ -3,6 +3,59 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [0.89.0] - 2026-10-06
+
+### Added
+
+- **Shift + right-click** an entry to stop tracking it, without opening the
+  menu. Works on quests, world quests, achievements, recipes, collectables,
+  monthly activities and initiative tasks; bonus objectives, events and
+  scenarios still open the menu. It follows the game's own untrack modifier,
+  Shift unless you changed it. Requested by a player on CurseForge.
+- **Stop Tracking** in the right-click menu of profession recipes. The game
+  keeps plain and recraft recipes in separate lists, so untracking one leaves
+  the other in place. Requested by a player on CurseForge.
+- Clicking a tracked **collectable** opens where it comes from: an achievement
+  opens the achievement, a recipe opens the profession, and a vendor, boss or
+  chest opens the map on it. It used to always open the collections journal,
+  which made housing decor look unclickable. Collectables also get a pin that
+  points the arrow, a chat link on Shift-click, the dressing room on
+  Ctrl-click and, for appearances, the journal in the menu.
+- Clicking an **initiative task** opens the housing dashboard on the Endeavors
+  tab, at that task; it used to do nothing. Tasks also get a chat link on
+  Shift-click and a menu item for the tab.
+
+### Fixed
+
+- The line under a tracked collectable's name was empty. It now shows where it
+  comes from: who sells it, where it drops, what it costs.
+
+### Adicionado
+
+- **Shift + clique direito** numa entrada para de rastreá-la, sem abrir o
+  menu. Vale para missões, missões mundiais, conquistas, receitas, coleções,
+  atividades mensais e tarefas de iniciativa; objetivo bônus, evento e cenário
+  seguem abrindo o menu. Usa o modificador do próprio jogo para soltar um
+  acompanhamento, Shift a menos que você tenha mudado. Pedido de um jogador no
+  CurseForge.
+- **Parar de rastrear** no menu do clique direito das receitas de profissão. O
+  jogo guarda receita comum e recraft em listas separadas, então soltar uma
+  deixa a outra no lugar. Pedido de um jogador no CurseForge.
+- O clique numa **coleção** rastreada abre de onde ela vem: conquista abre a
+  conquista, receita abre a profissão e vendedor, chefe ou baú abrem o mapa no
+  lugar. Antes ia sempre para o diário de coleções, o que fazia a decoração de
+  moradia parecer não clicável. As coleções ganham também pino que aponta a
+  seta, link no chat com Shift, provador com Ctrl e, nas aparências, o diário
+  pelo menu.
+- O clique numa **tarefa de iniciativa** abre o painel de moradia na aba de
+  empreitadas, já na tarefa; antes não fazia nada. As tarefas ganham também
+  link no chat com Shift e um item de menu para a aba.
+
+### Corrigido
+
+- A linha sob o nome de uma coleção rastreada vinha vazia. Agora mostra de onde
+  ela vem: quem vende, onde cai, quanto custa.
+
 ## [0.88.1] - 2026-09-14
 
 ### Alterado
