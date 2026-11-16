@@ -24,7 +24,7 @@ e tempo restante.
 - Ordenação por nível, agrupamento ou título
 - Seções recolhíveis, com o estado guardado entre sessões
 - Perfis de configuração, um ativo por personagem
-- Rolagem, arrastar livremente, largura e altura ajustáveis
+- Rolagem, arrastar livremente, largura, altura e espaço entre seções e entradas ajustáveis
 - Fonte, tamanho, contorno e sombra escolhidos entre as fontes que os seus addons
   registram
 - Fundo e borda com textura do acervo compartilhado, cor, espessura, opacidade e

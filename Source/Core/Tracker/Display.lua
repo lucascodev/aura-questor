@@ -163,6 +163,10 @@ function TrackerDisplay:ApplyAppearance()
 	self.renderer:SetProgressBarHeight(self.preferences:Get(Keys.PROGRESS_BAR_HEIGHT))
 	self.renderer:SetProgressBarStyle(self.preferences:Get(Keys.PROGRESS_BAR_STYLE))
 	self.renderer:SetScale(self.preferences:Get(Keys.TRACKER_SCALE) / PERCENTAGE_MAXIMUM)
+	self.renderer:SetSpacing({
+		betweenSections = self.preferences:Get(Keys.SECTION_SPACING),
+		betweenEntries = self.preferences:Get(Keys.ENTRY_SPACING),
+	})
 	self.renderer:SetEditing(self.preferences:Get(Keys.EDIT_MODE))
 
 	self.renderer:SetAppearance({

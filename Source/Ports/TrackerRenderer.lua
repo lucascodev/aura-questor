@@ -29,6 +29,11 @@
 ---@field borderOpacity number Between 0 and 1.
 ---@field borderThickness number
 
+--- Empty space in the list, in pixels before the scale.
+---@class TrackerSpacing
+---@field betweenSections number From the last entry of a section to the next header.
+---@field betweenEntries number Between two entries of the same section.
+
 --- Draws the sections. The domain hands over what to show; how it looks is
 --- entirely the adapter's business.
 ---@class TrackerRenderer
@@ -41,6 +46,7 @@
 ---@field SetProgressBarHeight fun(self: TrackerRenderer, height: number)
 ---@field SetProgressBarStyle fun(self: TrackerRenderer, style: string)
 ---@field SetScale fun(self: TrackerRenderer, scale: number)
+---@field SetSpacing fun(self: TrackerRenderer, spacing: TrackerSpacing)
 ---@field SetEditing fun(self: TrackerRenderer, isEditing: boolean)
 ---@field ResetPosition fun(self: TrackerRenderer)
 ---@field Expand fun(self: TrackerRenderer)
