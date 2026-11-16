@@ -83,7 +83,6 @@ read_globals = {
 	"GameFontHighlight",
 	"GameTooltip",
 	"GameTooltip_AddQuestRewardsToTooltip",
-	"GameTooltip_AddWidgetSet",
 	"GetAchievementCategory",
 	"GetAutoQuestPopUp",
 	"GetNumAutoQuestPopUps",
