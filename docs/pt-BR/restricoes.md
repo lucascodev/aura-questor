@@ -94,7 +94,20 @@ adia a escrita para o fim do combate; só o último pedido vale.
 Abrir o painel de opções (`Settings.OpenToCategory`) também é protegido em
 combate desde o 12.x. `OptionsPanel` avisa no chat e não tenta.
 
-## Widgets no tooltip: nunca `GameTooltip_AddWidgetSet`
+## Tooltip compartilhado: nunca pelas funções de montagem da Blizzard
+
+O `GameTooltip` é um frame só para a interface inteira. As funções da Blizzard
+que o preenchem (`GameTooltip_AddWidgetSet`, `GameTooltip_AddQuestRewardsToTooltip`
+e afins) fazem mais do que acrescentar linhas: guardam estado nele, em campos e
+em frames embutidos. Chamadas por addon, todas essas escritas ficam
+contaminadas, e a Blizzard as lê de volta depois, nos próprios tooltips, com o
+nome deste addon no que quebrar.
+
+**Regra:** o nosso tooltip usa só os métodos do `GameTooltip` (`SetOwner`,
+`SetText`, `AddLine`, `Show`). O que o jogo desenharia com uma dessas funções é
+lido pela API pública e entra como linha.
+
+### Widgets: `GameTooltip_AddWidgetSet`
 
 O `GameTooltip` guarda **um único** container de widgets para a interface
 inteira, criado na primeira chamada de `GameTooltip_AddWidgetSet` e reescrito a
@@ -115,6 +128,27 @@ lê o texto dos widgets pela `C_UIWidgetManager` e o tooltip os adiciona como
 linhas comuns. Nenhum frame da Blizzard é tocado e nada é medido. Widgets só
 visuais, como barra e ícone sem texto, ficam de fora do nosso tooltip; no do
 mapa continuam aparecendo.
+
+### Recompensas: `GameTooltip_AddQuestRewardsToTooltip`
+
+Mesmo com `fullItemDescription = false`, o bloco de recompensas escreve estado
+da Blizzard em dois lugares (issue #83):
+
+- `GameTooltip.waitingForData`, a cada chamada. A Blizzard lê esse campo de
+  volta quando monta o próprio tooltip de recompensas, e essa execução passa a
+  escrever `updateTooltipTimer`, que o `GameTooltip_OnUpdate` lê a cada frame
+  antes de chamar o `UpdateTooltip` do dono.
+- `GameTooltip.ItemTooltip`, o tooltip de item embutido, nas recompensas de
+  moeda-container e de feitiço (`itemID`, `spellID`, `itemTextureSet`). O mapa
+  desenha as recompensas de missão mundial nesse mesmo frame, e nada limpa esses
+  campos ao esconder.
+
+**Solução adotada:** [`QuestRewardReader`](../../Source/Game/QuestRewardReader.lua)
+monta as mesmas linhas, na mesma ordem, com os textos e as cores do próprio
+jogo: experiência, moedas (com a cor de limite estourado e o nome do container),
+honra, dinheiro, itens, feitiços e o bônus do Modo Guerra. Entram todos os
+itens, onde o jogo mostra só o primeiro; os tooltips embutidos de item e de
+feitiço saem.
 
 ## Nome do addon é identidade
 
