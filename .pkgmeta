@@ -30,3 +30,5 @@ ignore:
   - .luacheckrc
   - .luarc.json
   - README.md
+  - README.pt-BR.md
+  - CHANGELOG.pt-BR.md

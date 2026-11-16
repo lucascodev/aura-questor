@@ -1,5 +1,7 @@
 # Restrições do WoW
 
+[English](../constraints.md) | **Português**
+
 Limitações da API que já causaram problemas neste projeto ou em addons
 conhecidos. Recomendada a leitura antes de alterar qualquer frame.
 
@@ -25,7 +27,7 @@ frame:EnableMouse(false)
 **Nunca** `Hide()`, `SetScale()` ou `SetPoint()` nele. Esse foi o erro que
 quebrou outro addon de rastreador no 12.1, e `Hide()` num frame com filho
 protegido é bloqueado em combate. Ver
-[`Game/BlizzardTracker.lua`](../Source/Game/BlizzardTracker.lua).
+[`Game/BlizzardTracker.lua`](../../Source/Game/BlizzardTracker.lua).
 
 ## Frames protegidos e combate
 
@@ -108,7 +110,7 @@ deste addon (issue #68). A pilha não passa pelo nosso código: nasce em
 Um `pcall` em volta da chamada não resolve. Ele engole o erro no nosso tooltip,
 mas a mancha já ficou no container, e o erro reaparece no do mapa.
 
-**Solução adotada:** [`WidgetTextReader`](../Source/Game/WidgetTextReader.lua)
+**Solução adotada:** [`WidgetTextReader`](../../Source/Game/WidgetTextReader.lua)
 lê o texto dos widgets pela `C_UIWidgetManager` e o tooltip os adiciona como
 linhas comuns. Nenhum frame da Blizzard é tocado e nada é medido. Widgets só
 visuais, como barra e ícone sem texto, ficam de fora do nosso tooltip; no do
@@ -186,7 +188,7 @@ consultada.
 O painel de conquistas é *load on demand*. Chamar
 `OpenAchievementFrameToAchievement` direto dá erro; a sequência é
 `AchievementFrame_LoadUI()` e só então abrir e selecionar. Ver
-[`Game/Achievement/Panel.lua`](../Source/Game/Achievement/Panel.lua).
+[`Game/Achievement/Panel.lua`](../../Source/Game/Achievement/Panel.lua).
 
 ## Assinaturas contraintuitivas
 

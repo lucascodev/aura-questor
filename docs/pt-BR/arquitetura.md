@@ -1,5 +1,7 @@
 # Arquitetura
 
+[English](../architecture.md) | **Português**
+
 ## A regra de dependência
 
 **As dependências apontam para dentro.** O `Core/` não referencia nenhuma outra
@@ -49,7 +51,7 @@ Se o comando imprimir algum caminho, a regra foi violada.
 pode ser verificado abrindo o cliente e inspecionando o resultado manualmente.
 Código desacoplado roda em qualquer interpretador Lua.
 
-As ~1.400 linhas do `Core/` são cobertas por [testes em Lua puro](../Tests/Run.lua) que
+As ~1.400 linhas do `Core/` são cobertas por [testes em Lua puro](../../Tests/Run.lua) que
 rodam sem o cliente, em milissegundos, no CI.
 
 ## As pastas
@@ -80,7 +82,7 @@ tipo de conteúdo no rastreador. Os 10 providers são independentes entre si.
 *o que* exibir; o renderer define *como*.
 
 **`EntryActions`** define o comportamento de uma entrada ao ser clicada. O
-[`EntryActionRouter`](../Source/Modules/EntryActionRouter.lua) despacha por
+[`EntryActionRouter`](../../Source/Modules/EntryActionRouter.lua) despacha por
 `entry.kind`. Os métodos opcionais (`Describe`, `Rewards`, `SuperTrack`) são
 verificados por presença antes da chamada, em vez de exigirem herança.
 
@@ -142,7 +144,7 @@ exposição a mudanças entre patches, porque a primeira muda menos que a segund
 Ver [restrições](restricoes.md).
 
 **Preferências como dados.** Adicionar uma preferência é acrescentar uma entrada
-em [`Core/Preferences/Catalog.lua`](../Source/Core/Preferences/Catalog.lua). Nenhum
+em [`Core/Preferences/Catalog.lua`](../../Source/Core/Preferences/Catalog.lua). Nenhum
 adapter muda: o painel de opções lê o catálogo e cria o controle correspondente.
 
 **Um provider por tipo de conteúdo.** Adicionar um tipo não exige alteração em
