@@ -35,6 +35,7 @@ local SUITES = {
 	"Core/Integration/WaypointSync",
 	"Game/BlizzardTracker",
 	"Game/WidgetTextReader",
+	"Game/QuestRewardReader",
 	"UI/Text",
 	"Options/Schematic",
 	"Options/Pages",

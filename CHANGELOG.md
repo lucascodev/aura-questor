@@ -5,6 +5,23 @@
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 versioning follows [Semantic Versioning](https://semver.org/).
 
+## [0.90.1] - 2026-11-16
+
+### Fixed
+
+- The rewards in a quest's tooltip no longer go through the game's own rewards
+  block, which could leave the world map's quest tooltips in a state that throws
+  "secret value" errors naming Aura Questor, the same kind of error as
+  [#68](https://github.com/lucascodev/aura-questor/issues/68)
+  ([#83](https://github.com/lucascodev/aura-questor/issues/83)). The tracker now
+  lists the rewards itself, with the same lines, colours and war mode bonus.
+
+### Changed
+
+- The rewards list shows **every item** a quest gives, where it used to show
+  only the first. The embedded item and spell tooltips are gone; hover the
+  quest on the map to see them.
+
 ## [0.90.0] - 2026-11-16
 
 ### Added

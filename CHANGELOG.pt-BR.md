@@ -5,6 +5,25 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [0.90.1] - 2026-11-16
+
+### Corrigido
+
+- As recompensas no tooltip de uma missão deixam de passar pelo bloco de
+  recompensas do próprio jogo, que podia deixar os tooltips de missão do
+  mapa-múndi num estado que dá erro de "valor secreto" com o nome do Aura
+  Questor, o mesmo tipo de erro da
+  [#68](https://github.com/lucascodev/aura-questor/issues/68)
+  ([#83](https://github.com/lucascodev/aura-questor/issues/83)). O rastreador
+  agora lista as recompensas por conta própria, com as mesmas linhas, cores e
+  bônus do Modo Guerra.
+
+### Alterado
+
+- A lista de recompensas mostra **todos os itens** que a missão dá; antes
+  mostrava só o primeiro. Os tooltips embutidos de item e de feitiço saem; para
+  vê-los, passe o mouse na missão no mapa.
+
 ## [0.90.0] - 2026-11-16
 
 ### Adicionado
