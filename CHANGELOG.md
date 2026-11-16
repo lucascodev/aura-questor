@@ -3,6 +3,49 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [0.90.0] - 2026-11-16
+
+### Added
+
+- **Space between sections** and **space between entries**, under Appearance >
+  Window. The defaults keep the look you already had; at zero the next header
+  sits right under the last entry. The list also no longer ends with an empty
+  gap at the bottom. Requested by a player on CurseForge.
+
+### Fixed
+
+- Hovering a point of interest on the world map could throw a "secret value"
+  error naming Aura Questor, after an event had been hovered in the tracker
+  ([#68](https://github.com/lucascodev/aura-questor/issues/68)). The event's
+  extra details now go into the tracker's tooltip as text; purely graphical
+  ones, like bars or icons without text, show only on the map.
+
+### Changed
+
+- Compatible with WoW patch **12.1.7**, while still running on 12.1.5, which is
+  live.
+
+### Adicionado
+
+- **Espaço entre seções** e **espaço entre entradas**, em Aparência > Janela. O
+  padrão mantém o visual que você já tinha; no zero, o título da próxima seção
+  encosta na última entrada. A lista também deixa de terminar com um vão vazio
+  embaixo. Pedido de um jogador no CurseForge.
+
+### Corrigido
+
+- Passar o mouse num ponto de interesse do mapa-múndi podia dar um erro de
+  "valor secreto" com o nome do Aura Questor, depois de passar o mouse num
+  evento do rastreador
+  ([#68](https://github.com/lucascodev/aura-questor/issues/68)). Os detalhes
+  extras do evento agora entram no tooltip do rastreador como texto; os só
+  visuais, como barras ou ícones sem texto, aparecem apenas no mapa.
+
+### Alterado
+
+- Compatível com o patch **12.1.7** do WoW, sem deixar de rodar no 12.1.5 que
+  está no ar.
+
 ## [0.89.0] - 2026-10-06
 
 ### Added
