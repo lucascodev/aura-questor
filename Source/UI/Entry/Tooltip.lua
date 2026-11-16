@@ -3,7 +3,6 @@ local _, Addon = ...
 local FULL_ALPHA = 1
 local WRAP = true
 local WHITE = { 1, 1, 1 }
-local WIDGET_PADDING = 10
 
 local GROUP_COLOR = { red = 0.45, green = 0.65, blue = 0.9 }
 local OBJECTIVE_COLOR = { red = 0.82, green = 0.82, blue = 0.82 }
@@ -46,25 +45,20 @@ local REWARDS_STYLE = {
 	fullItemDescription = false,
 }
 
---- Sets whose drawing has already failed once. The game fills a POI's widgets
---- while its map is up, and away from it some arrive without the fields its own
---- drawing code reads, which errors inside the game. Nothing here can complete
---- that data, and an error the player sees on every hover is worse than the
---- missing details, so a set that fails is dropped for the session.
-local brokenWidgetSets = {}
-
---- The set the map draws in the point's tooltip, with items and rewards that
---- have no place inside a block.
+--- What the map shows under the point, as plain lines. The reader explains why
+--- the game's widget frames are never drawn here.
 ---@param widgetSetID number
-local function AddWidgetSet(widgetSetID)
-	if brokenWidgetSets[widgetSetID] then
+local function AddWidgetLines(widgetSetID)
+	local lines = Addon.WidgetTextReader.Lines(widgetSetID)
+
+	if #lines == 0 then
 		return
 	end
 
-	local wasDrawn = pcall(GameTooltip_AddWidgetSet, GameTooltip, widgetSetID, WIDGET_PADDING)
+	GameTooltip:AddLine(" ")
 
-	if not wasDrawn then
-		brokenWidgetSets[widgetSetID] = true
+	for _, line in ipairs(lines) do
+		GameTooltip:AddLine(line, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, WRAP)
 	end
 end
 
@@ -133,7 +127,7 @@ function EntryTooltip.Show(actions, entry, owner)
 	end
 
 	if entry.tooltipWidgetSetID then
-		AddWidgetSet(entry.tooltipWidgetSetID)
+		AddWidgetLines(entry.tooltipWidgetSetID)
 	end
 
 	GameTooltip:Show()
