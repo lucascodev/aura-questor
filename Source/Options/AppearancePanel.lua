@@ -36,6 +36,10 @@ function AppearancePanel.Register(category, catalog, preferences)
 					{ key = Keys.PANEL_OPACITY, suffix = "%" },
 				},
 				{
+					{ key = Keys.SECTION_SPACING },
+					{ key = Keys.ENTRY_SPACING },
+				},
+				{
 					{ key = Keys.AUTO_HEIGHT, span = 2 },
 				},
 				"divider",

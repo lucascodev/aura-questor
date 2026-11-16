@@ -202,6 +202,24 @@ return function(Addon, T, Support)
 			T.Near(built.renderer.scale, 0.8, 0.001)
 		end)
 
+		T.Test("o espaco entre secoes e entre entradas chega ao renderer", function()
+			local built = Build({
+				values = { [Keys.SECTION_SPACING] = 6, [Keys.ENTRY_SPACING] = 3 },
+			})
+			built.display:Refresh()
+
+			T.Equals(built.renderer.spacing.betweenSections, 6)
+			T.Equals(built.renderer.spacing.betweenEntries, 3)
+		end)
+
+		T.Test("o espaco padrao e o mesmo que o painel ja tinha", function()
+			local built = Build()
+			built.display:Refresh()
+
+			T.Equals(built.renderer.spacing.betweenSections, 28)
+			T.Equals(built.renderer.spacing.betweenEntries, 10)
+		end)
+
 		T.Test("opacidade tambem vira fracao", function()
 			local built = Build({
 				values = { [Keys.PANEL_OPACITY] = 50, [Keys.BORDER_OPACITY] = 20 },

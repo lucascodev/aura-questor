@@ -1,29 +1,31 @@
-# Documentação
+# Documentation
 
-Documentação técnica do Aura Questor, para quem vai modificar o código.
+**English** | [Português](pt-BR/README.md)
 
-| Documento | Assunto |
+Technical documentation for Aura Questor, for those who will modify the code.
+
+| Document | Subject |
 |---|---|
-| [Arquitetura](arquitetura.md) | as camadas e a regra de dependência |
-| [Fluxo de execução](fluxo.md) | inicialização, ciclo de atualização e combate |
-| [Adicionar conteúdo](adicionar-conteudo.md) | implementar um tipo de conteúdo novo |
-| [Restrições do WoW](restricoes.md) | conhecer os limites da API antes de mexer em frame |
-| [Desenvolvimento](desenvolvimento.md) | ambiente, testes, empacotamento e publicação |
+| [Architecture](architecture.md) | the layers and the dependency rule |
+| [Execution flow](flow.md) | initialization, update cycle and combat |
+| [Adding content](adding-content.md) | implementing a new content type |
+| [WoW constraints](constraints.md) | knowing the API's limits before touching a frame |
+| [Development](development.md) | environment, tests, packaging and publishing |
 
-## Resumo
+## Summary
 
-O addon lê as **APIs públicas de dados** do jogo, monta a lista de objetivos em
-Lua puro e desenha o próprio frame. Não modifica nem depende do rastreador da
-Blizzard.
+The addon reads the game's **public data APIs**, builds the objective list in
+pure Lua and draws its own frame. It neither modifies nor depends on Blizzard's
+tracker.
 
-## O projeto em números
+## The project in numbers
 
 | | |
 |---|---|
-| Arquivos Lua carregados pelo jogo | 106, sendo 99 nossos e 7 de bibliotecas |
-| Linhas no `Core/`, sem uma única API do jogo | ~1.600 |
-| Providers de conteúdo, alimentando 11 seções | 10 |
-| Eventos do jogo escutados | 27 |
-| Preferências | 35 |
-| Contratos em `Source/Ports/` | 17 |
-| Testes rodando fora do cliente | 141 |
+| Lua files loaded by the game | 106: 99 of ours and 7 from libraries |
+| Lines in `Core/`, without a single game API | ~1,600 |
+| Content providers, feeding 11 sections | 10 |
+| Game events listened to | 27 |
+| Preferences | 35 |
+| Contracts in `Source/Ports/` | 17 |
+| Tests running outside the client | 141 |

@@ -88,6 +88,30 @@ local PreferenceCatalog = {
 		step = 4,
 	},
 	{
+		-- The default is the gap the panel always had, so nobody's layout moves
+		-- on update; zero puts the next header right under the last entry.
+		key = Keys.SECTION_SPACING,
+		panel = APPEARANCE_PANEL,
+		kind = "number",
+		default = 28,
+		label = L.PREF_SECTION_SPACING,
+		tooltip = L.PREF_SECTION_SPACING_TIP,
+		minimum = 0,
+		maximum = 40,
+		step = 1,
+	},
+	{
+		key = Keys.ENTRY_SPACING,
+		panel = APPEARANCE_PANEL,
+		kind = "number",
+		default = 10,
+		label = L.PREF_ENTRY_SPACING,
+		tooltip = L.PREF_ENTRY_SPACING_TIP,
+		minimum = 0,
+		maximum = 24,
+		step = 1,
+	},
+	{
 		key = Keys.FONT_SIZE,
 		panel = APPEARANCE_PANEL,
 		kind = "number",

@@ -1,4 +1,4 @@
-## Interface: 120105, 120100
+## Interface: 120107, 120105
 ## Title: Aura Questor: Objective Tracker
 ## X-Brand: Aura Questor
 ## Notes: A standalone objective tracker built on the public quest APIs.
@@ -6,7 +6,7 @@
 ## Notes-esES: Un rastreador de objetivos independiente, construido sobre las API públicas del juego.
 ## Notes-esMX: Un rastreador de objetivos independiente, construido sobre las API públicas del juego.
 ## Notes-frFR: Un suivi d'objectifs autonome, construit sur les API publiques du jeu.
-## Version: 0.89.0
+## Version: 0.90.0
 ## Author: Lucascodev
 ## X-License: MIT
 ## X-Curse-Project-ID: 1651416
@@ -87,6 +87,7 @@ Source\Game\ClientFont.lua
 Source\Game\SuperTracking.lua
 Source\Game\MapNavigator.lua
 Source\Game\WaypointReader.lua
+Source\Game\WidgetTextReader.lua
 
 # Three readers, one shape: all of them answer with TrackerObjective[].
 Source\Game\Objectives\QuestReader.lua

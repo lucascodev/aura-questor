@@ -1,86 +1,89 @@
 # Aura Questor: Objective Tracker
 
-Um objective tracker autônomo para World of Warcraft: rastreador de missões,
-conquistas, profissões e cenários, escrito sobre as APIs públicas do jogo. Em
-inglês, português, espanhol e francês.
+**English** | [Português](README.pt-BR.md)
 
-Ele não decora o rastreador da Blizzard: desenha o próprio, lendo os mesmos
-dados que o jogo expõe. É a diferença que faz um addon sobreviver a um patch,
-a superfície de dados muda muito menos que a de interface.
+A standalone objective tracker for World of Warcraft: a tracker for quests,
+achievements, professions and scenarios, built on the game's public APIs. In
+English, Portuguese, Spanish and French.
 
-## O que ele mostra
+It doesn't dress up Blizzard's tracker: it draws its own, reading the same data
+the game exposes. That's the difference that lets an addon survive a patch: the
+data surface changes far less than the interface does.
 
-Missões, Campanha, Missões Mundiais, Objetivos Bônus, Conquistas, Profissões,
-Atividades Mensais, Colecionáveis, Tarefas de Iniciativa e Cenário, incluindo
-nível da pedra-chave, afixos e mortes em Mítica+.
+## What it shows
 
-E uma seção que o rastreador da Blizzard não tem: **Eventos do mundo**, com zona
-e tempo restante.
+Quests, Campaign, World Quests, Bonus Objectives, Achievements, Professions,
+Traveler's Log, Collections, Endeavors and Scenario, including
+keystone level, affixes and deaths in Mythic+.
 
-## Recursos
+Plus a section Blizzard's tracker doesn't have: **World events**, with the zone
+and the time left.
 
-- Filtros por zona, campanha, diárias, masmorra, concluídas e por agrupamento do
-  diário
-- Ordenação por nível, agrupamento ou título
-- Seções recolhíveis, com o estado guardado entre sessões
-- Perfis de configuração, um ativo por personagem
-- Rolagem, arrastar livremente, largura e altura ajustáveis
-- Fonte, tamanho, contorno e sombra escolhidos entre as fontes que os seus addons
-  registram
-- Fundo e borda com textura do acervo compartilhado, cor, espessura, opacidade e
-  recuo, ou a cor da sua classe na borda
-- Cada botão do cabeçalho e o do minimapa podem ser desligados um a um
-- Tooltip com a descrição da missão e as recompensas, com ícones
-- Botão de minimapa e atalhos de teclado
+## Features
 
-## Instalação
+- Filters by zone, campaign, dailies, dungeon, finished, and by quest log
+  grouping
+- Sorting by level, grouping or title
+- Collapsible sections, with their state kept between sessions
+- Settings profiles, one active per character
+- Scrolling, free dragging, and adjustable width, height and space between
+  sections and entries
+- Font, size, outline and shadow, picked from the fonts your addons register
+- Background and border with a texture from the shared media library, colour,
+  thickness, opacity and inset, or your class colour on the border
+- Each header button, and the minimap button, can be turned off one by one
+- Tooltip with the quest description and the rewards, with icons
+- Minimap button and key bindings
 
-Extraia o zip em `World of Warcraft\_retail_\Interface\AddOns\`. Ele traz duas
-pastas: `AuraQuestor`, o addon, e `AuraTrackerQuestor`, uma ponte só com o
-manifesto que mantém as configurações salvas com o nome antigo carregadas até
-o addon aproveitá-las. Quem já usava o Aura Tracker Questor deixa a ponte
-habilitada no primeiro login e não perde nada; depois disso ela pode ser
-removida.
+## Installation
 
-Dentro do jogo, `/atq` abre as opções e `/atq ajuda` lista os comandos.
+Extract the zip into `World of Warcraft\_retail_\Interface\AddOns\`. It holds
+two folders: `AuraQuestor`, the addon, and `AuraTrackerQuestor`, a bridge with
+just the manifest that keeps the settings saved under the old name loaded until
+the addon picks them up. If you already used Aura Tracker Questor, leave the
+bridge enabled on your first login and you won't lose a thing; after that it
+can be removed.
 
-## Desenvolvimento
+In game, `/atq` opens the options and `/atq help` lists the commands.
 
-O código segue Clean Architecture, com a regra de dependência apontando para
-dentro:
+## Development
 
-| Pasta | Responsabilidade |
+The code follows Clean Architecture, with the dependency rule pointing
+inwards:
+
+| Folder | Responsibility |
 |---|---|
-| `Locales/` | textos, `enUS.lua` como padrão e as traduções por cima |
-| `Source/Core/` | regras em Lua puro: `Preferences/`, `Filtering/`, `Tracker/`, `Commands/`. **Nenhuma API do WoW** |
-| `Source/Ports/` | contratos de tipo, lidos pelo language server e fora do pacote |
-| `Source/Game/` | lê a API do jogo e não desenha nada: `Objectives/`, `Quest/`, `Achievement/` |
-| `Source/Modules/` | uma pasta por tipo de conteúdo: o que ela coleta e o que suas entradas fazem |
-| `Source/UI/` | frames: `Entry/` desenha uma entrada, `Tracker/` o painel, `Header/` os botões do topo |
-| `Source/Options/` | páginas de opções e o kit `Components/` |
-| `Source/System/` | chat, comandos, eventos, som e acervo compartilhado |
-| `Source/Bootstrap.lua` | composition root, o único lugar que conhece as implementações |
+| `Locales/` | text, `enUS.lua` as the default and the translations on top |
+| `Source/Core/` | rules in pure Lua: `Preferences/`, `Filtering/`, `Tracker/`, `Commands/`. **No WoW API** |
+| `Source/Ports/` | type contracts, read by the language server and left out of the package |
+| `Source/Game/` | reads the game API and draws nothing: `Objectives/`, `Quest/`, `Achievement/` |
+| `Source/Modules/` | one folder per content type: what it collects and what its entries do |
+| `Source/UI/` | frames: `Entry/` draws an entry, `Tracker/` the panel, `Header/` the buttons at the top |
+| `Source/Options/` | options pages and the `Components/` kit |
+| `Source/System/` | chat, commands, events, sound and shared media |
+| `Source/Bootstrap.lua` | composition root, the only place that knows the implementations |
 
 ```sh
-lua Tests/Run.lua     # os testes do Core, sem abrir o jogo
-luacheck .            # análise estática
-.\build.ps1           # gera dist\AuraQuestor-<versão>.zip
+lua Tests/Run.lua     # the Core tests, without opening the game
+luacheck .            # static analysis
+.\build.ps1           # builds dist\AuraQuestor-<version>.zip
 ```
 
-`Libs/` não está no repositório: o empacotador busca as bibliotecas na origem
-declarada em `.pkgmeta`. Um clone limpo não roda no jogo antes de trazê-las.
+`Libs/` is not in the repository: the packager fetches the libraries from the
+source declared in `.pkgmeta`. A clean clone won't run in the game until you
+bring them in.
 
-A documentação completa está em **[docs/](docs/)**:
+The full documentation lives in **[docs/](docs/)**:
 
 | | |
 |---|---|
-| [Arquitetura](docs/arquitetura.md) | as camadas e a regra de dependência |
-| [Fluxo de execução](docs/fluxo.md) | inicialização, ciclo de atualização e combate |
-| [Adicionar conteúdo](docs/adicionar-conteudo.md) | implementar um tipo de conteúdo novo |
-| [Restrições do WoW](docs/restricoes.md) | taint, combate e limites da API |
-| [Desenvolvimento](docs/desenvolvimento.md) | ambiente, testes, empacotamento e publicação |
+| [Architecture](docs/architecture.md) | the layers and the dependency rule |
+| [Execution flow](docs/flow.md) | initialization, update cycle and combat |
+| [Adding content](docs/adding-content.md) | implementing a new content type |
+| [WoW constraints](docs/constraints.md) | taint, combat and API limits |
+| [Development](docs/development.md) | environment, tests, packaging and publishing |
 
-## Licença
+## License
 
-MIT. As bibliotecas em `Libs/` pertencem a seus autores e mantêm as licenças
-próprias.
+MIT. The libraries in `Libs/` belong to their authors and keep their own
+licenses.

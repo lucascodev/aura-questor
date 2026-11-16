@@ -1,5 +1,7 @@
 # Restrições do WoW
 
+[English](../constraints.md) | **Português**
+
 Limitações da API que já causaram problemas neste projeto ou em addons
 conhecidos. Recomendada a leitura antes de alterar qualquer frame.
 
@@ -25,7 +27,7 @@ frame:EnableMouse(false)
 **Nunca** `Hide()`, `SetScale()` ou `SetPoint()` nele. Esse foi o erro que
 quebrou outro addon de rastreador no 12.1, e `Hide()` num frame com filho
 protegido é bloqueado em combate. Ver
-[`Game/BlizzardTracker.lua`](../Source/Game/BlizzardTracker.lua).
+[`Game/BlizzardTracker.lua`](../../Source/Game/BlizzardTracker.lua).
 
 ## Frames protegidos e combate
 
@@ -91,6 +93,28 @@ adia a escrita para o fim do combate; só o último pedido vale.
 
 Abrir o painel de opções (`Settings.OpenToCategory`) também é protegido em
 combate desde o 12.x. `OptionsPanel` avisa no chat e não tenta.
+
+## Widgets no tooltip: nunca `GameTooltip_AddWidgetSet`
+
+O `GameTooltip` guarda **um único** container de widgets para a interface
+inteira, criado na primeira chamada de `GameTooltip_AddWidgetSet` e reescrito a
+cada chamada. Chamada por addon, a função cria e escreve esse container em
+execução contaminada, e a mancha fica nele até o `/reload`.
+
+Mais tarde o mapa-múndi desenha o tooltip de um ponto de interesse pelo mesmo
+container. A execução da Blizzard fica contaminada, `GetStringHeight()` passa a
+devolver um número secreto e o `Clamp` do widget de texto estoura, com o nome
+deste addon (issue #68). A pilha não passa pelo nosso código: nasce em
+`AreaPOIDataProvider` e morre em `Blizzard_UIWidgetTemplateTextWithState`.
+
+Um `pcall` em volta da chamada não resolve. Ele engole o erro no nosso tooltip,
+mas a mancha já ficou no container, e o erro reaparece no do mapa.
+
+**Solução adotada:** [`WidgetTextReader`](../../Source/Game/WidgetTextReader.lua)
+lê o texto dos widgets pela `C_UIWidgetManager` e o tooltip os adiciona como
+linhas comuns. Nenhum frame da Blizzard é tocado e nada é medido. Widgets só
+visuais, como barra e ícone sem texto, ficam de fora do nosso tooltip; no do
+mapa continuam aparecendo.
 
 ## Nome do addon é identidade
 
@@ -164,7 +188,7 @@ consultada.
 O painel de conquistas é *load on demand*. Chamar
 `OpenAchievementFrameToAchievement` direto dá erro; a sequência é
 `AchievementFrame_LoadUI()` e só então abrir e selecionar. Ver
-[`Game/Achievement/Panel.lua`](../Source/Game/Achievement/Panel.lua).
+[`Game/Achievement/Panel.lua`](../../Source/Game/Achievement/Panel.lua).
 
 ## Assinaturas contraintuitivas
 

@@ -1,5 +1,7 @@
 # Fluxo de execução
 
+[English](../flow.md) | **Português**
+
 ## Inicialização
 
 A inicialização é dividida em duas etapas, disparadas por eventos diferentes.
@@ -74,14 +76,14 @@ sequenceDiagram
 `QUEST_LOG_UPDATE` é disparado várias vezes em sequência para uma única entrega
 de missão. Sem agrupamento, o rastreador seria reconstruído repetidas vezes em
 frames consecutivos. O atraso de 0,15 s em
-[`TrackerEvents`](../Source/System/TrackerEvents.lua) reduz a sequência a uma única
+[`TrackerEvents`](../../Source/System/TrackerEvents.lua) reduz a sequência a uma única
 reconstrução. Os 26 eventos registrados passam todos por esse mesmo agrupamento.
 
 ### Reaproveitamento de widgets
 
 Cada reconstrução desenha até algumas dezenas de entradas. Como o WoW não destrói
 frames, criar novos a cada atualização acumularia widgets por toda a sessão. O
-[`EntryBlockPool`](../Source/UI/Entry/BlockPool.lua) reaproveita os existentes.
+[`EntryBlockPool`](../../Source/UI/Entry/BlockPool.lua) reaproveita os existentes.
 
 ## Mudança de preferência
 

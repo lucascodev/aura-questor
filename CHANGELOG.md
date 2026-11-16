@@ -1,7 +1,31 @@
 # Changelog
 
-Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
-versionamento em [SemVer](https://semver.org/lang/pt-BR/).
+**English** | [Português](CHANGELOG.pt-BR.md)
+
+Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+versioning follows [Semantic Versioning](https://semver.org/).
+
+## [0.90.0] - 2026-11-16
+
+### Added
+
+- **Space between sections** and **space between entries**, under Appearance >
+  Window. The defaults keep the look you already had; at zero the next header
+  sits right under the last entry. The list also no longer ends with an empty
+  gap at the bottom. Requested by a player on CurseForge.
+
+### Fixed
+
+- Hovering a point of interest on the world map could throw a "secret value"
+  error naming Aura Questor, after an event had been hovered in the tracker
+  ([#68](https://github.com/lucascodev/aura-questor/issues/68)). The event's
+  extra details now go into the tracker's tooltip as text; purely graphical
+  ones, like bars or icons without text, show only on the map.
+
+### Changed
+
+- Compatible with WoW patch **12.1.7**, while still running on 12.1.5, which is
+  live.
 
 ## [0.89.0] - 2026-10-06
 
@@ -30,515 +54,493 @@ versionamento em [SemVer](https://semver.org/lang/pt-BR/).
 - The line under a tracked collectable's name was empty. It now shows where it
   comes from: who sells it, where it drops, what it costs.
 
-### Adicionado
-
-- **Shift + clique direito** numa entrada para de rastreá-la, sem abrir o
-  menu. Vale para missões, missões mundiais, conquistas, receitas, coleções,
-  atividades mensais e tarefas de iniciativa; objetivo bônus, evento e cenário
-  seguem abrindo o menu. Usa o modificador do próprio jogo para soltar um
-  acompanhamento, Shift a menos que você tenha mudado. Pedido de um jogador no
-  CurseForge.
-- **Parar de rastrear** no menu do clique direito das receitas de profissão. O
-  jogo guarda receita comum e recraft em listas separadas, então soltar uma
-  deixa a outra no lugar. Pedido de um jogador no CurseForge.
-- O clique numa **coleção** rastreada abre de onde ela vem: conquista abre a
-  conquista, receita abre a profissão e vendedor, chefe ou baú abrem o mapa no
-  lugar. Antes ia sempre para o diário de coleções, o que fazia a decoração de
-  moradia parecer não clicável. As coleções ganham também pino que aponta a
-  seta, link no chat com Shift, provador com Ctrl e, nas aparências, o diário
-  pelo menu.
-- O clique numa **tarefa de iniciativa** abre o painel de moradia na aba de
-  empreitadas, já na tarefa; antes não fazia nada. As tarefas ganham também
-  link no chat com Shift e um item de menu para a aba.
-
-### Corrigido
-
-- A linha sob o nome de uma coleção rastreada vinha vazia. Agora mostra de onde
-  ela vem: quem vende, onde cai, quanto custa.
-
 ## [0.88.1] - 2026-09-14
 
-### Alterado
+### Changed
 
-- Compatível com o patch **12.1.5** do WoW, sem deixar de rodar no 12.1.0 que
-  está no ar. Nada muda no uso: as funções do jogo que o addon chama ficaram
-  iguais no patch novo, e o que a Blizzard removeu nele não era usado aqui.
+- Compatible with WoW patch **12.1.5**, while still running on 12.1.0, which is
+  live. Nothing changes in how you use it: the game functions the addon calls
+  stayed the same in the new patch, and what Blizzard removed in it wasn't used
+  here.
 
 ## [0.88.0] - 2026-08-28
 
-### Adicionado
+### Added
 
-- **Mais recentes primeiro**, em Ordenação: as missões aceitas há menos tempo
-  vão para o topo da seção. O jogo não guarda quando uma missão foi aceita, então
-  o addon passa a registrar isso por conta própria, por personagem.
-- As missões que já estavam no log quando esta versão sobe entram todas de uma
-  vez, na ordem em que o log as devolve. Só o que for aceito daqui em diante tem
-  a ordem de chegada exata.
+- **Newest first**, under Sorting: the quests you accepted most recently go to
+  the top of the section. The game doesn't record when a quest was accepted, so
+  the addon now keeps track of that on its own, per character.
+- The quests already in your log when you update to this version all come in at
+  once, in the order the log returns them. Only what you accept from now on gets
+  the exact order of arrival.
 
 ## [0.87.1] - 2026-08-24
 
-### Corrigido
+### Fixed
 
-- Em combate o rastreador congelava inteiro: nada de novo entrava na lista, o
-  cenário não mudava de estado e recolher ou mover a janela não respondia. A
-  causa era o botão de item da missão, que fica dentro do bloco e, por regra do
-  jogo, protege todo frame acima dele. Agora ele mora num frame próprio, fora do
-  painel, e é só ancorado ao bloco. A lista atualiza durante a luta como em
-  qualquer outro momento.
-- O que continua parado em combate é só o botão em si, porque o jogo proíbe:
-  botão de item de uma missão que apareceu no meio da luta entra quando ela
-  acaba.
+- In combat the whole tracker froze: nothing new came into the list, the
+  scenario didn't change state, and collapsing or moving the window didn't
+  respond. The cause was the quest item button, which sits inside the block and,
+  by the game's rules, protects every frame above it. It now lives in a frame of
+  its own, outside the panel, and is only anchored to the block. The list
+  updates during a fight just like at any other time.
+- The only thing still on hold in combat is the button itself, because the game
+  forbids it: the item button of a quest that shows up mid-fight comes in when
+  the fight ends.
 
 ## [0.87.0] - 2026-08-23
 
-### Adicionado
+### Added
 
-- **Recolher em Mítica+**, em Conteúdo: a janela se recolhe sozinha quando a
-  chave começa e abre de volta quando a corrida termina. Só a janela que o addon
-  recolheu é aberta de volta; se você mesmo recolheu antes, ela fica como você
-  deixou, e se abrir na mão durante a corrida, o addon não mexe mais. Nasce
-  desligada. Pedido de um jogador no CurseForge.
+- **Collapse during Mythic+**, under Content: the window collapses on its own
+  when the key starts and opens again when the run ends. Only a window the addon
+  collapsed is opened again; if you collapsed it yourself beforehand, it stays
+  as you left it, and if you open it by hand during the run, the addon leaves it
+  alone. Off by default. Requested by a player on CurseForge.
 
 ## [0.86.1] - 2026-08-22
 
-### Corrigido
+### Fixed
 
-- Dentro de masmorra mítica+ aparecia um erro de Lua citando o Aura Questor,
-  vindo da leitura de auras feita pelo rastreador do jogo. Escondido, ele
-  continuava montando os blocos dele a cada atualização, e essa montagem lê
-  aura, que dentro de instância o cliente recusa entregar a código que um addon
-  encostou. Agora, enquanto o rastreador do jogo está escondido, os módulos
-  dele saem do painel: o trecho que dava erro não chega a rodar, e some junto o
-  trabalho de desenhar um rastreador que ninguém vê. Voltar a mostrá-lo devolve
-  tudo no lugar, sem `/reload`.
+- Inside a Mythic+ dungeon a Lua error naming Aura Questor showed up, coming
+  from the aura reading done by the game's tracker. Even hidden, it kept
+  building its blocks on every update, and that building reads auras, which
+  inside an instance the client refuses to hand to code an addon has touched.
+  Now, while the game's tracker is hidden, its modules leave the panel: the
+  part that caused the error never gets to run, and the work of drawing a
+  tracker nobody sees goes away with it. Showing it again puts everything back
+  in place, no `/reload` needed.
 
 ## [0.86.0] - 2026-08-21
 
-### Corrigido
+### Fixed
 
-- A janela andava um pouco a cada `/reload`, e com ela mudava a altura. Para se
-  reancorar, o rastreador media a própria posição a cada mudança de tamanho, e o
-  jogo responde a essa medida com o desenho anterior, não com o atual. No login
-  isso gravava um lugar um pouco diferente do real, e a janela caminhava. Agora
-  a posição guardada é a única referência: medir só acontece quando você solta o
-  arrasto.
-- Mudar a escala nas opções levava a janela para outro ponto da tela. Os números
-  guardados valem na escala da janela, então trocar a escala mudava o que eles
-  significam. O lugar passa a ser reaplicado logo depois da escala.
+- The window moved a little on every `/reload`, and its height changed with it.
+  To re-anchor itself, the tracker measured its own position on every size
+  change, and the game answers that measurement with the previous layout, not
+  the current one. At login this saved a spot slightly off from the real one,
+  and the window wandered. Now the saved position is the only reference:
+  measuring only happens when you let go of a drag.
+- Changing the scale in the options moved the window to another spot on the
+  screen. The saved numbers are in the window's scale, so changing the scale
+  changed what they mean. The position is now reapplied right after the scale.
 
-### Alterado
+### Changed
 
-- A ordem das seções passa a ser guardada como preferência, e não como tabela do
-  perfil: assim o botão **Padrões** da página restaura a ordem junto com o
-  resto, e o card ganhou um **Restaurar ordem** próprio. Uma seção que uma
-  versão futura trouxer entra ao lado da vizinha padrão dela, em vez de ir para
-  o fim de uma lista que você arrumou.
+- Section order is now saved as a preference instead of a profile table: that
+  way the page's **Defaults** button restores the order along with everything
+  else, and the card got a **Restore order** button of its own. A section that a
+  future version adds goes next to the section it sits beside by default,
+  instead of at the end of a list you arranged.
 
 ## [0.85.0] - 2026-08-21
 
-### Corrigido
+### Fixed
 
-- A janela subia sozinha quando a lista chegava na borda de baixo da tela: ela
-  crescia além do limite e o jogo empurrava tudo para cima, levando o cabeçalho
-  junto. Agora ela para de crescer ali e a lista rola, como já fazia ao bater no
-  limite de altura.
-- A janela podia sair do lugar quando a lista mudava de tamanho, e a posição de
-  fábrica é ancorada pela borda direita, onde isso acontecia sempre. Ela passa a
-  ser presa pelo canto de cima, que é o que mantém o cabeçalho parado, e o lugar
-  escolhido por você é gravado por esse mesmo canto.
+- The window crept upward on its own when the list reached the bottom edge of
+  the screen: it grew past the limit and the game pushed everything up, taking
+  the header with it. Now it stops growing there and the list scrolls, as it
+  already did when it hit the height limit.
+- The window could move when the list changed size, and the default position is
+  anchored by the right edge, where this happened every time. It's now held by
+  its top corner, which is what keeps the header still, and the spot you choose
+  is saved by that same corner.
 
-### Adicionado
+### Added
 
-- **Altura conforme a lista**, ligada de fábrica: a janela encolhe até o tamanho
-  do que está rastreado, e a altura escolhida no painel passa a ser o limite em
-  vez de um tamanho fixo.
-- **Esconder quando vazio**, ligada de fábrica: sem nada rastreado a janela sai
-  da tela. Esconder seções pelo filtro não conta como vazio, porque isso é
-  escolha sua.
-- **Abrir ao rastrear algo**, desligada de fábrica: com a janela recolhida, ela
-  se abre sozinha quando algo novo entra na lista.
-- **Link do Wowhead** no menu de uma missão ou conquista, no idioma do cliente,
-  numa caixa para copiar, já que o jogo não abre navegador.
+- **Fit height to the list**, on by default: the window shrinks to the size of
+  what's tracked, and the height you pick in the panel becomes the limit instead
+  of a fixed size.
+- **Hide when empty**, on by default: with nothing tracked the window leaves the
+  screen. Hiding sections with the filter doesn't count as empty, because that's
+  your choice.
+- **Open when something is tracked**, off by default: with the window collapsed,
+  it opens on its own when something new reaches the list.
+- **Wowhead link** in a quest's or achievement's menu, in the client's language,
+  in a box to copy from, since the game doesn't open a browser.
 
 ## [0.84.1] - 2026-08-21
 
-### Corrigido
+### Fixed
 
-- Passar o mouse numa missão com item de recompensa gerava erro do jogo na
-  tela. O bloco de recompensas embute o tooltip do item, e ele se mede com
-  valores que o cliente esconde de addon, o que quebra a conta dentro do
-  próprio jogo. As recompensas continuam aparecendo, com nome, cor e ícone,
-  sem o tooltip do item embutido.
+- Hovering a quest with an item reward threw a game error on screen. The rewards
+  block embeds the item's tooltip, which measures itself with values the client
+  hides from addons, and that breaks the math inside the game itself. Rewards
+  still show, with name, colour and icon, without the embedded item tooltip.
 
 ## [0.84.0] - 2026-08-21
 
-### Corrigido
+### Fixed
 
-- Objetivos de uma missão ficavam tão próximos uns dos outros quanto as linhas
-  de um objetivo que quebra em duas, e não dava para ver onde um terminava.
-  Agora existe um degrau claro entre eles.
-- As barras de progresso ocupavam a largura inteira do bloco, coladas no texto
-  em cima e embaixo. Agora ficam recuadas dos dois lados e com mais respiro
-  acima e abaixo, para lerem como figura no meio das linhas.
-- Em combate, clicar numa missão para segui-la não fazia nada. A escrita
-  esperava o fim da luta por causa de um problema com os pinos do mapa, que só
-  acontece com o mapa aberto. Agora só espera nesse caso, e com o mapa fechado
-  o clique vale na hora, como no rastreador do jogo.
-- A barra de um cenário saía lisa, e o jogo a desenha dividida em cinco, a mesma
-  arte do objetivo bônus e da missão mundial. Só missão comum usa a barra lisa.
+- A quest's objectives sat as close to each other as the lines of an objective
+  that wraps onto two, and you couldn't tell where one ended. Now there's a
+  clear step between them.
+- Progress bars took up the full width of the block, pressed against the text
+  above and below. Now they're inset on both sides, with more breathing room
+  above and below, so they read as a graphic between the lines.
+- In combat, clicking a quest to follow it did nothing. The change waited for
+  the fight to end because of a problem with the map pins, which only happens
+  with the map open. Now it only waits in that case, and with the map closed the
+  click takes effect right away, as in the game's tracker.
+- A scenario's bar came out plain, while the game draws it split into five, the
+  same art as bonus objectives and world quests. Only regular quests use the
+  plain bar.
 
 ## [0.83.1] - 2026-08-21
 
-### Corrigido
+### Fixed
 
-- Passar o mouse num evento podia gerar erro do jogo na tela. Os detalhes que
-  ele publica no ponto do mapa chegam incompletos longe do mapa, e o próprio
-  desenhador da Blizzard quebra com eles. Um conjunto que falha uma vez deixa
-  de ser desenhado até o próximo login, e o resto do tooltip continua igual.
+- Hovering an event could throw a game error on screen. The details it publishes
+  on its map pin arrive incomplete away from the map, and Blizzard's own
+  renderer breaks on them. A set that fails once is no longer drawn until your
+  next login, and the rest of the tooltip stays the same.
 
 ## [0.83.0] - 2026-08-21
 
-### Adicionado
+### Added
 
-- A contagem regressiva mostra segundos: `4min 32s` abaixo de uma hora e `45s`
-  no último minuto. Acima de uma hora nada muda. O número anda de segundo em
-  segundo enquanto houver contagem na tela.
-- O que o jogo mostra no ponto do mapa de um evento, com recompensas e itens,
-  passa a aparecer no tooltip da entrada, que é onde esse conteúdo cabe.
-- O menu do evento ganhou **seguir** e **parar de seguir**, com os mesmos
-  nomes que o jogo usa no ponto do mapa. Clicar no ícone do evento já fazia
-  isso, mas nada dizia.
-- O evento que está sendo seguido ganha o mesmo brilho que o jogo põe atrás do
-  ponto no mapa. A arte própria dele não tem versão de selecionado, então antes
-  não havia como saber qual estava escolhido.
-- Evento vai para o bate-papo com o mesmo clique das missões, usando o link de
-  evento que o próprio jogo criou para os lembretes dele.
-- O tooltip de uma missão passa a mostrar as recompensas com o mesmo bloco que
-  o jogo desenha no mapa, então moeda, reputação e bônus de Modo de Guerra
-  aparecem. O nosso lia só dinheiro e itens, e uma missão mundial paga fora do
-  diário, o que deixava o tooltip dela sem recompensa nenhuma.
-- O tooltip escolhe o lado que tem espaço e fica preso à tela, já que o bloco de
-  recompensas traz o tooltip do item inteiro e o rastreador pode estar em
-  qualquer canto.
+- The countdown shows seconds: `4min 32s` under an hour and `45s` in the last
+  minute. Above an hour nothing changes. The number ticks second by second while
+  there's a countdown on screen.
+- What the game shows on an event's map pin, with rewards and items, now appears
+  in the entry's tooltip, which is where that content fits.
+- The event menu gained **Focus** and **Remove Focus**, the same options the
+  game shows on the map pin. Clicking the event's icon already did this, but
+  nothing said so.
+- The event you're following gets the same glow the game puts behind its pin on
+  the map. Its own art has no selected version, so before there was no way to
+  tell which one was chosen.
+- Events go to chat with the same click as quests, using the event link the game
+  itself created for its reminders.
+- A quest's tooltip now shows rewards with the same block the game draws on the
+  map, so currency, reputation and War Mode bonus show up. Ours only read money
+  and items, and a world quest pays outside the quest log, which left its
+  tooltip with no reward at all.
+- The tooltip picks the side that has room and stays inside the screen, since
+  the rewards block brings the full item tooltip and the tracker can be in any
+  corner.
 
-### Alterado
+### Changed
 
-- As barras de progresso ganharam estilo à escolha, na página Moldura:
-  **Aura Questor**, plana e com contorno fino, que é o padrão, ou **Blizzard**,
-  com a moldura de metal do rastreador do jogo. Nos dois, missão mundial e
-  objetivo bônus saem divididas em cinco partes, como no rastreador do jogo. A
-  altura também virou preferência.
-- Dá para escolher o que a seção de missões mundiais lista, no painel e no menu
-  do funil: **rastreadas**, como era antes, ou **todas desta zona** e **todas de
-  onde estou**, que trazem as missões mundiais ao seu redor mesmo sem você ter
-  rastreado nenhuma. Com **rastreadas**, uma missão seguida pelo mapa continua
-  na lista onde quer que você vá, que é como o rastreador do jogo se comporta.
+- Progress bars now come in a style of your choice, on the Frame page:
+  **Aura Questor**, flat with a thin outline, which is the default, or
+  **Blizzard**, with the metal frame of the game's tracker. In both, world
+  quests and bonus objectives are split into five parts, as in the game's
+  tracker. Their height is now a preference too.
+- You can choose what the world quests section lists, in the panel and in the
+  funnel menu: **Tracked**, as before, or **All in this zone** and **All where I
+  am**, which bring in the world quests around you even if you haven't tracked
+  any. With **Tracked**, a quest followed from the map stays on the list
+  wherever you go, which is how the game's tracker behaves.
 
-### Corrigido
+### Fixed
 
-- Evento em andamento não mostrava quanto tempo ainda tinha. O prazo desses não
-  vem do agendador, e sim do ponto no mapa, e agora é de lá que ele é lido.
-- A arte e a contagem de cada evento passam a seguir o que o próprio evento
-  pede, em vez de valerem para todos igual.
+- An event in progress didn't show how much time it had left. The deadline for
+  these doesn't come from the scheduler but from the map pin, and that's where
+  it's read from now.
+- Each event's art and countdown now follow what that event asks for, instead of
+  being the same for all of them.
 
 ## [0.82.0] - 2026-08-20
 
-### Adicionado
+### Added
 
-- Botão **Padrões** no cabeçalho de cada página de preferências, no mesmo canto
-  em que o jogo põe o dele. Restaura só o que aquela página mostra, e pergunta
-  antes, já que não há como desfazer.
+- **Defaults** button in the header of each settings page, in the same corner
+  where the game puts its own. It restores only what that page shows, and asks
+  first, since there's no undo.
 
-### Corrigido
+### Fixed
 
-- O teto da altura que a 0.81.0 prometia não subia de verdade: a altura da tela
-  era medida no carregamento, antes de a escala da interface valer, e o controle
-  acabava parando no mesmo 900 de antes. A medida passa a ser feita quando a
-  página é aberta, e de quebra trocar de resolução ou de escala no meio da
-  sessão passa a valer sem `/reload`.
+- The higher height cap promised in 0.81.0 didn't actually go up: the screen
+  height was measured at load, before the interface scale applied, and the
+  control ended up stopping at the same 900 as before. It's now measured when
+  the page opens, and as a bonus, changing resolution or scale mid-session
+  takes effect without a `/reload`.
 
 ## [0.81.0] - 2026-08-20
 
-### Alterado
+### Changed
 
-- O teto da altura do rastreador passa a acompanhar a tela em vez de parar em
-  900: num monitor alto dá para descer até perto da borda de baixo. Numa tela
-  mais baixa o teto antigo continua valendo, então nenhuma altura já gravada
-  encolhe.
+- The tracker's height cap now follows your screen instead of stopping at 900:
+  on a tall monitor you can stretch it down close to the bottom edge. On a
+  shorter screen the old cap still applies, so no height you already saved
+  shrinks.
 
 ## [0.80.2] - 2026-08-20
 
-### Corrigido
+### Fixed
 
-- Com muitos addons de mídia instalados, a lista de um seletor passava da borda
-  da tela e o que caía embaixo ficava impossível de escolher. Os seletores do
-  painel agora rolam em vez de crescer sem fim.
-- O rastreador do jogo reaparecia por baixo do nosso no meio da sessão e só
-  saía de cena de novo com um `/reload`. Toda vez que a interface volta,
-  saindo de uma cinemática ou de um veículo, o jogo reacende os quadros
-  daquele canto da tela, e o addon confiava na própria memória de já ter
-  escondido: nunca reescrevia. A opacidade passa a ser lida do próprio
-  quadro, então a atualização seguinte esconde de novo.
-- Com os dois rastreadores na tela, o do jogo deixa de reaparecer nos
-  momentos em que o próprio jogo o apaga, como sob a barra de ação de um
-  veículo.
+- With many media addons installed, a dropdown's list ran past the edge of the
+  screen and whatever fell below it was impossible to pick. The panel's
+  dropdowns now scroll instead of growing endlessly.
+- The game's tracker reappeared under ours mid-session and only went away again
+  after a `/reload`. Every time the interface comes back, when leaving a
+  cinematic or a vehicle, the game turns the frames in that corner of the screen
+  back on, and the addon trusted its own memory of having already hidden it, so
+  it never wrote it again. Opacity is now read from the frame itself, so the
+  next update hides it again.
+- With both trackers on screen, the game's no longer reappears at moments when
+  the game itself hides it, like under a vehicle's action bar.
 
 ## [0.80.1] - 2026-08-19
 
-### Corrigido
+### Fixed
 
-- Em clientes chineses e coreanos o texto nascia ilegível: a Inter e a
-  JetBrains Mono que acompanham o addon não têm esses glifos. Nesses
-  clientes o rastreador e o painel de opções passam a usar a fonte do
-  próprio jogo, o seletor deixa de oferecer as fontes sem os glifos, e uma
-  escolha delas já gravada é migrada. A fonte **Game Default** entra no
-  acervo compartilhado em qualquer idioma, para quem preferir a do jogo.
+- On Chinese and Korean clients the text came out unreadable: the Inter and
+  JetBrains Mono fonts that ship with the addon don't have those glyphs. On
+  those clients the tracker and the options panel now use the game's own font,
+  the font picker no longer offers the fonts missing those glyphs, and a choice
+  of one of them that was already saved is migrated. The **Game Default** font
+  joins the shared library in every language, for anyone who prefers the
+  game's.
 
 ## [0.80.0] - 2026-08-18
 
-### Adicionado
+### Added
 
-- Clique com o modificador de link de chat (shift por padrão) numa missão,
-  objetivo bônus ou conquista põe o link na caixa de texto para
-  compartilhar, como no rastreador do jogo.
-- **Só a masmorra na Mítica+**, ligado de fábrica como no rastreador do jogo:
-  durante uma pedra-chave ativa as outras seções saem de cena e volta tudo ao
-  sair. Desligável na página Conteúdo.
+- Clicking a quest, bonus objective or achievement with the chat link modifier
+  (Shift by default) puts its link in the chat box to share, as in the game's
+  tracker.
+- **Only the dungeon in Mythic+**, on by default as in the game's tracker:
+  during an active keystone the other sections step aside, and everything comes
+  back when you leave. You can turn it off on the Content page.
 
 ## [0.79.3] - 2026-08-17
 
-### Corrigido
+### Fixed
 
-- O card de Imersão aparecia em dobro, com um tier em cada um. O jogo publica
-  um cabeçalho por estado no mesmo conjunto de widgets e conta com eles se
-  sobrepondo, como no contêiner do estágio da Blizzard; o nosso empilhava. O
-  contêiner adota as mesmas âncoras, e de quebra se refaz ao reaparecer e os
-  blocos em uso deixam de ser escondidos e reexibidos a cada redesenho.
+- The Delve card showed up twice, with one tier in each. The game publishes one
+  header per state in the same widget set and counts on them overlapping, as in
+  Blizzard's stage container; ours stacked them. The container now uses the same
+  anchors and, along the way, rebuilds itself when it reappears, and blocks in
+  use are no longer hidden and shown again on every redraw.
 
 ## [0.79.2] - 2026-08-17
 
-### Corrigido
+### Fixed
 
-- Missão que se completa à distância mas cuja notificação já tinha passado
-  (completada antes do login, ou o aviso descartado) aparecia como entrega
-  normal e o clique abria o diário. A leitura passou a seguir a marca do
-  próprio diário (`isAutoComplete`), como o rastreador da Blizzard, e a
-  entrada mostra "Missão cumprida" e "(clique para concluir)"; o clique abre
-  a janela de conclusão.
-- Em combate, com botão de item na lista, o rastreador não atualizava nada até
-  a luta acabar, e uma missão mundial de "matar criaturas" ficava com a barra
-  parada em 0% enquanto o mapa já dizia 30%. Agora o texto das linhas e o
-  valor das barras dos blocos na tela são reescritos em lugar durante o
-  combate; só o que mudaria de forma (linha a mais, entrada nova) espera o
-  fim da luta.
+- A quest that completes remotely but whose notification had already gone by
+  (completed before login, or the alert dismissed) showed up as a normal
+  turn-in, and clicking it opened the quest log. The check now follows the quest
+  log's own flag (`isAutoComplete`), like Blizzard's tracker, and the entry
+  shows "Quest Complete" and "(click to complete)"; clicking it opens the
+  completion window.
+- In combat, with an item button on the list, the tracker didn't update anything
+  until the fight ended, and a "kill creatures" world quest kept its bar stuck
+  at 0% while the map already said 30%. Now the text of the lines and the value
+  of the bars of the blocks on screen are rewritten in place during combat; only
+  what would change shape (an extra line, a new entry) waits for the fight to
+  end.
 
 ## [0.79.1] - 2026-08-17
 
-### Adicionado
+### Added
 
-- **Rastrear missões mundiais**, no menu de filtro e na página Conteúdo, o
-  mesmo interruptor que os eventos já tinham: desligado, a seção some por
-  inteiro, sem depender de estar dentro da área de alguma.
+- **Track world quests**, in the filter menu and on the Content page, the same
+  switch events already had: when off, the section goes away entirely, whether
+  or not you're inside a world quest's area.
 
-### Corrigido
+### Fixed
 
-- Missões mundiais rastreadas pelo mapa não apareciam: a seção lia só as da
-  área em que o jogador está. Agora lista as duas fontes, na ordem do
-  rastreador da Blizzard: primeiro as da área, depois as rastreadas, onde
-  quer que estejam. **Parar de rastrear** numa missão mundial usava a chamada
-  do diário e não fazia nada; passou a usar a lista certa e, se a missão era
-  a supervisionada, solta a seta junto.
+- World quests tracked from the map didn't appear: the section only read the
+  ones in the area you're in. It now lists both sources, in the order of
+  Blizzard's tracker: first the ones in the area, then the tracked ones,
+  wherever they are. **Stop Tracking** on a world quest used the quest log call
+  and did nothing; it now uses the right list and, if the quest was the
+  supervised one, releases the arrow along with it.
 
 ## [0.79.0] - 2026-08-17
 
-### Alterado
+### Changed
 
-- O addon passa a se chamar **Aura Questor: Objective Tracker**; a pasta e o
-  manifesto viram `AuraQuestor`. Ninguém perde configuração: o zip leva junto a
-  pasta `AuraTrackerQuestor` como ponte, só com o manifesto que mantém a tabela
-  antiga carregada, e o addon a adota no primeiro login com o nome novo,
-  avisando no chat. Os atalhos de teclado e o `/atq` continuam os mesmos.
-  Mudaram com a pasta o nome do frame (`AuraQuestorTracker`) e o objeto do
-  LibDataBroker (`AuraQuestor`): addons que ancoravam por nome ou guardavam o
-  slot do datatext precisam reapontar. A ponte pode ser removida depois do
-  primeiro login e sairá do pacote em versões futuras.
+- The addon is now called **Aura Questor: Objective Tracker**; the folder and
+  the manifest become `AuraQuestor`. Nobody loses their settings: the zip also
+  carries the `AuraTrackerQuestor` folder as a bridge, with only the manifest
+  that keeps the old table loaded, and the addon adopts it on the first login
+  under the new name, letting you know in chat. Key bindings and `/atq` stay the
+  same. The frame name (`AuraQuestorTracker`) and the LibDataBroker object
+  (`AuraQuestor`) changed along with the folder: addons that anchored by name or
+  saved the datatext slot need to be pointed at the new names. The bridge can be
+  removed after the first login and will leave the package in future versions.
 
-### Corrigido
+### Fixed
 
-- Com o painel estreito, os botões do cabeçalho passavam por cima do nome do
-  addon. O nome agora termina antes da fila de botões e corta com reticências
-  quando não cabe.
+- With a narrow panel, the header buttons ran over the addon's name. The name
+  now ends before the row of buttons and is cut with an ellipsis when it doesn't
+  fit.
 
 ## [0.78.0] - 2026-08-16
 
-### Adicionado
+### Added
 
-- Botão de recolher no canto do cabeçalho, o mesmo do rastreador da Blizzard:
-  o painel encolhe até sobrar só o cabeçalho e volta com outro clique. O
-  estado fica salvo no perfil, e o cabeçalho não sai do lugar ao recolher.
-- **Modo de edição** também no menu de filtro, no grupo Janela ao fim da
-  lista, para liberar o arrasto sem abrir as opções.
+- Collapse button in the corner of the header, the same one Blizzard's tracker
+  has: the panel shrinks until only the header is left and comes back with
+  another click. The state is saved in the profile, and the header stays in
+  place when collapsing.
+- **Edit mode** in the filter menu too, in the Window group at the end of the
+  list, to unlock dragging without opening the options.
 
 ## [0.77.0] - 2026-08-15
 
-### Alterado
+### Changed
 
-- As opções foram redesenhadas por inteiro, com identidade própria na paleta
-  do logo: fundo quase preto, cards de seção e um único destaque azul. Oito
-  subpáginas viraram cinco (Aparência, Moldura, Conteúdo, Integração e
-  Perfis), sem remover nenhuma preferência: Avançado entrou na página
-  principal, Botões e Som entraram em Conteúdo, e Fundo e borda virou Moldura.
-  As dicas saíram do tooltip e passaram a texto de apoio na própria linha,
-  interruptores substituíram os checkboxes, e a Integração virou uma lista com
-  versão e estado por addon. As fontes Inter e JetBrains Mono acompanham o
-  addon (licença SIL OFL) e ficam disponíveis no acervo compartilhado.
-- A busca nativa das Opções e o botão Padrões deixam de alcançar essas
-  páginas, consequência aceita de desenhá-las por conta própria.
-- As pastas de código desceram para `Source/`, deixando a raiz do addon só com
-  o manifesto, os atalhos, mídia, locales e bibliotecas. Nenhuma mudança de
-  comportamento.
-- O rastreador adota a tipografia das opções: Inter vira a fonte padrão em
-  instalações novas (perfis existentes mantêm a escolha), e as porcentagens
-  das barras de progresso passam a JetBrains Mono, que alinha os dígitos.
+- The options were redesigned from top to bottom, with their own identity in
+  the logo's palette: near-black background, section cards and a single blue
+  accent. Eight subpages became five (Appearance, Frame, Content, Integration
+  and Profiles), without removing any preference: Advanced went into the main
+  page, Buttons and Sound went into Content, and Background and border became
+  Frame. Hints moved out of the tooltip and became helper text on the line
+  itself, switches replaced the checkboxes, and Integration became a list with
+  version and state per addon. The Inter and JetBrains Mono fonts ship with the
+  addon (SIL OFL license) and are available in the shared library.
+- The built-in Options search and the Defaults button no longer reach these
+  pages, an accepted consequence of drawing them ourselves.
+- The code folders moved down into `Source/`, leaving the addon's root with only
+  the manifest, bindings, media, locales and libraries. No change in behaviour.
+- The tracker adopts the options' typography: Inter becomes the default font on
+  new installs (existing profiles keep their choice), and the progress bar
+  percentages switch to JetBrains Mono, which lines up the digits.
 
-### Adicionado
+### Added
 
-- Menu de contexto de missão ganhou **Abandonar missão**, com a confirmação
-  da própria Blizzard, apenas quando a missão pode ser abandonada.
-- Missão que se completa à distância aparece na lista mesmo sem estar sendo
-  observada, com o aviso da Blizzard no lugar dos objetivos, e o clique abre a
-  janela de recompensa dali. Vale também para missões oferecidas à distância,
-  que mostram "Nova missão descoberta" e abrem a oferta ao clicar.
+- The quest context menu gained **Abandon Quest**, with Blizzard's own
+  confirmation, only when the quest can be abandoned.
+- A quest that completes remotely shows up on the list even if it isn't being
+  watched, with Blizzard's notice in place of the objectives, and clicking it
+  opens the reward window right there. This also applies to quests offered
+  remotely, which show "Quest Discovered!" and open the offer when clicked.
 
-### Corrigido
+### Fixed
 
-- O card de estágio ficava sem a arte da Blizzard quando o cenário não
-  declarava um conjunto próprio: a busca parava antes das reservas. Agora o
-  card veste a arte no tamanho dela e segue o desenho do jogo, com o número do
-  estágio em destaque, o nome menor embaixo e **Estágio Final** no último.
-- Supervisionar uma entrada durante o combate manchava o refresh dos pins do
-  mapa e gerava avisos de ação bloqueada. A escrita agora espera o combate
-  acabar; só o último clique vale.
-- Abrir as opções em combate é protegido pelo jogo desde o 12.x e caía em
-  ação bloqueada. O clique agora avisa no chat e não tenta.
+- The stage card was missing Blizzard's art when the scenario didn't declare a
+  set of its own: the lookup stopped before the fallbacks. Now the card wears
+  the art at its own size and follows the game's design, with the stage number
+  highlighted, the name smaller below it and **Final Stage** on the last one.
+- Supervising an entry during combat tainted the map pin refresh and caused
+  blocked action warnings. The change now waits for combat to end; only the
+  last click counts.
+- Opening the options in combat has been protected by the game since 12.x and
+  ran into a blocked action. The click now warns you in chat and doesn't try.
 
 ## [0.76.1] - 2026-08-14
 
-### Corrigido
+### Fixed
 
-- O modo de exibição do mapa só é escrito quando muda de verdade. Reescrever o
-  valor que já estava lá manchava o campo que o atalho de mapa lê, e abrir o
-  mapa em combate gerava avisos de ação bloqueada em nome do addon.
+- The map display mode is only written when it actually changes. Rewriting the
+  value that was already there tainted the field the map key binding reads, and
+  opening the map in combat caused blocked action warnings in the addon's name.
 
 ## [0.76.0] - 2026-08-14
 
-### Adicionado
+### Added
 
-- Integração com o TomTom, na aba **Integração** das opções: a seta segue a
-  missão supervisionada, criada ao clicar no pin ou ao selecionar pelo mapa, e
-  o menu de contexto ganha **Enviar ao TomTom**. A linha mostra a versão do
-  addon quando presente; instalado mas desativado aparece em cor secundária, e
-  a integração nasce desligada, para o jogador ligar.
-- Botão **I** no cabeçalho do rastreador, com tooltip, abrindo direto a página
-  de Integração. Desligável na página Botões, como os demais.
-- Traduções para **espanhol** (esES e esMX) e **francês** (frFR), com testes de
-  paridade cobrindo as quatro línguas.
+- TomTom integration, on the **Integration** tab of the options: the arrow
+  follows the supervised quest, set by clicking the pin or selecting it on the
+  map, and the context menu gains **Send to TomTom**. The line shows the addon's
+  version when it's there; installed but disabled shows in a secondary colour,
+  and the integration starts off, for you to turn on.
+- **I** button in the tracker header, with a tooltip, that opens the Integration
+  page directly. You can turn it off on the Buttons page, like the others.
+- **Spanish** (esES and esMX) and **French** (frFR) translations, with parity
+  tests covering all four languages.
 
-### Alterado
+### Changed
 
-- A tela principal das opções apresenta o addon: os interruptores gerais e as
-  informações de versão, autor e comandos num lugar só. A subpágina
-  Informações saiu da lista.
-- Título de missão concluída no verde de "pronto para entregar" do jogo, em
-  vez do tom pastel.
+- The main options screen introduces the addon: the general switches and the
+  version, author and command info in one place. The About subpage left the
+  list.
+- Completed quest titles use the game's "ready to turn in" green instead of the
+  pastel tone.
 
-### Corrigido
+### Fixed
 
-- O cabeçalho "Escolha uma:" das recompensas de escolha estava fixo em
-  português e aparecia assim em qualquer idioma.
+- The "Escolha uma:" header of choice rewards was hardcoded in Portuguese and
+  showed up that way in every language.
 
 ## [0.75.0] - 2026-08-13
 
-### Adicionado
+### Added
 
-- Estágio de cenário em destaque: um card com a arte que o próprio cenário
-  declara e, quando o passo publica widgets, o bloco da própria Blizzard,
-  com cronômetro de onda ou o cabeçalho de Imersão com nível, vidas e
-  modificadores, tudo se atualizando sozinho.
-- Botão de item também em missões mundiais e objetivos bônus, à direita do
-  bloco, com moldura, contador de cargas, relógio de recarga e o ícone em
-  vermelho fora de alcance.
-- Opção **Concluídas no topo**, no menu de filtro e nas opções, para agrupar
-  as entradas concluídas no topo da seção em vez do fim.
+- Scenario stage in the spotlight: a card with the art the scenario itself
+  declares and, when the step publishes widgets, Blizzard's own block, with a
+  wave timer or the Delve header with tier, lives and modifiers, all updating on
+  their own.
+- Item button on world quests and bonus objectives too, to the right of the
+  block, with a frame, charge count, cooldown clock and the icon in red when out
+  of range.
+- **Completed at the top** option, in the filter menu and in the options, to
+  group completed entries at the top of the section instead of the bottom.
 
-### Alterado
+### Changed
 
-- A seção diz **Masmorra** em qualquer masmorra, não só em Mítica+, e diz
-  **Imersões** dentro de uma Delve.
-- Missão com objetivo em porcentagem mostra a linha e a barra, em vez de uma
-  barra sem texto.
-- Quebrar textos longos passou a ser o padrão em contas novas; perfis
-  existentes mantêm a escolha feita.
+- The section says **Dungeon** in any dungeon, not just Mythic+, and says
+  **Delves** inside a Delve.
+- A quest with a percentage objective shows the line and the bar, instead of a
+  bar with no text.
+- Wrapping long text is now the default on new accounts; existing profiles keep
+  the choice they made.
 
-### Corrigido
+### Fixed
 
-- Erro de ancoragem quando uma missão com item entrava na lista: a área de
-  rolagem estava presa a uma textura, e frame protegido não aceita isso.
-- O clique no botão de item não disparava: o registro de cliques não casava
-  com o `ActionButtonUseKeyDown`.
-- Em combate, o rastreador com botão de item não tenta mais mexer em frames
-  protegidos: escala, tamanho, rolagem, modo de edição e visibilidade
-  esperam o combate acabar, e o refresh que segue o fim do combate aplica
-  tudo de uma vez.
-- O rastreador da Blizzard só é tocado quando o estado pedido muda, em vez
-  de a cada atualização.
+- Anchoring error when a quest with an item joined the list: the scroll area was
+  anchored to a texture, and a protected frame doesn't accept that.
+- Clicking the item button didn't fire: the click registration didn't match
+  `ActionButtonUseKeyDown`.
+- In combat, the tracker with an item button no longer tries to touch protected
+  frames: scale, size, scrolling, edit mode and visibility wait for combat to
+  end, and the refresh that follows the end of combat applies everything at
+  once.
+- Blizzard's tracker is only touched when the requested state changes, instead
+  of on every update.
 
 ## [0.74.0] - 2026-08-13
 
-### Adicionado
+### Added
 
-- Logo próprio, usado na lista de addons do jogo, no botão do minimapa e no
-  cabeçalho do rastreador.
-- Publicação no Wago Addons junto com o CurseForge, pelo mesmo empacotador.
-- Aba **Som**: aviso ao concluir uma missão, com escolha do som e do canal de
-  áudio. Os sons vêm do próprio jogo e do acervo compartilhado.
-- Barra de progresso para objetivos que reportam porcentagem, com textura
-  configurável.
-- Página **Fundo e borda**: textura, cor, espessura, opacidade e recuo, ou a cor
-  da classe na borda.
-- Página **Perfis** nas opções, no lugar do submenu do botão de filtro.
-- Página **Botões**: cada botão do cabeçalho e o do minimapa desligam
-  separadamente.
-- Contorno e sombra da fonte; opção de cortar textos longos com reticências em
-  vez de quebrar linha.
-- Integração com CI e empacotamento pelo BigWigs packager.
-- Localização: `Locales/` com `enUS.lua` como padrão e `ptBR.lua` por cima. Uma
-  chave sem tradução cai no inglês em vez de sumir.
+- A logo of its own, used in the game's addon list, on the minimap button and
+  in the tracker header.
+- Published on Wago Addons alongside CurseForge, through the same packager.
+- **Sound** tab: an alert when you complete a quest, with a choice of sound and
+  audio channel. The sounds come from the game itself and from the shared
+  library.
+- Progress bar for objectives that report a percentage, with a configurable
+  texture.
+- **Background and border** page: texture, colour, thickness, opacity and
+  inset, or your class colour on the border.
+- **Profiles** page in the options, replacing the filter button's submenu.
+- **Buttons** page: each header button and the minimap button can be turned off
+  separately.
+- Font outline and shadow; option to cut long text with an ellipsis instead of
+  wrapping it.
+- CI integration and packaging with the BigWigs packager.
+- Localization: `Locales/` with `enUS.lua` as the default and `ptBR.lua` on
+  top. A key with no translation falls back to English instead of disappearing.
 
-### Alterado
+### Changed
 
-- Cabeçalho do rastreador: o logo vem antes do nome, e uma régua o separa da
-  lista, no mesmo desenho que divide as seções.
-- Estrutura de pastas: `Adapters/` deu lugar a `Game/`, `Modules/`, `UI/`,
-  `Options/` e `System/`, e o `Core/` foi agrupado por assunto.
-- Bibliotecas passam a ser baixadas pelo empacotador em vez de commitadas.
-- Missões mundiais são listadas por zona, com o ícone de tipo dentro do pino.
-- Missão concluída mostra onde entregar em vez do contador cheio, e desce para o
-  fim da seção.
-- Objetivo bônus recebeu a estrela que o jogo desenha dentro do marcador.
+- Tracker header: the logo comes before the name, and a rule separates it from
+  the list, in the same design that divides the sections.
+- Folder structure: `Adapters/` gave way to `Game/`, `Modules/`, `UI/`,
+  `Options/` and `System/`, and `Core/` was grouped by subject.
+- Libraries are now downloaded by the packager instead of committed.
+- World quests are listed by zone, with the type icon inside the pin.
+- A completed quest shows where to turn it in instead of the full counter, and
+  moves down to the end of the section.
+- Bonus objectives got the star the game draws inside the marker.
 
-### Corrigido
+### Fixed
 
-- O nome do perfil padrão era traduzido, e trocar o idioma do cliente fazia o
-  perfil sumir junto com todas as configurações. Passou a ser um identificador
-  fixo, e um perfil salvo com o nome antigo é renomeado na carga.
+- The default profile's name was translated, and changing the client's language
+  made the profile disappear along with all its settings. It's now a fixed
+  identifier, and a profile saved under the old name is renamed on load.
 
-- Missões mundiais não apareciam quando nenhuma tinha sido rastreada à mão.
-- Clicar no pino de uma entrada já selecionada não soltava a seleção.
-- Progresso de missões-tarefa não atualizava até a próxima varredura do diário.
+- World quests didn't appear when none had been tracked by hand.
+- Clicking the pin of an entry that was already selected didn't release the
+  selection.
+- Task quest progress didn't update until the next quest log scan.
 
 ## [0.1.0]
 
-Primeira versão do rastreador próprio, com seções de Missões, Campanha, Missões
-Mundiais, Objetivos Bônus, Conquistas, Profissões, Atividades Mensais,
-Colecionáveis, Tarefas de Iniciativa, Cenário e Eventos do mundo.
+First version of the standalone tracker, with Quests, Campaign, World Quests,
+Bonus Objectives, Achievements, Professions, Traveler's Log, Collectables,
+Endeavors, Scenario and World Events sections.

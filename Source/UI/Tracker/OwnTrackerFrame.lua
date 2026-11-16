@@ -11,8 +11,11 @@ local WHEEL_STEP = 40
 
 local TITLE_GAP = 7
 local COUNTDOWN_TICK_SECONDS = 1
-local BLOCK_GAP = 10
-local SECTION_GAP = 18
+
+--- Replaced by the player's choice on the first refresh, which always comes
+--- before anything is drawn.
+---@type TrackerSpacing
+local NO_SPACING = { betweenSections = 0, betweenEntries = 0 }
 
 local HEADER_COLOR = { red = 1, green = 0.82, blue = 0 }
 
@@ -62,6 +65,7 @@ local SECTION_SIZE_DELTA = -1
 ---@field private collapsedSections table<string, boolean>
 ---@field private state table
 ---@field private expandedHeight number
+---@field private spacing TrackerSpacing
 ---@field private lastSections TrackerSection[]
 ---@field private root table
 ---@field private scroll table
@@ -85,6 +89,7 @@ function OwnTrackerFrame.New(addonInfo, position, actions, collapsedSections, st
 		collapsedSections = collapsedSections,
 		state = state,
 		expandedHeight = INITIAL_HEIGHT,
+		spacing = NO_SPACING,
 		sectionHeaders = {},
 		usedHeaders = 0,
 		lastSections = {},
@@ -298,7 +303,13 @@ function OwnTrackerFrame:Render(sections)
 	-- Numbered in reading order, not by the game's internal watch index.
 	local entryNumber = 0
 
-	for _, section in ipairs(sections) do
+	-- Gaps go between things, never after the last one: a trailing gap would be
+	-- empty space at the bottom of the list that no setting could take away.
+	for sectionIndex, section in ipairs(sections) do
+		if sectionIndex > 1 then
+			offset = offset + self.spacing.betweenSections
+		end
+
 		local isCollapsed = self.collapsedSections[section.id] == true
 		local header = self:AcquireSectionHeader()
 		header.sectionID = section.id
@@ -319,20 +330,24 @@ function OwnTrackerFrame:Render(sections)
 		header.accent:ClearAllPoints()
 		header.accent:SetPoint("TOPLEFT", self.content, "TOPLEFT", 0, -offset)
 
-		offset = offset + SECTION_LINE_THICKNESS + TITLE_GAP
+		offset = offset + SECTION_LINE_THICKNESS
 
 		if not isCollapsed then
-			for _, entry in ipairs(section.entries) do
+			offset = offset + TITLE_GAP
+
+			for entryIndex, entry in ipairs(section.entries) do
+				if entryIndex > 1 then
+					offset = offset + self.spacing.betweenEntries
+				end
+
 				entryNumber = entryNumber + 1
 
 				local block, height = self.pool:Build(entry, width, entryNumber)
 				block.frame:ClearAllPoints()
 				block.frame:SetPoint("TOPLEFT", self.content, "TOPLEFT", 0, -offset)
-				offset = offset + height + BLOCK_GAP
+				offset = offset + height
 			end
 		end
-
-		offset = offset + SECTION_GAP
 	end
 
 	for index = self.usedHeaders + 1, #self.sectionHeaders do
@@ -537,6 +552,12 @@ end
 ---@param path string
 function OwnTrackerFrame:SetProgressBarTexture(path)
 	self.pool:SetProgressBarTexture(path)
+end
+
+--- Only stored: the refresh that hands it over draws the list right after.
+---@param spacing TrackerSpacing
+function OwnTrackerFrame:SetSpacing(spacing)
+	self.spacing = spacing
 end
 
 ---@param height number

@@ -122,6 +122,9 @@ function Support.Renderer()
 		SetScale = function(self, scale)
 			self.scale = scale
 		end,
+		SetSpacing = function(self, spacing)
+			self.spacing = spacing
+		end,
 		SetEditing = function(self, isEditing)
 			self.editing = isEditing
 		end,

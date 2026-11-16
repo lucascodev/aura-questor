@@ -1,5 +1,7 @@
 # Desenvolvimento
 
+[English](../development.md) | **Português**
+
 ## Preparar
 
 ```sh
@@ -8,7 +10,7 @@ cd aura-questor
 ```
 
 `Libs/` **não está no repositório**. As sete bibliotecas são buscadas na origem
-declarada em [`.pkgmeta`](../.pkgmeta) na hora do release, então um clone limpo
+declarada em [`.pkgmeta`](../../.pkgmeta) na hora do release, então um clone limpo
 não roda no jogo até você trazê-las:
 
 ```sh
@@ -41,8 +43,8 @@ teste falhar.
 
 `Tests/` espelha o interior de `Source/`: cada suíte fica no caminho equivalente
 ao do módulo que exercita. Fakes e construtores compartilhados vivem em
-[`Tests/Support.lua`](../Tests/Support.lua); o carregamento e as asserções, em
-[`Tests/Harness.lua`](../Tests/Harness.lua).
+[`Tests/Support.lua`](../../Tests/Support.lua); o carregamento e as asserções, em
+[`Tests/Harness.lua`](../../Tests/Harness.lua).
 
 Cobertura: filtros, ordenação, montagem das seções, detecção de conclusão,
 cores, perfis, preferências, categorias de conquista e a consistência entre os
@@ -57,7 +59,7 @@ verificado no cliente.
 luacheck .
 ```
 
-A configuração está em [`.luacheckrc`](../.luacheckrc), com os 106 globais do
+A configuração está em [`.luacheckrc`](../../.luacheckrc), com os 106 globais do
 jogo declarados como somente leitura e os 7 que o addon escreve separados. Roda
 no CI a cada push.
 
@@ -87,7 +89,7 @@ git tag v0.72.0
 git push --tags
 ```
 
-A tag dispara [`release.yml`](../.github/workflows/release.yml), que roda o
+A tag dispara [`release.yml`](../../.github/workflows/release.yml), que roda o
 BigWigs packager: busca as bibliotecas, aplica o `.pkgmeta`, monta o zip e
 publica no GitHub Releases e no CurseForge.
 
@@ -113,8 +115,8 @@ de comentário para ser entendido normalmente deveria ser extraído para uma
 função com nome descritivo. Código em inglês; textos visíveis ao jogador em
 `Locales/`.
 
-**Indentação** com tab, conforme o [`.editorconfig`](../.editorconfig). Finais de
-linha normalizados em LF pelo [`.gitattributes`](../.gitattributes).
+**Indentação** com tab, conforme o [`.editorconfig`](../../.editorconfig). Finais de
+linha normalizados em LF pelo [`.gitattributes`](../../.gitattributes).
 
 **Textos** não ficam literais no código. Uma chave nova entra em `Locales/enUS.lua`
 **e** em `ptBR.lua`. Há um teste que falha se uma das duas faltar, ou se a

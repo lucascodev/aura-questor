@@ -1,5 +1,7 @@
 # Adicionar um tipo de conteúdo
 
+[English](../adding-content.md) | **Português**
+
 É a extensão mais comum do projeto. Requer uma pasta nova e o registro no
 composition root; nenhum código existente é alterado.
 
@@ -18,7 +20,7 @@ flowchart TD
 
 ## 1. O provider
 
-Implementa a porta [`SectionProvider`](../Source/Ports/SectionProvider.lua), que tem um
+Implementa a porta [`SectionProvider`](../../Source/Ports/SectionProvider.lua), que tem um
 método. A responsabilidade é ler a API do jogo e devolver a estrutura comum.
 
 ```lua
@@ -84,13 +86,13 @@ entradas antes de ordenar.
 
 Se a API expõe uma lista de ids mais uma consulta por id, e descreve progresso
 como `requirementsList`, use
-[`TrackedListSectionProvider`](../Source/Modules/TrackedListSectionProvider.lua) em vez
+[`TrackedListSectionProvider`](../../Source/Modules/TrackedListSectionProvider.lua) em vez
 de escrever um provider. Ele recebe uma tabela de configuração. Atividades
 Mensais e Tarefas de Iniciativa compartilham essa implementação.
 
 ## 2. A ordem da seção
 
-Uma linha em [`Core/Tracker/SectionOrder.lua`](../Source/Core/Tracker/SectionOrder.lua),
+Uma linha em [`Core/Tracker/SectionOrder.lua`](../../Source/Core/Tracker/SectionOrder.lua),
 onde o `id` da seção é a chave. O arquivo concentra a ordem de todas as seções.
 
 ```lua
@@ -101,7 +103,7 @@ Há um teste que falha se duas seções receberem o mesmo número.
 
 A seção passa a aparecer sozinha na lista de reordenar do painel de opções, mas
 o rótulo dela vem de um mapa em
-[`Options/SectionOrderCard.lua`](../Source/Options/SectionOrderCard.lua), que
+[`Options/SectionOrderCard.lua`](../../Source/Options/SectionOrderCard.lua), que
 associa o `id` à global da Blizzard já traduzida:
 
 ```lua
@@ -114,7 +116,7 @@ cru para o jogador.
 ## 3. As ações
 
 Necessário apenas se a entrada responder ao clique. A porta é
-[`EntryActions`](../Source/Ports/EntryActions.lua) e seus métodos são **opcionais**: o
+[`EntryActions`](../../Source/Ports/EntryActions.lua) e seus métodos são **opcionais**: o
 roteador verifica a presença de cada um antes de chamar, então implemente somente
 os que se aplicam.
 
@@ -129,12 +131,12 @@ os que se aplicam.
 | `FindGroup` | o olho verde de conteúdo em grupo |
 
 Um cenário não tem página para abrir nem pode ser desrastreado, e por isso
-[`Modules/Scenario/EntryActions.lua`](../Source/Modules/Scenario/EntryActions.lua)
+[`Modules/Scenario/EntryActions.lua`](../../Source/Modules/Scenario/EntryActions.lua)
 implementa quase nada.
 
 ## 4. Registrar
 
-Duas linhas no [`Bootstrap.lua`](../Source/Bootstrap.lua), único arquivo do projeto que
+Duas linhas no [`Bootstrap.lua`](../../Source/Bootstrap.lua), único arquivo do projeto que
 conhece implementações concretas:
 
 ```lua
@@ -158,7 +160,7 @@ arquivo empacotado que não consta na lista.
 ## Eventos adicionais
 
 Se o tipo novo depende de um evento ainda não registrado, acrescente-o à lista em
-[`System/TrackerEvents.lua`](../Source/System/TrackerEvents.lua). O agrupamento já está
+[`System/TrackerEvents.lua`](../../Source/System/TrackerEvents.lua). O agrupamento já está
 implementado ali; não crie outro frame de eventos.
 
 ## Verificar
