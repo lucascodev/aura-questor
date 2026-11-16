@@ -88,6 +88,7 @@ Source\Game\SuperTracking.lua
 Source\Game\MapNavigator.lua
 Source\Game\WaypointReader.lua
 Source\Game\WidgetTextReader.lua
+Source\Game\QuestRewardReader.lua
 
 # Three readers, one shape: all of them answer with TrackerObjective[].
 Source\Game\Objectives\QuestReader.lua

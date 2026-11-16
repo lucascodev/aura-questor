@@ -96,7 +96,20 @@ write until the end of combat; only the last request counts.
 Opening the options panel (`Settings.OpenToCategory`) has also been protected in
 combat since 12.x. `OptionsPanel` warns in chat and does not try.
 
-## Widgets in the tooltip: never `GameTooltip_AddWidgetSet`
+## The shared tooltip: never through Blizzard's builders
+
+`GameTooltip` is one frame for the whole interface. Blizzard's helpers that fill
+it (`GameTooltip_AddWidgetSet`, `GameTooltip_AddQuestRewardsToTooltip` and the
+like) do more than add lines: they keep state on it, in fields and in frames
+embedded in it. Called by an addon, every one of those writes is tainted, and
+Blizzard reads them back later, from its own tooltips, with this addon's name on
+whatever fails.
+
+**Rule:** our tooltip uses only the `GameTooltip` methods (`SetOwner`,
+`SetText`, `AddLine`, `Show`). Anything the game would draw with a helper is
+read through the public API and added as lines.
+
+### Widgets: `GameTooltip_AddWidgetSet`
 
 `GameTooltip` keeps **a single** widget container for the whole interface,
 created on the first call to `GameTooltip_AddWidgetSet` and rewritten on every
@@ -119,6 +132,25 @@ reads the widgets' text through `C_UIWidgetManager` and the tooltip adds them as
 plain lines. No Blizzard frame is touched and nothing is measured. Purely visual
 widgets, such as a bar or an icon without text, are left out of our tooltip; in
 the map's they still show.
+
+### Rewards: `GameTooltip_AddQuestRewardsToTooltip`
+
+Even with `fullItemDescription = false`, the rewards block writes Blizzard state
+in two places (issue #83):
+
+- `GameTooltip.waitingForData`, on every call. Blizzard reads it back when it
+  builds its own rewards tooltip, and that execution then writes
+  `updateTooltipTimer`, which `GameTooltip_OnUpdate` reads every frame before
+  calling the owner's `UpdateTooltip`.
+- `GameTooltip.ItemTooltip`, the embedded item tooltip, for currency-container
+  and spell rewards (`itemID`, `spellID`, `itemTextureSet`). The map draws world
+  quest rewards in that same frame, and nothing resets those fields on hide.
+
+**Adopted solution:** [`QuestRewardReader`](../Source/Game/QuestRewardReader.lua)
+builds the same lines, in the same order and with the game's own strings and
+colours: XP, currencies (with the overflow colour and container names), honor,
+money, items, spells and the war mode bonus. Every item is listed, where the
+game shows only the first; the embedded item and spell tooltips are gone.
 
 ## The addon's name is its identity
 

@@ -32,18 +32,34 @@ function EntryTooltip.ShowMenu(actions, entry, owner)
 	end)
 end
 
---- The game's own rewards block, without the item tooltip it can embed: that
---- one measures itself with values the client keeps secret from an addon, and
---- doing the arithmetic on them errors inside the game. Without it the rewards
---- still come out named, coloured and with their icons.
-local REWARDS_STYLE = {
-	headerText = QUEST_REWARDS,
-	headerColor = NORMAL_FONT_COLOR,
-	prefixBlankLineCount = 1,
-	postHeaderBlankLineCount = 0,
-	wrapHeaderText = true,
-	fullItemDescription = false,
-}
+--- The rewards block the map shows, as plain lines. The reader explains why the
+--- game's own block is never called here. A world quest carries its rewards
+--- outside the quest log, and they arrive on request.
+---@param questID number
+local function AddRewardLines(questID)
+	if not HaveQuestRewardData(questID) then
+		C_TaskQuest.RequestPreloadRewardData(questID)
+
+		return
+	end
+
+	local lines = Addon.QuestRewardReader.Lines(questID)
+
+	if #lines == 0 then
+		return
+	end
+
+	GameTooltip:AddLine(" ")
+	GameTooltip:AddLine(QUEST_REWARDS, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, WRAP)
+
+	for _, line in ipairs(lines) do
+		if line.color then
+			GameTooltip:AddLine(line.text, line.color.red, line.color.green, line.color.blue)
+		else
+			GameTooltip:AddLine(line.text)
+		end
+	end
+end
 
 --- What the map shows under the point, as plain lines. The reader explains why
 --- the game's widget frames are never drawn here.
@@ -62,9 +78,9 @@ local function AddWidgetLines(widgetSetID)
 	end
 end
 
---- The side with room for it. A rewards block carries the whole item tooltip,
---- so it can be taller and wider than the tracker itself, and the tracker can
---- be dragged to either edge of any screen.
+--- The side with room for it. With a briefing and a list of rewards the tooltip
+--- can be wider than the tracker itself, and the tracker can be dragged to
+--- either edge of any screen.
 ---@param owner table
 ---@return string
 local function AnchorFor(owner)
@@ -115,15 +131,8 @@ function EntryTooltip.Show(actions, entry, owner)
 		end
 	end
 
-	-- The game's own rewards block, so currencies, reputation and the war mode
-	-- bonus come out as they do on the map. A world quest carries its rewards
-	-- outside the quest log, and they arrive on request.
 	if entry.rewardsQuestID then
-		if HaveQuestRewardData(entry.rewardsQuestID) then
-			GameTooltip_AddQuestRewardsToTooltip(GameTooltip, entry.rewardsQuestID, REWARDS_STYLE)
-		else
-			C_TaskQuest.RequestPreloadRewardData(entry.rewardsQuestID)
-		end
+		AddRewardLines(entry.rewardsQuestID)
 	end
 
 	if entry.tooltipWidgetSetID then
